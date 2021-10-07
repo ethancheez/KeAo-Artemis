@@ -2,7 +2,7 @@
 
 This is a documentation of getting the RFM69HCW connected to the Beaglebone Black.
 
-# Getting Started
+## Getting Started
 Note: The pin configurations are set up based on the HSFL / Ke Ao OBC board.
 
 1. Open up a command line and SSH into the BBB. You may be able to use `beaglebone.local` or the IP address the BBB is connected to in your network. i.e. `192.168.x.x`
@@ -42,6 +42,20 @@ $ sudo reboot
 ```
 $ sudo config-pin P9_42 spi_cs
 ```
+
+## Beaglebone SPI Configurations
+
+### SPIDEV
+- spidev0.0:    Bus 0, Channel 0
+- spidev0.1:    Bus 0, Channel 1
+- spidev1.0:    Bus 1, Channel 0
+- spidev1.1:    Bus 1, Channel 1 (We will be using this version)
+
+### SPI MODES
+- MODE0:    Low at idle, capture on rising clock edge
+- MODE1:    Low at idle, capture on falling clock edge
+- MODE2:    High at idle, capture on falling clock edge
+- MODE3:    High at idle, capture on rising clock edge
 
 # Sources
 
