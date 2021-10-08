@@ -1,27 +1,3 @@
-/** @mainpage
-    This library implements packet data transmittion via RFM69CW radiomodules.
-
-    In order to use this library you need to include the @ref rfm69.h file, 
-    declare extern global variables and call @ref rfm69_init() function, tat's
-    all.
- 
-    After init radiomodule will switch into receive mode and will wait the 
-    packet by the radio channel. To transmit the packet you need to place your
-    data into @ref packet_buffer and call rfm69_transmit_start() function, then 
-    after transmitting data, radiomodule will be switched by interrupt into 
-    receive mode again.
-
-    If radiomodule received the package successfully, the value of @ref 
-    rfm69_condition equals to @ref RFM69_NEW_PACK and received data are 
-    alreary in the @ref packet_buffer array. Then, when you are ready to 
-    receive new data, you need to start the receive mode again by calling 
-    rfm69_receive_start() function. 
-
-    Note that radiomodule settings are in the rfm69.h file, packet size is in
-    @ref packet_size global variable and the packet data are in @ref 
-    packet_buffer global array and radiomodule state is in @ref rfm69_condition 
-    variable.
-*/
 #include <iostream>
 #include <unistd.h>
 #include <chrono>
@@ -38,7 +14,7 @@ namespace cubesat {
     @function
     Constructor
 */
-RFM69HCW::RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode){
+RFM69HCW::RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode, uint8_t freqBand, uint8_t networkID){
     this->dataLen = 0;
     this->SENDERID = 0;
     this->targetID = 0;
@@ -49,62 +25,156 @@ RFM69HCW::RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode)
 
     /* call rfm69_init() */
     rfm69_mcu_init(address, device, spi_mode);
-    rfm69_init();
+    rfm69_init(freqBand, networkID);
 
     this->_address = 1;
-    rfm69_stby();
 }
 
 /**
     @function
-    Accessor method for packet_buffer
-    @param data - array to copy packet data into from packet_buffer
+    This function implements MCU initialisation, i.e. initialisaton of SPI
+    interface, interrupts, GPIOs, etc.
+    TODO: replace code with SPIDevice calls
 */
-void RFM69HCW::getData( char *data){
-    int i;
-    for(i = 0; i < RFM69_BUFFER_SIZE; i++ ){
-        data[i] = this->packet_buffer[i];
+void RFM69HCW::rfm69_mcu_init(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode)
+{
+//  SPI initialisation
+    this->spi = new SPIDevice(address,device,spi_mode);
+}
+
+/**
+    @function
+    This function performs radiomodule initialisation. It writes radiomodule
+    register values via SPI, which were defined and calculated in file rfm69.h.
+    It also checks the SPI interface, if it doesn't work, it sets the @ref
+    RFM69_SPI_FAILED state.
+    @return 0 if initialisation completed successfully, and -1 otherwise
+*/
+int RFM69HCW::rfm69_init(uint8_t freqBand, uint8_t networkID){
+    const uint8_t CONFIG[][2] =
+      {
+        /* 0x01 */ { REG_OPMODE, RF_OPMODE_SEQUENCER_ON | RF_OPMODE_LISTEN_OFF | RF_OPMODE_STANDBY },
+        /* 0x02 */ { REG_DATAMODUL, RF_DATAMODUL_DATAMODE_PACKET | RF_DATAMODUL_MODULATIONTYPE_FSK | RF_DATAMODUL_MODULATIONSHAPING_00 }, // no shaping
+        /* 0x03 */ { REG_BITRATEMSB, RF_BITRATEMSB_55555}, // default: 4.8 KBPS
+        /* 0x04 */ { REG_BITRATELSB, RF_BITRATELSB_55555},
+        /* 0x05 */ { REG_FDEVMSB, RF_FDEVMSB_50000}, // default: 5KHz, (FDEV + BitRate / 2 <= 500KHz)
+        /* 0x06 */ { REG_FDEVLSB, RF_FDEVLSB_50000},
+
+        /* 0x07 */ { REG_FRFMSB, (uint8_t) (freqBand==RF69_315MHZ ? RF_FRFMSB_315 : (freqBand==RF69_433MHZ ? RF_FRFMSB_433 : (freqBand==RF69_868MHZ ? RF_FRFMSB_868 : RF_FRFMSB_915))) },
+        /* 0x08 */ { REG_FRFMID, (uint8_t) (freqBand==RF69_315MHZ ? RF_FRFMID_315 : (freqBand==RF69_433MHZ ? RF_FRFMID_433 : (freqBand==RF69_868MHZ ? RF_FRFMID_868 : RF_FRFMID_915))) },
+        /* 0x09 */ { REG_FRFLSB, (uint8_t) (freqBand==RF69_315MHZ ? RF_FRFLSB_315 : (freqBand==RF69_433MHZ ? RF_FRFLSB_433 : (freqBand==RF69_868MHZ ? RF_FRFLSB_868 : RF_FRFLSB_915))) },
+
+        // looks like PA1 and PA2 are not implemented on RFM69W/CW, hence the max output power is 13dBm
+        // +17dBm and +20dBm are possible on RFM69HW
+        // +13dBm formula: Pout = -18 + OutputPower (with PA0 or PA1**)
+        // +17dBm formula: Pout = -14 + OutputPower (with PA1 and PA2)**
+        // +20dBm formula: Pout = -11 + OutputPower (with PA1 and PA2)** and high power PA settings (section 3.3.7 in datasheet)
+        ///* 0x11 */ { REG_PALEVEL, RF_PALEVEL_PA0_ON | RF_PALEVEL_PA1_OFF | RF_PALEVEL_PA2_OFF | RF_PALEVEL_OUTPUTPOWER_11111},
+        ///* 0x13 */ { REG_OCP, RF_OCP_ON | RF_OCP_TRIM_95 }, // over current protection (default is 95mA)
+
+        // RXBW defaults are { REG_RXBW, RF_RXBW_DCCFREQ_010 | RF_RXBW_MANT_24 | RF_RXBW_EXP_5} (RxBw: 10.4KHz)
+        /* 0x19 */ { REG_RXBW, RF_RXBW_DCCFREQ_010 | RF_RXBW_MANT_16 | RF_RXBW_EXP_2 }, // (BitRate < 2 * RxBw)
+        //for BR-19200: /* 0x19 */ { REG_RXBW, RF_RXBW_DCCFREQ_010 | RF_RXBW_MANT_24 | RF_RXBW_EXP_3 },
+        /* 0x25 */ { REG_DIOMAPPING1, RF_DIOMAPPING1_DIO0_01 }, // DIO0 is the only IRQ we're using
+        /* 0x26 */ { REG_DIOMAPPING2, RF_DIOMAPPING2_CLKOUT_OFF }, // DIO5 ClkOut disable for power saving
+        /* 0x28 */ { REG_IRQFLAGS2, RF_IRQFLAGS2_FIFOOVERRUN }, // writing to this bit ensures that the FIFO & status flags are reset
+        /* 0x29 */ { REG_RSSITHRESH, 220 }, // must be set to dBm = (-Sensitivity / 2), default is 0xE4 = 228 so -114dBm
+        ///* 0x2D */ { REG_PREAMBLELSB, RF_PREAMBLESIZE_LSB_VALUE } // default 3 preamble bytes 0xAAAAAA
+        /* 0x2E */ { REG_SYNCCONFIG, RF_SYNC_ON | RF_SYNC_FIFOFILL_AUTO | RF_SYNC_SIZE_2 | RF_SYNC_TOL_0 },
+        /* 0x2F */ { REG_SYNCVALUE1, 0x2D },      // attempt to make this compatible with sync1 byte of RFM12B lib
+        /* 0x30 */ { REG_SYNCVALUE2, networkID }, // NETWORK ID
+        //* 0x31 */ { REG_SYNCVALUE3, 0xAA },
+        //* 0x31 */ { REG_SYNCVALUE4, 0xBB },
+        /* 0x37 */ { REG_PACKETCONFIG1, RF_PACKET1_FORMAT_VARIABLE | RF_PACKET1_DCFREE_OFF | RF_PACKET1_CRC_ON | RF_PACKET1_CRCAUTOCLEAR_ON | RF_PACKET1_ADRSFILTERING_OFF },
+        /* 0x38 */ { REG_PAYLOADLENGTH, 66 }, // in variable length mode: the max frame size, not used in TX
+        ///* 0x39 */ { REG_NODEADRS, nodeID }, // turned off because we're not using address filtering
+        /* 0x3C */ { REG_FIFOTHRESH, RF_FIFOTHRESH_TXSTART_FIFONOTEMPTY | RF_FIFOTHRESH_VALUE }, // TX on FIFO not empty
+        /* 0x3D */ { REG_PACKETCONFIG2, RF_PACKET2_RXRESTARTDELAY_2BITS | RF_PACKET2_AUTORXRESTART_OFF | RF_PACKET2_AES_OFF }, // RXRESTARTDELAY must match transmitter PA ramp-down time (bitrate dependent)
+        //for BR-19200: /* 0x3D */ { REG_PACKETCONFIG2, RF_PACKET2_RXRESTARTDELAY_NONE | RF_PACKET2_AUTORXRESTART_ON | RF_PACKET2_AES_OFF }, // RXRESTARTDELAY must match transmitter PA ramp-down time (bitrate dependent)
+        /* 0x6F */ { REG_TESTDAGC, RF_DAGC_IMPROVED_LOWBETA0 }, // run DAGC continuously in RX mode for Fading Margin Improvement, recommended default for AfcLowBetaOn=0
+        {255, 0}
+      };
+
+    // Reset radio
+    printf("Resetting Radio . . .\n");
+    GPIO *outGPIO = new GPIO(80);
+    outGPIO->setDirection(OUTPUT);
+    outGPIO->setValue(HIGH);
+    COSMOS_SLEEP(0.1); // wait 0.1s
+    outGPIO->setValue(LOW);
+    COSMOS_SLEEP(0.1); // wait 0.1s
+    delete outGPIO;
+
+    // Ensure that the radio is able to read and write through SPI
+    for(int cycle = 0; rfm69_read(REG_SYNCVALUE1) != 0xaa; cycle++) {
+        if(cycle > 100) {
+            printf("SPI was not properly initialized. Exiting . . .\n");
+            exit (0);
+        }
+        rfm69_write(REG_SYNCVALUE1, 0xaa);
+    }
+
+    for(int cycle = 0; rfm69_read(REG_SYNCVALUE2) != 0x55; cycle++) {
+        if(cycle > 100) {
+            printf("SPI was not properly initialized. Exiting . . .\n");
+            exit (0);
+        }
+        rfm69_write(REG_SYNCVALUE2, 0x55);
+    }
+
+    //  RFM69 initialization
+    for (int i = 0; CONFIG[i][0] != 255; i++) {
+        rfm69_write(CONFIG[i][0], CONFIG[i][1]);
+    }
+
+    rfm69_setHighPower(1);
+    COSMOS_SLEEP(1);
+
+    setMode(RFM69_STBY);
+    while ((rfm69_read(REG_IRQFLAGS1) & RF_IRQFLAGS1_MODEREADY) == 0x00);
+
+    // SPI check
+    int ret = rfm69_read(REG_RXBW);
+    if ( ret != (RF_RXBW_DCCFREQ_010 | RF_RXBW_MANT_16 | RF_RXBW_EXP_2) ) {
+        this->rfm69_condition = RFM69_SPI_FAILED;
+        cerr<<"RFM69HCW::rfm69_init->SPI failed. ret: '"<<ret<<"'"<<endl;
+        return -1;
+    }else{
+        cout << endl << "-------------------------------------------" << endl;
+        cout << "RADIO SUCCESSFULLY INITIALIZED" << endl;
+        cout << "-------------------------------------------" << endl;
+        return 0;
     }
 }
 
-
-/**
- * @function setMode
- *
- * @param byte newMode - Could use RF69_MODE_TX, RF69_MODE_RX, RF69_MODE_SYNTH, 
- * RF69_MODE_STANDBY or RF69_MODE_SLEEP
- */
-void RFM69HCW::setMode(uint8_t mode) {
+void RFM69HCW::setMode(RFM69STATE mode) {
 
   if(this->rfm69_condition == mode)
       return;
 
   switch (mode) {
-    case TX_MODE:
-      rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | TX_MODE);
-      this->rfm69_condition = RFM69_TX;
+    case RFM69_TX:
+      rfm69_write(REG_OPMODE, (rfm69_read(REG_OPMODE) & 0xE3) | RF_OPMODE_TRANSMITTER);
       break;
-    case RX_MODE:
-      rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | RX_MODE);
-      this->rfm69_condition = RFM69_RX;
+    case RFM69_RX:
+      rfm69_write(REG_OPMODE, (rfm69_read(REG_OPMODE) & 0xE3) | RF_OPMODE_RECEIVER);
       break;
-    case FS_MODE:
-      rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | FS_MODE);
-      this->rfm69_condition = RFM69_NEW_PACK;
+    case RFM69_SYNTH:
+      rfm69_write(REG_OPMODE, (rfm69_read(REG_OPMODE) & 0xE3) | RF_OPMODE_SYNTHESIZER);
       break;
-    case STBY_MODE:
-      rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | STBY_MODE);
-      this->rfm69_condition = RFM69_STBY;
+    case RFM69_STBY:
+      rfm69_write(REG_OPMODE, (rfm69_read(REG_OPMODE) & 0xE3) | RF_OPMODE_STANDBY);
       break;
-    case SLEEP_MODE:
-      rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | SLEEP_MODE);
-      this->rfm69_condition = RFM69_SLEEP;
+    case RFM69_SLEEP:
+      rfm69_write(REG_OPMODE, (rfm69_read(REG_OPMODE) & 0xE3) | RF_OPMODE_SLEEP);
       break;
     default:
-      break;
+      return;
     }
 
-  while(this->rfm69_condition == RFM69_SLEEP && (rfm69_read(REGIRQFLAGS1) & RFIRQFLAGS1_MODEREADY) == 0x00);
+  while(this->rfm69_condition == RFM69_SLEEP && (rfm69_read(REG_IRQFLAGS1) & RF_IRQFLAGS1_MODEREADY) == 0x00);
+
+  this->rfm69_condition = mode;
 }
   
 
@@ -142,167 +212,16 @@ uint8_t RFM69HCW::rfm69_read(uint8_t address)
 	return data;
 }
 
-/** 
-    @function
-    This function implements MCU initialisation, i.e. initialisaton of SPI 
-    interface, interrupts, GPIOs, etc. 
-    TODO: replace code with SPIDevice calls
-*/
-void RFM69HCW::rfm69_mcu_init(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode)
-{
-//  SPI initialisation 
-    this->spi = new SPIDevice(address,device,spi_mode);
-}
 
-/** 
-    @function
-    This function performs radiomodule initialisation. It writes radiomodule 
-    register values via SPI, which were defined and calculated in file rfm69.h. 
-    It also checks the SPI interface, if it doesn't work, it sets the @ref
-    RFM69_SPI_FAILED state. 
-    @return 0 if initialisation completed successfully, and -1 otherwise
-*/
-int RFM69HCW::rfm69_init(){
-    //this->spi->debugDumpRegisters();
-
-    // Reset radio
-    printf("Resetting Radio . . .\n");
-    GPIO *outGPIO = new GPIO(80);
-    outGPIO->setDirection(OUTPUT);
-    outGPIO->setValue(HIGH);
-    COSMOS_SLEEP(0.1); // wait 0.1s
-    outGPIO->setValue(LOW);
-    COSMOS_SLEEP(0.1); // wait 0.1s
-    delete outGPIO;
-
-    // Ensure that the radio is able to read and write through SPI
-    for(int cycle = 0; rfm69_read(REGSYNCVALUE1) != 0xaa; cycle++) {
-        if(cycle > 100) {
-            printf("SPI was not properly initialized. Exiting . . .\n");
-            exit (0);
-        }
-        rfm69_write(REGSYNCVALUE1, 0xaa);
-    }
-
-    for(int cycle = 0; rfm69_read(REGSYNCVALUE2) != 0x55; cycle++) {
-        if(cycle > 100) {
-            printf("SPI was not properly initialized. Exiting . . .\n");
-            exit (0);
-        }
-        rfm69_write(REGSYNCVALUE2, 0x55);
-    }
-
-//  RFM69 initialization
-    rfm69_write(REGOPMODE, SEQUENCEROFF | LISTENOFF | STBY_MODE);
-    rfm69_write(REGDATAMODUL, PACKET_MODE | FSK | NO_SHAPING);
-
-    rfm69_write(REGFDEVMSB, DEVMSB_5000);
-    rfm69_write(REGFDEVLSB, DEVLSB_5000);
-
-    rfm69_write(REGBITRATEMSB, REGBITRATEMSB_DEF);
-    rfm69_write(REGBITRATELSB, REGBITRATELSB_DEF);
-
-    // FREQUENCY BAND
-    rfm69_write(REGFRFMSB, FRFMSB_915);
-    rfm69_write(REGFRFMID, FRFMID_915);
-    rfm69_write(REGFRFLSB, FRFLSB_915);
-
-    rfm69_write(REGRXBW, RXBW_DCCFREQ_010 | RXBW_MANT_16 | RXBW_EXP_2);
-
-    rfm69_write(REGAFCCTRL, REGAFCCTRL_DEF);
-
-//  rfm69_write(REGLISTEN1, REGLISTEN1_DEF);
-//  rfm69_write(REGLISTEN2, REGLISTEN2_DEF);
-//  rfm69_write(REGLISTEN3, REGLISTEN3_DEF);
-
-//    rfm69_write(REGPALEVEL, REGPALEVEL_DEF);
-//    rfm69_write(REGPARAMP, REGPARAMP_DEF);
-//    rfm69_write(REGOCP, REGOCP_DEF);
-//    rfm69_write(REGLNA, REGLNA_DEF);
-
-
-//  rfm69_write(REGOOKPEAK, REGOOKPEAK_DEF);
-//  rfm69_write(REGOOKAVG, REGOOKAVG_DEF);
-//  rfm69_write(REGOOKFIX, REGOOKFIX_DEF);
-
-//    rfm69_write(REGAFCFEI, REGAFCFEI_DEF);
-
-    //rfm69_write(REGDIOMAPPING1, REGDIOMAPPING1_DEF);
- //   rfm69_write(REGDIOMAPPING2, REGDIOMAPPING2_DEF);
-
-    rfm69_write(REGIRQFLAGS2, RFIRQFLAGS2_FIFOOVERRUN);
-
-    rfm69_write(REGRSSITHRESH, 220);
-    rfm69_write(REGFIFOTHRES, FIFOTHRESH_TXSTART_FIFONOTEMPTY | FIFOTHRESH_VALUE);
-
-    //rfm69_write(REGPREAMBLEMSB, REGPREAMBLEMSB_DEF);
-    //rfm69_write(REGPREAMBLELSB, REGPREAMBLELSB_DEF);
-
-    rfm69_write(REGSYNCCONFIG, SYNC_ON | SYNC_FIFOFILL_AUTO | SYNC_SIZE_2 | SYNC_TOL_0 );
-    rfm69_write(REGSYNCVALUE1, REGSYNCVALUE1_DEF);
-    rfm69_write(REGSYNCVALUE2, REGSYNCVALUE2_DEF);// set network id
-
-    rfm69_write(REGPACKETCONFIG1, REGPACKETCONFIG1_DEF);
-    rfm69_write(REGPAYLOADLENGTH, REGPAYLOADLENGTH_DEF);
-    //rfm69_write(REGNODEADRS, REGNODEADRS_DEF);
-    //rfm69_write(REGBROADCASTADRS, REGBROADCASTADRS_DEF);
-    //rfm69_write(REGAUTOMODES, REGAUTOMODES_DEF);
-
-    rfm69_write(REGPACKETCONFIG2, PACKET2_RXRESTARTDELAY_2BITS | PACKET2_AUTORXRESTART_ON | PACKET2_AES_OFF);
-
-//  rfm69_write(REGAESKEY1, REGAESKEY1_DEF);
-//  rfm69_write(REGAESKEY2, REGAESKEY2_DEF);
-//  rfm69_write(REGAESKEY3, REGAESKEY3_DEF);
-//  rfm69_write(REGAESKEY4, REGAESKEY4_DEF);
-//  rfm69_write(REGAESKEY5, REGAESKEY5_DEF);
-//  rfm69_write(REGAESKEY6, REGAESKEY6_DEF);
-//  rfm69_write(REGAESKEY7, REGAESKEY7_DEF);
-//  rfm69_write(REGAESKEY8, REGAESKEY8_DEF);
-//  rfm69_write(REGAESKEY9, REGAESKEY9_DEF);
-//  rfm69_write(REGAESKEY10, REGAESKEY10_DEF);
-//  rfm69_write(REGAESKEY11, REGAESKEY11_DEF);
-//  rfm69_write(REGAESKEY12, REGAESKEY12_DEF);
-//  rfm69_write(REGAESKEY13, REGAESKEY13_DEF);
-//  rfm69_write(REGAESKEY14, REGAESKEY14_DEF);
-//  rfm69_write(REGAESKEY15, REGAESKEY15_DEF);
-//  rfm69_write(REGAESKEY16, REGAESKEY16_DEF);
-
-    rfm69_write(REGTESTDAGC, DAGC_IMPROVED_LOWBETA0);
-
-    rfm69_write(255, 0);
-
-    //this->spi->debugDumpRegisters();
-
-    rfm69_setHighPower(1);
-
-    COSMOS_SLEEP(1);
-    //rfm69_receive_start();
-
-    rfm69_stby();
-    while ((rfm69_read(REGIRQFLAGS1) & RFIRQFLAGS1_MODEREADY) == 0x00);
-
-    // SPI check
-    int ret = rfm69_read(REGRXBW);
-    if ( ret != (RXBW_DCCFREQ_010 | RXBW_MANT_16 | RXBW_EXP_2) ) {
-        rfm69_condition = RFM69_SPI_FAILED;
-        cerr<<"RFM69HCW::rfm69_init->SPI failed. ret: '"<<ret<<"'"<<endl;
-        return -1;
-    }else{
-        cout << endl << "-------------------------------------------" << endl;
-        cout << "RADIO SUCCESSFULLY INITIALIZED" << endl;
-        cout << "-------------------------------------------" << endl;
-        return 0;
-    }
-}
 
 int RFM69HCW::getRSSI(int forceTrigger){
   int rssi = 0;
   if (forceTrigger == 1) {
     //RSSI trigger not needed if DAGC is in continuous mode
-    rfm69_write(REGRSSICONFIG, RSSISTART);
-    while ((rfm69_read(REGRSSICONFIG) & RSSIDONE) == 0x00); // Wait for RSSI_Ready
+    rfm69_write(REG_RSSICONFIG, RF_RSSI_START);
+    while ((rfm69_read(REG_RSSICONFIG) & RF_RSSI_DONE) == 0x00); // Wait for RSSI_Ready
   }
-  rssi = -rfm69_read(REGRSSIVALUE);
+  rssi = -rfm69_read(REG_RSSIVALUE);
   rssi >>= 1;
   rssi += 20;
   return rssi;
@@ -333,7 +252,7 @@ bool RFM69HCW::rfm69_canSend(void) {
         return true;
     }
     if(this->rfm69_condition == RFM69_RX && this->payloadLen == 0 && getRSSI(0) < CSMA_LIMIT) {
-        rfm69_stby();
+        setMode(RFM69_STBY);
         return true;
     }
     //cout << "CANNOT SEND" << endl;
@@ -341,7 +260,7 @@ bool RFM69HCW::rfm69_canSend(void) {
 }
 
 void RFM69HCW::rfm69_send(uint8_t toAddress, std::string buffer, uint8_t bufferSize, bool requestACK) {
-    rfm69_write(REGPACKETCONFIG2, (rfm69_read(REGPACKETCONFIG2) & 0xfb) | PACKET2_RXRESTART);
+    rfm69_write(REG_PACKETCONFIG2, (rfm69_read(REG_PACKETCONFIG2) & 0xfb) | RF_PACKET2_RXRESTART);
 
     auto start = std::chrono::steady_clock::now();
     auto end = std::chrono::steady_clock::now();
@@ -357,9 +276,9 @@ void RFM69HCW::rfm69_send(uint8_t toAddress, std::string buffer, uint8_t bufferS
 }
 
 void RFM69HCW::rfm69_sendFrame(uint8_t toAddress, std::string buffer, uint8_t bufferSize, bool requestACK, bool sendACK) {
-    rfm69_stby(); // turn off receiver to prevent reception while filling fifo
+    setMode(RFM69_STBY); // turn off receiver to prevent reception while filling fifo
 
-    while ((rfm69_read(REGIRQFLAGS1) & RFIRQFLAGS1_MODEREADY) == 0x00) { // wait for ModeReady
+    while ((rfm69_read(REG_IRQFLAGS1) & RF_IRQFLAGS1_MODEREADY) == 0x00) { // wait for ModeReady
         //cout << "READ1: " << rfm69_read(REGIRQFLAGS1) << "   result = " << (rfm69_read(REGIRQFLAGS1) & RFIRQFLAGS1_MODEREADY) << endl;
     }
 
@@ -374,7 +293,7 @@ void RFM69HCW::rfm69_sendFrame(uint8_t toAddress, std::string buffer, uint8_t bu
         CTLbyte = RFM69_CTL_REQACK;
 
     // write to FIFO
-    this->spi->write(0x80 | REGFIFO);
+    this->spi->write(0x80 | REG_FIFO);
     this->spi->write(bufferSize + 3);
     this->spi->write(toAddress);
     this->spi->write(this->_address);
@@ -385,13 +304,13 @@ void RFM69HCW::rfm69_sendFrame(uint8_t toAddress, std::string buffer, uint8_t bu
     }
 
     // no need to wait for transmit mode to be ready since its handled by the radio
-    setMode(TX_MODE);
+    setMode(RFM69_TX);
     //while (RFM69_ReadDIO0Pin()) == 0 && !Timeout_IsTimeout1()); // wait for DIO0 to turn HIGH signalling transmission finish
     /*
     while( (rfm69_read(REGIRQFLAGS2) & RFIRQFLAGS2_PACKETSENT) == 0x00) { // wait for ModeReady
         //cout << "READ2: " << rfm69_read(REGIRQFLAGS2) << "   result = " << (rfm69_read(REGIRQFLAGS2) & RFIRQFLAGS2_PACKETSENT) << endl;
     }*/
-    rfm69_stby();
+    setMode(RFM69_STBY);
 }
 
 bool RFM69HCW::rfm69_ACKReceived(uint8_t fromNodeID) {
@@ -410,23 +329,23 @@ void RFM69HCW::rfm69_receiveBegin(void) {
     this->ACK_REQUESTED = 0;
     this->rssi = 0;
 
-    if(rfm69_read(REGIRQFLAGS2) & RFIRQFLAGS2_PAYLOADREADY) {
-        rfm69_write(REGPACKETCONFIG2, (rfm69_read(REGPACKETCONFIG2) & 0xfb) | PACKET2_RXRESTART); // avoid RX deadlocks
+    if(rfm69_read(REG_IRQFLAGS2) & RF_IRQFLAGS2_PAYLOADREADY) {
+        rfm69_write(REG_PACKETCONFIG2, (rfm69_read(REG_PACKETCONFIG2) & 0xfb) | RF_PACKET2_RXRESTART); // avoid RX deadlocks
     }
 
     //rfm69_write(REGDIOMAPPING1, DIO0MAP1); // set DIO0 to "PAYLOADREADY" in receive mode
-    setMode(RX_MODE);
+    setMode(RFM69_RX);
 }
 
 bool RFM69HCW::rfm69_receiveDone(void) {
     //cout << "receiveDone" << endl;
     if (this->rfm69_condition == RFM69_RX && this->payloadLen > 0) {
-        rfm69_stby(); // enables interrupts
+        setMode(RFM69_STBY); // enables interrupts
         return true;
     }
 
-    if(rfm69_read(REGIRQFLAGS1) & RFIRQFLAGS1_TIMEOUT) {
-        rfm69_write(REGPACKETCONFIG2, (rfm69_read(REGPACKETCONFIG2) & 0xfb) | PACKET2_RXRESTART);
+    if(rfm69_read(REG_IRQFLAGS1) & RF_IRQFLAGS1_TIMEOUT) {
+        rfm69_write(REG_PACKETCONFIG2, (rfm69_read(REG_PACKETCONFIG2) & 0xfb) | RF_PACKET2_RXRESTART);
     }
     else if (this->rfm69_condition == RFM69_RX) {
         return false;
@@ -435,228 +354,15 @@ bool RFM69HCW::rfm69_receiveDone(void) {
     return false;
 }
 
-/** 
-    @function
-    Start packet transmission. This function assumes that radiomodule is in receive, sleep or standby mode. Also do not forget to 
-    switch the transmitter off when package is already transmitted (interrupts will do that).
-    @param packet_size_loc - size of the packet
-    @param address - destination address (use broadcast address 0xff if you do not know any)
-    @return negative value if something wrong (package is too big, or SPI doesn't work), and return 0 if all is well
-*/
-int RFM69HCW::rfm69_transmit_start(uint8_t packet_size_loc, uint8_t address)
-{
-    int i;
-
-    packet_size = packet_size_loc;
-    if(packet_size > RFM69_BUFFER_SIZE) return -1;                          // check size of the package
-    
-    switch(this->rfm69_condition)
-    {
-        case RFM69STATE::RFM69_SPI_FAILED :
-            return -1;
-        case RFM69STATE::RFM69_SLEEP :
-            rfm69_clear_fifo();
-            break;
-        case RFM69STATE::RFM69_STBY :
-            rfm69_clear_fifo();
-            break;
-        case RFM69STATE::RFM69_RX :
-            break;
-        case RFM69STATE::RFM69_TX :
-            return -1;
-            break;
-        default:
-            break;
-    }
-    
-    rfm69_condition = RFM69_TX;
-    rfm69_write(REGOPMODE, REGOPMODE_DEF | TX_MODE);                        // makes transmitter on
-
-    rfm69_write(REGFIFO, packet_size+1);                                    // transmit the packet size into FIFO
-    rfm69_write(REGFIFO, address);                                          // transmit address into FIFO
-    for(i=0 ; i<packet_size ; ++i)  rfm69_write(REGFIFO, packet_buffer[i]); // transmit packet payload into FIFO
-
-    return 0;
-}
-
-/** 
-    @function
-    Switch radiomodule into receiver mode.
-*/
-void RFM69HCW::rfm69_receive_start(void)
-{
-    rfm69_condition = RFM69_RX;
-    rfm69_write(REGOPMODE, REGOPMODE_DEF | RX_MODE);
-}
-
-/** 
-    @function
-    This function reads received packet into the @ref packet_buffer
-    @return size of the received packet, and if size of the received package exceeded the buffer size, return -1
-*/
-int RFM69HCW::rfm69_receive_small_packet(void)
-{
-    unsigned int timeout = 10000;
-    /* receive data until timeout or valid data */
-    while(1){
-        if (rfm69_read(REGIRQFLAGS2) & PAYLOADREADY){
-            rfm69_write(REGPACKETCONFIG2, (rfm69_read(REGPACKETCONFIG2) &
-                0xFB) | RESTARTRX); // avoid RX deadlocks
-        }
-        setMode(RX_MODE);
-
-        // Receive Data until timeout (aprox 2s)
-        while((rfm69_read(REGIRQFLAGS2) & PAYLOADREADY) == 0) {
-            timeout--;
-            if(timeout == 0) {
-                setMode(STBY_MODE);
-                return -2;
-            }
-        }
-
-        packet_size = rfm69_read(REGFIFO);   // read the packet size
-        if(packet_size > 63) return -1;    // check size of the package
-
-        rfm69_read(REGFIFO);    // drop address
-        --packet_size;
-
-        int i;
-        // read package from FIFO
-        for(i=0 ; i<packet_size ; ++i) packet_buffer[i] = rfm69_read(REGFIFO);  
-        rfm69_clear_fifo();
-
-        return packet_size;
-    }
-}
-
 void RFM69HCW::rfm69_setHighPower(int onOff) {
     if(onOff) {
-        rfm69_write(REGOCP, RF_OCP_OFF);
-        rfm69_write(REGPALEVEL, (rfm69_read(REGPALEVEL) & 0x1f) | RF_PALEVEL_PA1_ON | RF_PALEVEL_PA2_ON);
+        rfm69_write(REG_OCP, RF_OCP_OFF);
+        rfm69_write(REG_PALEVEL, (rfm69_read(REG_PALEVEL) & 0x1f) | RF_PALEVEL_PA1_ON | RF_PALEVEL_PA2_ON);
     }
     else {
-        rfm69_write(REGOCP, RF_OCP_ON);
-        rfm69_write(REGPALEVEL, RF_PALEVEL_PA0_ON | RF_PALEVEL_PA1_OFF | RF_PALEVEL_PA2_OFF | MAX_POWER_LEVEL);
+        rfm69_write(REG_OCP, RF_OCP_ON);
+        rfm69_write(REG_PALEVEL, RF_PALEVEL_PA0_ON | RF_PALEVEL_PA1_OFF | RF_PALEVEL_PA2_OFF | MAX_POWER_LEVEL);
     }
-}
-
-/**
-    @function
-    Switch radiomodule into sleep mode.
-*/
-void RFM69HCW::rfm69_sleep(void)
-{
-    rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | SLEEP_MODE);
-    this->rfm69_condition = RFM69_SLEEP;
-}
-
-/**
-    @function
-    Switch radiomodule into standby mode.
-*/
-void RFM69HCW::rfm69_stby(void)
-{
-    rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | STBY_MODE);
-    this->rfm69_condition = RFM69_STBY;
-}
-
-/**
-    @function
-    Clear FIFO of radiomodule.
-*/
-void RFM69HCW::rfm69_clear_fifo(void)
-{
-    int i;
-    for(i=0 ; i<RFM69_BUFFER_SIZE ; ++i)   rfm69_read(REGFIFO);     // read every register one by one
-    //rfm69_write(REGIRQFLAGS2, 1<<FIFOOVERRUN);                      // clear flag if overrun
-}
-
-/**
-    @function
-    External interrupt handler. It is called after radiomodule has transmitted
-    or received the packet.
-*/
-void RFM69HCW::EXTI2_IRQHandler(void)
-{
-    int tmp;
-
-    switch(this->rfm69_condition)
-    {
-        case RFM69_SLEEP :
-            rfm69_sleep();
-            break;
-        case RFM69_STBY :
-            rfm69_stby();
-            break;
-        case RFM69_RX :
-            if(rfm69_read(REGIRQFLAGS2) & (1<<PAYLOADREADY))
-            {
-                tmp = rfm69_receive_small_packet();
-                rfm69_stby();
-
-                if(tmp) rfm69_condition = RFM69_NEW_PACK;
-                else    rfm69_receive_start();
-            }
-            break;
-        case RFM69_TX :
-            if(rfm69_read(REGIRQFLAGS2) & (1<<PACKETSENT))
-            {
-                rfm69_receive_start();
-            }
-            break;
-        default:
-            break;
-    }
-    //EXTI_ClearITPendingBit(CRCOK_PKSent_Line);
-}
-
-/**
-    @function
-    External interrupt handler. It is called after radiomodule FIFO threshold
-    level has been exceeded. This interrupt is useful for transmitting and
-    receiving packets bigger than 64 bytes. And it is not used in this firmware.
-*/
-void RFM69HCW::EXTI1_IRQHandler(void)
-{
-    switch(rfm69_condition)
-    {
-        case RFM69_SLEEP :
-            break;
-        case RFM69_STBY :
-            break;
-        case RFM69_RX :
-            break;
-        case RFM69_TX :
-            break;
-        default:
-            break;
-    }
-    //EXTI_ClearITPendingBit(FifoLevel_Line);
-}
-
-/**
-    @function
-    External interrupt handler. It is called after rerceived signal has
-    exceeded FIFO threshold. And it is not used at that moment.
-*/
-void RFM69HCW::EXTI0_IRQHandler(void)
-{
-    switch(rfm69_condition)
-    {
-        case RFM69_SLEEP :
-            rfm69_sleep();
-            break;
-        case RFM69_STBY :
-            rfm69_stby();
-            break;
-        case RFM69_RX :
-            break;
-        case RFM69_TX :
-            break;
-        default:
-            break;
-    }
-    //EXTI_ClearITPendingBit(SyncAddr_Line);
 }
 
 /**

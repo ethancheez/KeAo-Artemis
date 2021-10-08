@@ -1,32 +1,3 @@
-/********************************************************************
-* Copyright (C) 2015 by Interstel Technologies, Inc.
-*   and Hawaii Space Flight Laboratory.
-*
-* This file is part of the COSMOS/core that is the central
-* module for COSMOS. For more information on COSMOS go to
-* <http://cosmos-project.com>
-*
-* The COSMOS/core software is licenced under the
-* GNU Lesser General Public License (LGPL) version 3 licence.
-*
-* You should have received a copy of the
-* GNU Lesser General Public License
-* If not, go to <http://www.gnu.org/licenses/>
-*
-* COSMOS/core is free software: you can redistribute it and/or
-* modify it under the terms of the GNU Lesser General Public License
-* as published by the Free Software Foundation, either version 3 of
-* the License, or (at your option) any later version.
-*
-* COSMOS/core is distributed in the hope that it will be useful, but
-* WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* Lesser General Public License for more details.
-*
-* Refer to the "licences" folder for further information on the
-* condititons and terms to use this software.
-********************************************************************/
-
 #include "agent/agentclass.h"
 #include "device/rfm69/rfm69.h"
 #include "device/bus/SPIDevice.h"
@@ -35,19 +6,25 @@
 #define OTHERNODE 2
 #define NETWORK 1
 
+// Use /dev/spidev1.1
+#define SPI_BUS     1
+#define SPI_CHANNEL 1
+
 #define MAXBUFFERSIZE 2560
 
 using namespace std;
 using namespace cubesat;
 
-string node_name = "obcradio"; // default node name
-string other_node = "test2";
 string agent_name = "radio2";
 
-uint8_t spi_bus = 1; // default SPI config to /dev/spidev1.0
-uint8_t dev_addr = 0;
+string node_name;
+
+uint8_t spi_bus = SPI_BUS;
+uint8_t spi_channel = SPI_CHANNEL;
 SPIDevice::SPIMODE spi_mode = SPIDevice::MODE3; // default SPI mode
-uint8_t networkID = 1;
+
+uint8_t freqBand = RF69_915MHZ; // default Frequency of Radio Module
+uint8_t networkID = NETWORK; // default network ID
 
 Agent *agent;
 RFM69HCW *rfm69;
@@ -64,7 +41,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    rfm69 = new RFM69HCW(spi_bus, dev_addr, spi_mode);
+    rfm69 = new RFM69HCW(spi_bus, spi_channel, spi_mode, freqBand, networkID);
     rfm69->rfm69_setHighPower(1);   // Make sure to do this for RFM69HCW (anything with "H")
 
     while(agent->running()) {
@@ -85,13 +62,12 @@ int main(int argc, char *argv[])
 
 int check_input(int argc, char *argv[]) {
     switch (argc) {
-    case 3:
+    case 2:
         node_name = argv[1];
-        networkID = stoi(argv[2]);
         break;
-    case 6:
+    case 5:
         spi_bus = stoi(argv[1]);
-        dev_addr = stoi(argv[2]);
+        spi_channel = stoi(argv[2]);
         switch(stoi(argv[3])) {
         case 0:
             spi_mode = SPIDevice::MODE0;
@@ -107,7 +83,6 @@ int check_input(int argc, char *argv[]) {
             break;
         }
         node_name = argv[4];
-        networkID = stoi(argv[5]);
         break;
     default:
         print_usage();
@@ -118,9 +93,9 @@ int check_input(int argc, char *argv[]) {
 }
 
 void print_usage() {
-    printf("    Usage 1: agent_radio2 {nodename} {Network ID} \n");
-    printf("        - This will default the serial interface to spidev1.0 and MODE3 \n\n");
-    printf("    Usage 2: agent_radio2 {SPI Bus} {SPI Channel} {SPI Mode} {nodename} {Network ID} \n");
+    printf("    Usage 1: agent_radio2 {nodename} \n\n");
+    printf("    Usage 2: agent_radio2 {SPI Bus} {SPI Channel} {SPI Mode} {nodename} \n");
+    printf("        Used for Debugging Purposes \n");
     printf("        - Possible SPI Busses:      0 1 \n");
     printf("        - Possible SPI Channels:    0 1 \n");
     printf("        - Possible SPI Modes:       0 1 2 3 \n");

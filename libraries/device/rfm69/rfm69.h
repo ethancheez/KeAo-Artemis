@@ -208,6 +208,15 @@
 
 /// @}
 /*****************************************************************************/
+
+// available frequency bands
+#define RF69_315MHZ            31 // non trivial values to avoid misconfiguration
+#define RF69_433MHZ            43
+#define RF69_868MHZ            86
+#define RF69_915MHZ            91
+
+/*****************************************************************************/
+
 using namespace exploringBB;
 
 namespace cubesat{
@@ -219,7 +228,8 @@ enum RFM69STATE{
     RFM69_STBY,             ///< radiomodule is in standby mode
     RFM69_RX,               ///< receiver is on (radiomodule waits for the packet)
     RFM69_TX,               ///< transmitter is on (radiomodule transmits data)
-    RFM69_NEW_PACK          ///< the packet received successfully, radiomodule is in sleep mode
+    RFM69_NEW_PACK,         ///< the packet received successfully, radiomodule is in sleep mode
+    RFM69_SYNTH
 };
 
 class RFM69HCW{
@@ -227,7 +237,7 @@ class RFM69HCW{
 public:
 
     /** @name                   Register access functions                       **/
-    RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode); /* constructor */
+    RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode, uint8_t freqBand, uint8_t networkID); /* constructor */
     void rfm69_write(uint8_t address, uint8_t data);
     uint8_t rfm69_read(uint8_t address);
     void rfm69_write_burst(uint8_t address, uint8_t* data, uint8_t ndata);
@@ -235,7 +245,7 @@ public:
 
     /** @name                   Initialization functions                        **/
     void rfm69_mcu_init(uint8_t adress, uint8_t device, SPIDevice::SPIMODE spi_mode); /* sets up SPI connection */
-    int rfm69_init(void); /* connects to radio and sets initial state */
+    int rfm69_init(uint8_t freqBand, uint8_t networkID); /* connects to radio and sets initial state */
 
     /** @name       Functions for transmitting or receiving packets             **/
     int rfm69_transmit_start(uint8_t packet_size, uint8_t address);
@@ -254,14 +264,8 @@ public:
     void rfm69_sendACK(const void* buffer, uint8_t bufferSize);
 
     /** @name               Radiomodule management functions                    **/
-    void rfm69_sleep(void);
-    void rfm69_stby(void);
-    void rfm69_clear_fifo(void);
-    void EXTI0_IRQHandler(void);
-    void EXTI1_IRQHandler(void);
-    void EXTI2_IRQHandler(void);
     void getData( char *data);
-    void setMode(uint8_t mode);
+    void setMode(RFM69STATE mode);
     int getRSSI(int);
     void rfm69_setHighPower(int);
 
