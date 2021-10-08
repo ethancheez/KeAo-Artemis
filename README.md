@@ -27,20 +27,95 @@ uboot_overlay_addr4=/lib/firmware/BB-SPIDEV1-00A0.dtbo
 	- P9_29	=>	SPI1_D0
 	- P9_30	=>	SPI1_D1
 	- P9_31	=>	SPI1_SCLK
-	- P9_42	=>	SPI1_CS1 (does not start on boot)
 
 3. In order to use the SPI1 pins, the HDMI port MUST be disabled. Scroll down the same file and find the line below. Uncomment it by removing the `#`.
 ```
 #disable_uboot_overlay_video=1
 ```
-4. Save the file and exit.
-5. Reboot the Beaglebone by typing the following command:
+Save the file and exit.
+
+4. The firmware to enable SPI1 pins on boot does not include P9_42. We need to create a service to configure this pin upon boot. Go back to your home directory.
 ```
-$ sudo reboot
+$ cd
 ```
-6. NOTE! P9_42 is not the standard CS pin for SPI1. Therefore it has to be configured manually upon every boot of the BBB. Type the following command to set up P9_42 for SPI1_CS1.
+You can create a new folder to hold your scripts.
 ```
-$ sudo config-pin P9_42 spi_cs
+$ mkdir scripts
+```
+Navigate to that folder and create a new file called `init_spi.sh` and copy/paste the following into the file:
+```
+#!/bin/sh -e
+
+# Configure P9_42 SPI1 Pin
+config-pin P9_42 spi_cs
+
+exit 0
+```
+Save and exit.
+
+5. Make sure that the shell script is executable by typing the following command:
+```
+$ sudo chmod +x init_spi.sh
+```
+
+6. Next, we need to setup the CAN interfaces so the BBB will configure across power cycles. Open the `/etc/network/interfaces` file:
+```
+$ sudo nano /etc/network/interfaces
+```
+Copy/paste the following to the bottom of the file:
+```
+auto can0
+iface can0 inet manual
+pre-up /sbin/ip link set $IFACE type can bitrate 500000 restart-ms 10 listen-only on
+pre-up /sbin/ip link set $IFACE txqueuelen 1000
+up /sbin/ip link set up $IFACE
+down /sbin/ip link set down $IFACE
+
+auto can1
+iface can1 inet manual
+pre-up /sbin/ip link set $IFACE type can bitrate 500000 restart-ms 10
+pre-up /sbin/ip link set $IFACE txqueuelen 1000
+up /sbin/ip link set up $IFACE
+down /sbin/ip link set down $IFACE
+```
+Save the file and exit.
+
+7. Create a service to be run by systemd on startup. Navigate to the `etc/systemd/system` folder. Create a new file:
+```
+$ sudo touch init_spi.service
+```
+Copy/paste the following into the file (you may need to use `sudo` to edit the file):
+```
+[Unit]
+Description=Setup for BBB SPI P9_42 pin
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /home/debian/scripts/init_spi.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+Save the file and exit.
+
+8. Issue the following commands to start the service:
+```
+$ sudo systemctl start init_spi.service
+$ sudo systemctl enable init_spi.service
+```
+Verify that the service was started:
+```
+$ sudo systemctl status init_spi.service
+```
+
+9. Reboot the Beaglebone by typing the following command:
+```
+$ sudo reboot now
+```
+
+10. To verify that the SPI pin was configured properly, enter the following command:
+```
+$ config-pin -q P9_42
 ```
 
 ## Beaglebone SPI Configurations
