@@ -31,18 +31,23 @@
 #include "device/rfm69/rfm69.h"
 #include "device/bus/SPIDevice.h"
 
+#define NODE 1
+#define OTHERNODE 2
+#define NETWORK 1
+
 #define MAXBUFFERSIZE 2560
 
 using namespace std;
 using namespace cubesat;
 
 string node_name = "obcradio"; // default node name
+string other_node = "test2";
 string agent_name = "radio2";
 
 uint8_t spi_bus = 1; // default SPI config to /dev/spidev1.0
 uint8_t dev_addr = 0;
 SPIDevice::SPIMODE spi_mode = SPIDevice::MODE3; // default SPI mode
-uint8_t networkID = 1;  // default network ID
+uint8_t networkID = 1;
 
 Agent *agent;
 RFM69HCW *rfm69;
@@ -63,8 +68,15 @@ int main(int argc, char *argv[])
     rfm69->rfm69_setHighPower(1);   // Make sure to do this for RFM69HCW (anything with "H")
 
     while(agent->running()) {
-        //read_register = rfm69->rfm69_read(dev_addr);
-        break;
+        string msg = "TEST MESSAGE";
+        cout << "TX >> " << msg << endl;
+
+        if(rfm69->rfm69_sendWithRetry((uint8_t) OTHERNODE, msg, (uint8_t) msg.length(), (uint8_t) 2, (uint8_t) 10)) {
+            cout << "ACK RECEIVED" << endl;
+        } else {
+            cout << "NO ACK RECEIVED" << endl;
+            break;
+        }
     }
 
     delete rfm69;

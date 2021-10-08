@@ -239,7 +239,15 @@
 #define CLKOUT_RC   0x06    // output frequency of the RC oscillator (automatically enabled)
 #define CLKOUT_OFF  0x07    // output frequency is off
 
-#define REGIRQFLAGS1        0x27
+#define REGIRQFLAGS1            0x27
+#define RFIRQFLAGS1_MODEREADY   0x80
+#define RFIRQFLAGS1_RXREADY     0x40
+#define RFIRQFLAGS1_TXREADY     0x20
+#define RFIRQFLAGS1_PLLLOCK     0x10
+#define RFIRQFLAGS1_RSSI        0x08
+#define RFIRQFLAGS1_TIMEOUT     0x04
+#define RFIRQFLAGS1_AUTOMODE    0x02
+#define RFIRQFLAGS1_SYNCADDRESSMATCH    0x01
 
 #define MODEREADY       7
 #define RXREADY         6   // Set in Rx mode, after RSSI, AGC and AFC. Cleared when leaving Rx.
@@ -251,7 +259,16 @@
 #define SYNCADDRMATCH   0   // Set when Sync and Address (if enabled) are detected. Cleared when leaving Rx or FIFO is emptied.
 
 #define REGIRQFLAGS2    0x28
+#define RFIRQFLAGS2_FIFOFULL             0x80
+#define RFIRQFLAGS2_FIFONOTEMPTY         0x40
+#define RFIRQFLAGS2_FIFOLEVEL            0x20
+#define RFIRQFLAGS2_FIFOOVERRUN          0x10
+#define RFIRQFLAGS2_PACKETSENT           0x08
+#define RFIRQFLAGS2_PAYLOADREADY         0x04
+#define RFIRQFLAGS2_CRCOK                0x02
+#define RFIRQFLAGS2_LOWBAT               0x0
 
+#define REGFIFO         0x00
 #define FIFOISFULL      0x80    // Set when FIFO is full (i.e. contains 66 bytes), else cleared.
 #define FIFONOTEMPTY    0x40    // Set when FIFO contains at least one byte, else cleared.
 #define FIFOLEVEL       0x20    // Set when the number of bytes in the FIFO strictly exceeds FifoThreshold, else cleared.

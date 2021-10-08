@@ -24,6 +24,7 @@
 */
 #include <iostream>
 #include <unistd.h>
+#include <chrono>
 #include "support/configCosmos.h"
 #include "device/rfm69/rfm69.h"
 #include "device/gpio/GPIO.h"
@@ -38,91 +39,20 @@ namespace cubesat {
     Constructor
 */
 RFM69HCW::RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode){
+    this->dataLen = 0;
+    this->SENDERID = 0;
+    this->targetID = 0;
+    this->payloadLen = 0;
+    this->ACK_REQUESTED = 0;
+    this->ACK_RECEIVED = 0;
+    this->rssi = 0;
+
     /* call rfm69_init() */
     rfm69_mcu_init(address, device, spi_mode);
     rfm69_init();
-}
 
-/** 
-    @function
-    External interrupt handler. It is called after radiomodule has transmitted
-    or received the packet.
-*/
-void RFM69HCW::EXTI2_IRQHandler(void)
-{
-    int tmp;
-
-    switch(rfm69_condition)
-    {
-        case RFM69_SLEEP :
-            rfm69_sleep();
-            break;
-        case RFM69_STBY :
-            rfm69_stby();
-            break;
-        case RFM69_RX :
-            if(rfm69_read(REGIRQFLAGS2) & (1<<PAYLOADREADY))
-            {
-                tmp = rfm69_receive_small_packet();
-                rfm69_stby();
-
-                if(tmp) rfm69_condition = RFM69_NEW_PACK;
-                else    rfm69_receive_start();
-            }
-            break;
-        case RFM69_TX :
-            if(rfm69_read(REGIRQFLAGS2) & (1<<PACKETSENT))
-            {
-                rfm69_receive_start();
-            }
-            break;
-    }
-    //EXTI_ClearITPendingBit(CRCOK_PKSent_Line);
-}
-
-/** 
-    @function
-    External interrupt handler. It is called after radiomodule FIFO threshold 
-    level has been exceeded. This interrupt is useful for transmitting and 
-    receiving packets bigger than 64 bytes. And it is not used in this firmware.
-*/
-void RFM69HCW::EXTI1_IRQHandler(void)
-{
-    switch(rfm69_condition)
-    {
-        case RFM69_SLEEP :
-            break;
-        case RFM69_STBY :
-            break;
-        case RFM69_RX :
-            break;
-        case RFM69_TX :
-            break;
-    }
-    //EXTI_ClearITPendingBit(FifoLevel_Line);
-}
-
-/** 
-    @function
-    External interrupt handler. It is called after rerceived signal has 
-    exceeded FIFO threshold. And it is not used at that moment.
-*/
-void RFM69HCW::EXTI0_IRQHandler(void)
-{
-    switch(rfm69_condition)
-    {
-        case RFM69_SLEEP :
-            rfm69_sleep();
-            break;
-        case RFM69_STBY :
-            rfm69_stby();
-            break;
-        case RFM69_RX :
-            break;
-        case RFM69_TX :
-            break;
-    }
-    //EXTI_ClearITPendingBit(SyncAddr_Line);
+    this->_address = 1;
+    rfm69_stby();
 }
 
 /**
@@ -146,24 +76,35 @@ void RFM69HCW::getData( char *data){
  */
 void RFM69HCW::setMode(uint8_t mode) {
 
+  if(this->rfm69_condition == mode)
+      return;
+
   switch (mode) {
     case TX_MODE:
       rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | TX_MODE);
+      this->rfm69_condition = RFM69_TX;
       break;
     case RX_MODE:
       rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | RX_MODE);
+      this->rfm69_condition = RFM69_RX;
       break;
     case FS_MODE:
       rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | FS_MODE);
+      this->rfm69_condition = RFM69_NEW_PACK;
       break;
     case STBY_MODE:
       rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | STBY_MODE);
+      this->rfm69_condition = RFM69_STBY;
       break;
     case SLEEP_MODE:
       rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | SLEEP_MODE);
+      this->rfm69_condition = RFM69_SLEEP;
       break;
-    default: return;
+    default:
+      break;
     }
+
+  while(this->rfm69_condition == RFM69_SLEEP && (rfm69_read(REGIRQFLAGS1) & RFIRQFLAGS1_MODEREADY) == 0x00);
 }
   
 
@@ -197,7 +138,7 @@ uint8_t RFM69HCW::rfm69_read(uint8_t address)
     uint8_t data = 0x00;
 
     data =  this->spi->readRegister( address & 0x7f );
-	//cout << "The value that was received is: " << data << endl;
+    //cout << "The value that was received is: " << data << endl;
 	return data;
 }
 
@@ -222,8 +163,6 @@ void RFM69HCW::rfm69_mcu_init(uint8_t address, uint8_t device, SPIDevice::SPIMOD
     @return 0 if initialisation completed successfully, and -1 otherwise
 */
 int RFM69HCW::rfm69_init(){
-    int j;
-
     //this->spi->debugDumpRegisters();
 
     // Reset radio
@@ -288,8 +227,10 @@ int RFM69HCW::rfm69_init(){
 
 //    rfm69_write(REGAFCFEI, REGAFCFEI_DEF);
 
-    rfm69_write(REGDIOMAPPING1, REGDIOMAPPING1_DEF);
+    //rfm69_write(REGDIOMAPPING1, REGDIOMAPPING1_DEF);
  //   rfm69_write(REGDIOMAPPING2, REGDIOMAPPING2_DEF);
+
+    rfm69_write(REGIRQFLAGS2, RFIRQFLAGS2_FIFOOVERRUN);
 
     rfm69_write(REGRSSITHRESH, 220);
     rfm69_write(REGFIFOTHRES, FIFOTHRESH_TXSTART_FIFONOTEMPTY | FIFOTHRESH_VALUE);
@@ -303,9 +244,9 @@ int RFM69HCW::rfm69_init(){
 
     rfm69_write(REGPACKETCONFIG1, REGPACKETCONFIG1_DEF);
     rfm69_write(REGPAYLOADLENGTH, REGPAYLOADLENGTH_DEF);
-    rfm69_write(REGNODEADRS, REGNODEADRS_DEF);
-    rfm69_write(REGBROADCASTADRS, REGBROADCASTADRS_DEF);
-    rfm69_write(REGAUTOMODES, REGAUTOMODES_DEF);
+    //rfm69_write(REGNODEADRS, REGNODEADRS_DEF);
+    //rfm69_write(REGBROADCASTADRS, REGBROADCASTADRS_DEF);
+    //rfm69_write(REGAUTOMODES, REGAUTOMODES_DEF);
 
     rfm69_write(REGPACKETCONFIG2, PACKET2_RXRESTARTDELAY_2BITS | PACKET2_AUTORXRESTART_ON | PACKET2_AES_OFF);
 
@@ -328,14 +269,18 @@ int RFM69HCW::rfm69_init(){
 
     rfm69_write(REGTESTDAGC, DAGC_IMPROVED_LOWBETA0);
 
-    rfm69_write(REGIRQFLAGS2, 1<<FIFOOVERRUN);
-    this->spi->debugDumpRegisters();
+    rfm69_write(255, 0);
+
+    //this->spi->debugDumpRegisters();
 
     rfm69_setHighPower(1);
 
-    /* TODO: remove this busy waiting. Replace with call to sleep */
-    for (j=0 ; j<99999 ; ++j);
-    rfm69_receive_start();
+    COSMOS_SLEEP(1);
+    //rfm69_receive_start();
+
+    rfm69_stby();
+    while ((rfm69_read(REGIRQFLAGS1) & RFIRQFLAGS1_MODEREADY) == 0x00);
+
     // SPI check
     int ret = rfm69_read(REGRXBW);
     if ( ret != (RXBW_DCCFREQ_010 | RXBW_MANT_16 | RXBW_EXP_2) ) {
@@ -364,6 +309,132 @@ int RFM69HCW::getRSSI(int forceTrigger){
 
 }
 
+bool RFM69HCW::rfm69_sendWithRetry(uint8_t toAddress, std::string buffer, uint8_t bufferSize, uint8_t retries, uint8_t retryWaitTime) {
+    for(uint8_t attempt = 1; attempt <= retries; attempt++) {
+        cout << "ACK ATTEMPT #" << (int)attempt << endl;
+        rfm69_send(toAddress, buffer, bufferSize, true);
+
+        auto start = std::chrono::steady_clock::now();
+        auto end = std::chrono::steady_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end - start;
+        while( elapsed_seconds.count() < retryWaitTime) {
+            if(rfm69_ACKReceived(toAddress))
+                return true;
+            end = std::chrono::steady_clock::now();
+            elapsed_seconds = end - start;
+        }
+    }
+    return false;
+}
+
+bool RFM69HCW::rfm69_canSend(void) {
+    if(this->rfm69_condition == RFM69_STBY) {
+        rfm69_receiveBegin();
+        return true;
+    }
+    if(this->rfm69_condition == RFM69_RX && this->payloadLen == 0 && getRSSI(0) < CSMA_LIMIT) {
+        rfm69_stby();
+        return true;
+    }
+    //cout << "CANNOT SEND" << endl;
+    return false;
+}
+
+void RFM69HCW::rfm69_send(uint8_t toAddress, std::string buffer, uint8_t bufferSize, bool requestACK) {
+    rfm69_write(REGPACKETCONFIG2, (rfm69_read(REGPACKETCONFIG2) & 0xfb) | PACKET2_RXRESTART);
+
+    auto start = std::chrono::steady_clock::now();
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end - start;
+    while(!rfm69_canSend() && elapsed_seconds.count() < RF69_CSMA_LIMIT_S) {
+        rfm69_receiveDone();
+        end = std::chrono::steady_clock::now();
+        elapsed_seconds = end - start;
+    }
+
+    rfm69_sendFrame(toAddress, buffer, bufferSize, requestACK, false);
+    //cout << "test" << endl;
+}
+
+void RFM69HCW::rfm69_sendFrame(uint8_t toAddress, std::string buffer, uint8_t bufferSize, bool requestACK, bool sendACK) {
+    rfm69_stby(); // turn off receiver to prevent reception while filling fifo
+
+    while ((rfm69_read(REGIRQFLAGS1) & RFIRQFLAGS1_MODEREADY) == 0x00) { // wait for ModeReady
+        //cout << "READ1: " << rfm69_read(REGIRQFLAGS1) << "   result = " << (rfm69_read(REGIRQFLAGS1) & RFIRQFLAGS1_MODEREADY) << endl;
+    }
+
+    //rfm69_write(REGDIOMAPPING1, DIO0MAP0); // DIO0 is "Packet Sent"
+    if (bufferSize > RFM69_BUFFER_SIZE) bufferSize = RFM69_BUFFER_SIZE;
+
+    // control byte
+    uint8_t CTLbyte = 0x00;
+    if (sendACK)
+        CTLbyte = RFM69_CTL_SENDACK;
+    else if (requestACK)
+        CTLbyte = RFM69_CTL_REQACK;
+
+    // write to FIFO
+    this->spi->write(0x80 | REGFIFO);
+    this->spi->write(bufferSize + 3);
+    this->spi->write(toAddress);
+    this->spi->write(this->_address);
+    this->spi->write(CTLbyte);
+
+    for(uint8_t i = 0; i < bufferSize; i++) {
+        this->spi->write(buffer[i]);
+    }
+
+    // no need to wait for transmit mode to be ready since its handled by the radio
+    setMode(TX_MODE);
+    //while (RFM69_ReadDIO0Pin()) == 0 && !Timeout_IsTimeout1()); // wait for DIO0 to turn HIGH signalling transmission finish
+    /*
+    while( (rfm69_read(REGIRQFLAGS2) & RFIRQFLAGS2_PACKETSENT) == 0x00) { // wait for ModeReady
+        //cout << "READ2: " << rfm69_read(REGIRQFLAGS2) << "   result = " << (rfm69_read(REGIRQFLAGS2) & RFIRQFLAGS2_PACKETSENT) << endl;
+    }*/
+    rfm69_stby();
+}
+
+bool RFM69HCW::rfm69_ACKReceived(uint8_t fromNodeID) {
+    if (rfm69_receiveDone())
+        return (this->SENDERID == fromNodeID || fromNodeID == RF69_BROADCAST_ADDR) && ACK_RECEIVED;
+    return false;
+}
+
+void RFM69HCW::rfm69_receiveBegin(void) {
+    //cout << "receiveBegin" << endl;
+    this->dataLen = 0;
+    this->SENDERID = 0;
+    this->targetID = 0;
+    this->payloadLen = 0;
+    this->ACK_RECEIVED = 0;
+    this->ACK_REQUESTED = 0;
+    this->rssi = 0;
+
+    if(rfm69_read(REGIRQFLAGS2) & RFIRQFLAGS2_PAYLOADREADY) {
+        rfm69_write(REGPACKETCONFIG2, (rfm69_read(REGPACKETCONFIG2) & 0xfb) | PACKET2_RXRESTART); // avoid RX deadlocks
+    }
+
+    //rfm69_write(REGDIOMAPPING1, DIO0MAP1); // set DIO0 to "PAYLOADREADY" in receive mode
+    setMode(RX_MODE);
+}
+
+bool RFM69HCW::rfm69_receiveDone(void) {
+    //cout << "receiveDone" << endl;
+    if (this->rfm69_condition == RFM69_RX && this->payloadLen > 0) {
+        rfm69_stby(); // enables interrupts
+        return true;
+    }
+
+    if(rfm69_read(REGIRQFLAGS1) & RFIRQFLAGS1_TIMEOUT) {
+        rfm69_write(REGPACKETCONFIG2, (rfm69_read(REGPACKETCONFIG2) & 0xfb) | PACKET2_RXRESTART);
+    }
+    else if (this->rfm69_condition == RFM69_RX) {
+        return false;
+    }
+    rfm69_receiveBegin();
+    return false;
+}
+
 /** 
     @function
     Start packet transmission. This function assumes that radiomodule is in receive, sleep or standby mode. Also do not forget to 
@@ -379,20 +450,23 @@ int RFM69HCW::rfm69_transmit_start(uint8_t packet_size_loc, uint8_t address)
     packet_size = packet_size_loc;
     if(packet_size > RFM69_BUFFER_SIZE) return -1;                          // check size of the package
     
-    switch(rfm69_condition)
+    switch(this->rfm69_condition)
     {
-        case RFM69_SPI_FAILED :
+        case RFM69STATE::RFM69_SPI_FAILED :
             return -1;
-        case RFM69_SLEEP :
+        case RFM69STATE::RFM69_SLEEP :
             rfm69_clear_fifo();
             break;
-        case RFM69_STBY :
+        case RFM69STATE::RFM69_STBY :
             rfm69_clear_fifo();
             break;
-        case RFM69_RX :
+        case RFM69STATE::RFM69_RX :
             break;
-        case RFM69_TX :
+        case RFM69STATE::RFM69_TX :
             return -1;
+            break;
+        default:
+            break;
     }
     
     rfm69_condition = RFM69_TX;
@@ -472,8 +546,8 @@ void RFM69HCW::rfm69_setHighPower(int onOff) {
 */
 void RFM69HCW::rfm69_sleep(void)
 {
-    rfm69_write(REGOPMODE, REGOPMODE_DEF | SLEEP_MODE);
-    rfm69_condition = RFM69_SLEEP;
+    rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | SLEEP_MODE);
+    this->rfm69_condition = RFM69_SLEEP;
 }
 
 /**
@@ -482,8 +556,8 @@ void RFM69HCW::rfm69_sleep(void)
 */
 void RFM69HCW::rfm69_stby(void)
 {
-    rfm69_write(REGOPMODE, REGOPMODE_DEF | STBY_MODE);
-    rfm69_condition = RFM69_STBY;
+    rfm69_write(REGOPMODE, (rfm69_read(REGOPMODE) & 0xE3) | STBY_MODE);
+    this->rfm69_condition = RFM69_STBY;
 }
 
 /**
@@ -494,7 +568,95 @@ void RFM69HCW::rfm69_clear_fifo(void)
 {
     int i;
     for(i=0 ; i<RFM69_BUFFER_SIZE ; ++i)   rfm69_read(REGFIFO);     // read every register one by one
-    rfm69_write(REGIRQFLAGS2, 1<<FIFOOVERRUN);                      // clear flag if overrun
+    //rfm69_write(REGIRQFLAGS2, 1<<FIFOOVERRUN);                      // clear flag if overrun
+}
+
+/**
+    @function
+    External interrupt handler. It is called after radiomodule has transmitted
+    or received the packet.
+*/
+void RFM69HCW::EXTI2_IRQHandler(void)
+{
+    int tmp;
+
+    switch(this->rfm69_condition)
+    {
+        case RFM69_SLEEP :
+            rfm69_sleep();
+            break;
+        case RFM69_STBY :
+            rfm69_stby();
+            break;
+        case RFM69_RX :
+            if(rfm69_read(REGIRQFLAGS2) & (1<<PAYLOADREADY))
+            {
+                tmp = rfm69_receive_small_packet();
+                rfm69_stby();
+
+                if(tmp) rfm69_condition = RFM69_NEW_PACK;
+                else    rfm69_receive_start();
+            }
+            break;
+        case RFM69_TX :
+            if(rfm69_read(REGIRQFLAGS2) & (1<<PACKETSENT))
+            {
+                rfm69_receive_start();
+            }
+            break;
+        default:
+            break;
+    }
+    //EXTI_ClearITPendingBit(CRCOK_PKSent_Line);
+}
+
+/**
+    @function
+    External interrupt handler. It is called after radiomodule FIFO threshold
+    level has been exceeded. This interrupt is useful for transmitting and
+    receiving packets bigger than 64 bytes. And it is not used in this firmware.
+*/
+void RFM69HCW::EXTI1_IRQHandler(void)
+{
+    switch(rfm69_condition)
+    {
+        case RFM69_SLEEP :
+            break;
+        case RFM69_STBY :
+            break;
+        case RFM69_RX :
+            break;
+        case RFM69_TX :
+            break;
+        default:
+            break;
+    }
+    //EXTI_ClearITPendingBit(FifoLevel_Line);
+}
+
+/**
+    @function
+    External interrupt handler. It is called after rerceived signal has
+    exceeded FIFO threshold. And it is not used at that moment.
+*/
+void RFM69HCW::EXTI0_IRQHandler(void)
+{
+    switch(rfm69_condition)
+    {
+        case RFM69_SLEEP :
+            rfm69_sleep();
+            break;
+        case RFM69_STBY :
+            rfm69_stby();
+            break;
+        case RFM69_RX :
+            break;
+        case RFM69_TX :
+            break;
+        default:
+            break;
+    }
+    //EXTI_ClearITPendingBit(SyncAddr_Line);
 }
 
 /**

@@ -87,6 +87,14 @@
 #define FSTEP               61
 #define PI                  3.14159265359
 #define RFM69_BUFFER_SIZE   61
+#define CSMA_LIMIT          -90
+#define RF69_CSMA_LIMIT_S   1
+#define RF69_CSMA_LIMIT_MS  1000
+#define RF69_BROADCAST_ADDR 255
+
+#define RFM69_CTL_SENDACK   0x80
+#define RFM69_CTL_REQACK    0x40
+
 /*****************************************************************************/
 
 #include "device/rfm69/rfm69_table.h"
@@ -235,6 +243,16 @@ public:
     void rfm69_receive_start(void);
     int rfm69_receive_small_packet(void);
 
+    bool rfm69_canSend(void);
+    void rfm69_send(uint8_t toAddress, std::string buffer, uint8_t bufferSize, bool requestACK);
+    bool rfm69_sendWithRetry(uint8_t toAddress, std::string buffer, uint8_t bufferSize, uint8_t retries, uint8_t retryWaitTime); // 40ms roundtrip req for 61byte packets
+    void rfm69_sendFrame(uint8_t toAddress, std::string buffer, uint8_t bufferSize, bool requestACK, bool sendACK);
+    bool rfm69_ACKReceived(uint8_t fromNodeID);
+    void rfm69_receiveBegin(void);
+    bool rfm69_receiveDone(void);
+    bool rfm69_ACKRequested(void);
+    void rfm69_sendACK(const void* buffer, uint8_t bufferSize);
+
     /** @name               Radiomodule management functions                    **/
     void rfm69_sleep(void);
     void rfm69_stby(void);
@@ -246,6 +264,8 @@ public:
     void setMode(uint8_t mode);
     int getRSSI(int);
     void rfm69_setHighPower(int);
+
+
     ~RFM69HCW(void);
 
 private:
@@ -254,6 +274,16 @@ private:
     uint8_t packet_buffer[RFM69_BUFFER_SIZE ];  ///< packet buffer
     uint8_t packet_size;                            ///< packet size
 
+    uint8_t payloadLen;
+    uint8_t dataLen;
+    uint8_t targetID;
+    uint8_t rssi;
+
+    uint8_t SENDERID;
+    uint8_t ACK_RECEIVED;
+    uint8_t ACK_REQUESTED;
+
+    uint8_t _address;
 };
 
 } /* cubesat namespace */
