@@ -80,7 +80,7 @@ down /sbin/ip link set down $IFACE
 ```
 Save the file and exit.
 
-7. Create a service to be run by systemd on startup. Navigate to the `etc/systemd/system` folder. Create a new file:
+7. Create a service to be run by systemd on startup. Navigate to the `/etc/systemd/system` folder. Create a new file:
 ```
 $ sudo touch init_spi.service
 ```
