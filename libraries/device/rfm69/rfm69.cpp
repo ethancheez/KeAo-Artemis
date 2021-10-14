@@ -16,12 +16,15 @@ namespace cubesat {
 */
 RFM69HCW::RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode, uint8_t freqBand, uint8_t networkID){
     this->dataLen = 0;
-    this->SENDERID = 0;
+    this->senderID = 0;
     this->targetID = 0;
     this->payloadLen = 0;
     this->ACK_REQUESTED = 0;
     this->ACK_RECEIVED = 0;
     this->rssi = 0;
+
+    this->csPin = new GPIO(CS_Pin);
+    this->resetGPIO = new GPIO(CS_Pin);
 
     /* call rfm69_init() */
     rfm69_mcu_init(address, device, spi_mode);
@@ -96,14 +99,15 @@ int RFM69HCW::rfm69_init(uint8_t freqBand, uint8_t networkID){
       };
 
     // Reset radio
-    printf("Resetting Radio . . .\n");
-    GPIO *outGPIO = new GPIO(80);
-    outGPIO->setDirection(OUTPUT);
-    outGPIO->setValue(HIGH);
-    COSMOS_SLEEP(0.1); // wait 0.1s
-    outGPIO->setValue(LOW);
-    COSMOS_SLEEP(0.1); // wait 0.1s
-    delete outGPIO;
+    cout << "Resetting Radio . . .";
+    this->resetGPIO->setDirection(OUTPUT);
+    this->resetGPIO->setValue(HIGH);
+    COSMOS_SLEEP(0.2); // wait 0.2s
+    this->resetGPIO->setValue(LOW);
+    COSMOS_SLEEP(0.2); // wait 0.2s
+    cout << " Radio RESET!" << endl;
+
+    setCSPin(HIGH);
 
     // Ensure that the radio is able to read and write through SPI
     for(int cycle = 0; rfm69_read(REG_SYNCVALUE1) != 0xaa; cycle++) {
@@ -128,10 +132,9 @@ int RFM69HCW::rfm69_init(uint8_t freqBand, uint8_t networkID){
     }
 
     rfm69_setHighPower(1);
-    COSMOS_SLEEP(1);
-
     setMode(RFM69_STBY);
-    while ((rfm69_read(REG_IRQFLAGS1) & RF_IRQFLAGS1_MODEREADY) == 0x00);
+
+    while ((rfm69_read(REG_IRQFLAGS1) & RF_IRQFLAGS1_MODEREADY) == 0x00); // wait for ModeReady
 
     // SPI check
     int ret = rfm69_read(REG_RXBW);
@@ -155,9 +158,11 @@ void RFM69HCW::setMode(RFM69STATE mode) {
   switch (mode) {
     case RFM69_TX:
       rfm69_write(REG_OPMODE, (rfm69_read(REG_OPMODE) & 0xE3) | RF_OPMODE_TRANSMITTER);
+      rfm69_setHighPowerRegs(true);
       break;
     case RFM69_RX:
       rfm69_write(REG_OPMODE, (rfm69_read(REG_OPMODE) & 0xE3) | RF_OPMODE_RECEIVER);
+      rfm69_setHighPowerRegs(false);
       break;
     case RFM69_SYNTH:
       rfm69_write(REG_OPMODE, (rfm69_read(REG_OPMODE) & 0xE3) | RF_OPMODE_SYNTHESIZER);
@@ -191,9 +196,11 @@ void RFM69HCW::rfm69_write(uint8_t address, uint8_t data)
         cerr<<"RFM69HCW::rfm69_write->SPI not set"<<endl;
         return;
     }
+    rfm69_select();
     if( this->spi->writeRegister(address | 0x80, data) < 0 ){
         cerr<<"RFM69HCW::rfm69_write->Error writing to register "<<address<<endl;
     }
+    rfm69_unselect();
 }
 
 /** 
@@ -207,8 +214,11 @@ uint8_t RFM69HCW::rfm69_read(uint8_t address)
 {
     uint8_t data = 0x00;
 
+    rfm69_select();
     data =  this->spi->readRegister( address & 0x7f );
     //cout << "The value that was received is: " << data << endl;
+
+    rfm69_unselect();
 	return data;
 }
 
@@ -228,7 +238,7 @@ int RFM69HCW::getRSSI(int forceTrigger){
 
 }
 
-bool RFM69HCW::rfm69_sendWithRetry(uint8_t toAddress, std::string buffer, uint8_t bufferSize, uint8_t retries, uint8_t retryWaitTime) {
+bool RFM69HCW::rfm69_sendWithRetry(uint8_t toAddress, string buffer, uint8_t bufferSize, uint8_t retries, uint8_t retryWaitTime) {
     for(uint8_t attempt = 1; attempt <= retries; attempt++) {
         cout << "ACK ATTEMPT #" << (int)attempt << endl;
         rfm69_send(toAddress, buffer, bufferSize, true);
@@ -236,7 +246,7 @@ bool RFM69HCW::rfm69_sendWithRetry(uint8_t toAddress, std::string buffer, uint8_
         auto start = std::chrono::steady_clock::now();
         auto end = std::chrono::steady_clock::now();
         std::chrono::duration<double> elapsed_seconds = end - start;
-        while( elapsed_seconds.count() < retryWaitTime) {
+        while( elapsed_seconds.count() < retryWaitTime ) {
             if(rfm69_ACKReceived(toAddress))
                 return true;
             end = std::chrono::steady_clock::now();
@@ -259,13 +269,13 @@ bool RFM69HCW::rfm69_canSend(void) {
     return false;
 }
 
-void RFM69HCW::rfm69_send(uint8_t toAddress, std::string buffer, uint8_t bufferSize, bool requestACK) {
+void RFM69HCW::rfm69_send(uint8_t toAddress, string buffer, uint8_t bufferSize, bool requestACK) {
     rfm69_write(REG_PACKETCONFIG2, (rfm69_read(REG_PACKETCONFIG2) & 0xfb) | RF_PACKET2_RXRESTART);
 
     auto start = std::chrono::steady_clock::now();
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
-    while(!rfm69_canSend() && elapsed_seconds.count() < RF69_CSMA_LIMIT_S) {
+    while(!rfm69_canSend() /*&& elapsed_seconds.count() < RF69_CSMA_LIMIT_S*/) {
         rfm69_receiveDone();
         end = std::chrono::steady_clock::now();
         elapsed_seconds = end - start;
@@ -275,14 +285,14 @@ void RFM69HCW::rfm69_send(uint8_t toAddress, std::string buffer, uint8_t bufferS
     //cout << "test" << endl;
 }
 
-void RFM69HCW::rfm69_sendFrame(uint8_t toAddress, std::string buffer, uint8_t bufferSize, bool requestACK, bool sendACK) {
+void RFM69HCW::rfm69_sendFrame(uint8_t toAddress, string buffer, uint8_t bufferSize, bool requestACK, bool sendACK) {
     setMode(RFM69_STBY); // turn off receiver to prevent reception while filling fifo
 
     while ((rfm69_read(REG_IRQFLAGS1) & RF_IRQFLAGS1_MODEREADY) == 0x00) { // wait for ModeReady
-        //cout << "READ1: " << rfm69_read(REGIRQFLAGS1) << "   result = " << (rfm69_read(REGIRQFLAGS1) & RFIRQFLAGS1_MODEREADY) << endl;
+        cout << "READ1: " << rfm69_read(REG_IRQFLAGS1) << "   result = " << (rfm69_read(REG_IRQFLAGS1) & RF_IRQFLAGS1_MODEREADY) << endl;
     }
 
-    //rfm69_write(REGDIOMAPPING1, DIO0MAP0); // DIO0 is "Packet Sent"
+    rfm69_write(REG_DIOMAPPING1, RF_DIOMAPPING1_DIO0_00); // DIO0 is "Packet Sent"
     if (bufferSize > RFM69_BUFFER_SIZE) bufferSize = RFM69_BUFFER_SIZE;
 
     // control byte
@@ -293,6 +303,7 @@ void RFM69HCW::rfm69_sendFrame(uint8_t toAddress, std::string buffer, uint8_t bu
         CTLbyte = RFM69_CTL_REQACK;
 
     // write to FIFO
+    rfm69_select();
     this->spi->write(0x80 | REG_FIFO);
     this->spi->write(bufferSize + 3);
     this->spi->write(toAddress);
@@ -302,27 +313,47 @@ void RFM69HCW::rfm69_sendFrame(uint8_t toAddress, std::string buffer, uint8_t bu
     for(uint8_t i = 0; i < bufferSize; i++) {
         this->spi->write(buffer[i]);
     }
+    rfm69_unselect();
 
     // no need to wait for transmit mode to be ready since its handled by the radio
     setMode(RFM69_TX);
     //while (RFM69_ReadDIO0Pin()) == 0 && !Timeout_IsTimeout1()); // wait for DIO0 to turn HIGH signalling transmission finish
-    /*
-    while( (rfm69_read(REGIRQFLAGS2) & RFIRQFLAGS2_PACKETSENT) == 0x00) { // wait for ModeReady
-        //cout << "READ2: " << rfm69_read(REGIRQFLAGS2) << "   result = " << (rfm69_read(REGIRQFLAGS2) & RFIRQFLAGS2_PACKETSENT) << endl;
-    }*/
+
+    while( (rfm69_read(REG_IRQFLAGS2) & RF_IRQFLAGS2_PACKETSENT) == 0x00) { // wait for ModeReady
+        cout << "READ2: " << rfm69_read(REG_IRQFLAGS2) << "   result = " << (rfm69_read(REG_IRQFLAGS2) & RF_IRQFLAGS2_PACKETSENT) << endl;
+    }
     setMode(RFM69_STBY);
 }
 
 bool RFM69HCW::rfm69_ACKReceived(uint8_t fromNodeID) {
     if (rfm69_receiveDone())
-        return (this->SENDERID == fromNodeID || fromNodeID == RF69_BROADCAST_ADDR) && ACK_RECEIVED;
+        return (this->senderID == fromNodeID || fromNodeID == RF69_BROADCAST_ADDR) && ACK_RECEIVED;
     return false;
+}
+
+void RFM69HCW::rfm69_sendACK(string buffer, uint8_t bufferSize) {
+    this->ACK_REQUESTED = 0;   // TWS added to make sure we don't end up in a timing race and infinite loop sending Acks
+    uint8_t sender = senderID;
+    int16_t l_rssi = rssi; // save payload received RSSI value
+    rfm69_write(REG_PACKETCONFIG2, (rfm69_read(REG_PACKETCONFIG2) & 0xFB) | RF_PACKET2_RXRESTART); // avoid RX deadlocks
+
+    auto start = std::chrono::steady_clock::now();
+    auto end = std::chrono::steady_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end - start;
+    while (!rfm69_canSend() && elapsed_seconds.count() < RF69_CSMA_LIMIT_S) {
+        rfm69_receiveDone();
+        end = std::chrono::steady_clock::now();
+        elapsed_seconds = end - start;
+    }
+    this->senderID = sender;    // TWS: Restore senderID after it gets wiped out by RFM69_receiveDone()
+    rfm69_sendFrame(sender, buffer, bufferSize, false, true);
+    this->rssi = l_rssi; // restore payload RSSI
 }
 
 void RFM69HCW::rfm69_receiveBegin(void) {
     //cout << "receiveBegin" << endl;
     this->dataLen = 0;
-    this->SENDERID = 0;
+    this->senderID = 0;
     this->targetID = 0;
     this->payloadLen = 0;
     this->ACK_RECEIVED = 0;
@@ -330,10 +361,10 @@ void RFM69HCW::rfm69_receiveBegin(void) {
     this->rssi = 0;
 
     if(rfm69_read(REG_IRQFLAGS2) & RF_IRQFLAGS2_PAYLOADREADY) {
-        rfm69_write(REG_PACKETCONFIG2, (rfm69_read(REG_PACKETCONFIG2) & 0xfb) | RF_PACKET2_RXRESTART); // avoid RX deadlocks
+        rfm69_write(REG_PACKETCONFIG2, (rfm69_read(REG_PACKETCONFIG2) & 0xFB) | RF_PACKET2_RXRESTART); // avoid RX deadlocks
     }
 
-    //rfm69_write(REGDIOMAPPING1, DIO0MAP1); // set DIO0 to "PAYLOADREADY" in receive mode
+    rfm69_write(REG_DIOMAPPING1, RF_DIOMAPPING1_DIO0_01); // set DIO0 to "PAYLOADREADY" in receive mode
     setMode(RFM69_RX);
 }
 
@@ -365,11 +396,49 @@ void RFM69HCW::rfm69_setHighPower(int onOff) {
     }
 }
 
+void RFM69HCW::rfm69_setHighPowerRegs(bool state) {
+    rfm69_write(REG_TESTPA1, state ? 0x5D : 0x55);
+    rfm69_write(REG_TESTPA2, state ? 0x7C : 0x70);
+}
+
+void RFM69HCW::setCSPin(uint8_t mode) {
+    this->csPin->setDirection(OUTPUT);
+    switch(mode) {
+    case HIGH:
+        this->csPin->setValue(HIGH);
+        break;
+    case LOW:
+        this->csPin->setValue(LOW);
+        break;
+    default:
+        break;
+    }
+    COSMOS_SLEEP(0.1);
+}
+
+// select the RFM69 transceiver (save SPI settings, set CS low)
+void RFM69HCW::rfm69_select(void)  {
+  setCSPin(LOW);
+}
+
+// unselect the RFM69 transceiver (set CS high, restore SPI settings)
+void RFM69HCW::rfm69_unselect(void) {
+  setCSPin(HIGH);
+}
+
+//put transceiver in sleep mode to save battery - to wake or resume receiving just call RFM69_receiveDone()
+void RFM69HCW::rfm69_sleep() {
+  setMode(RFM69_SLEEP);
+}
+
 /**
     @function
     Destructor
 */
 RFM69HCW::~RFM69HCW(){
+    delete this->csPin;
+    delete this->resetGPIO;
+
     this->spi->close();
     delete this->spi;
 }

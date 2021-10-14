@@ -24,6 +24,7 @@
 */ 
 
 #include "device/bus/SPIDevice.h"
+#include "device/gpio/GPIO.h"
 
 // types of modulation
 /// @cond
@@ -195,6 +196,7 @@
 
 #define NSS_Port            GPIOA
 #define NSS_Pin             GPIO_Pin_3
+#define CS_Pin              7
 
 #define EXTI_Port1          GPIO_PortSourceGPIOB
 #define EXTI_Port23         GPIO_PortSourceGPIOA
@@ -253,6 +255,8 @@ public:
     void rfm69_receive_start(void);
     int rfm69_receive_small_packet(void);
 
+    void rfm69_setHighPowerRegs(bool state);
+
     bool rfm69_canSend(void);
     void rfm69_send(uint8_t toAddress, std::string buffer, uint8_t bufferSize, bool requestACK);
     bool rfm69_sendWithRetry(uint8_t toAddress, std::string buffer, uint8_t bufferSize, uint8_t retries, uint8_t retryWaitTime); // 40ms roundtrip req for 61byte packets
@@ -261,13 +265,17 @@ public:
     void rfm69_receiveBegin(void);
     bool rfm69_receiveDone(void);
     bool rfm69_ACKRequested(void);
-    void rfm69_sendACK(const void* buffer, uint8_t bufferSize);
+    void rfm69_sendACK(string buffer, uint8_t bufferSize);
 
     /** @name               Radiomodule management functions                    **/
     void getData( char *data);
     void setMode(RFM69STATE mode);
+    void setCSPin(uint8_t mode);
+    void rfm69_select(void);
+    void rfm69_unselect(void);
     int getRSSI(int);
     void rfm69_setHighPower(int);
+    void rfm69_sleep(void);
 
 
     ~RFM69HCW(void);
@@ -275,15 +283,19 @@ public:
 private:
     RFM69STATE rfm69_condition; /* current state of radio */
     SPIDevice *spi; /* spi connection to radio */
-    uint8_t packet_buffer[RFM69_BUFFER_SIZE ];  ///< packet buffer
+
+    GPIO *csPin;
+    GPIO *resetGPIO;
+
+    uint8_t packet_buffer[RFM69_BUFFER_SIZE];  ///< packet buffer
     uint8_t packet_size;                            ///< packet size
 
     uint8_t payloadLen;
     uint8_t dataLen;
     uint8_t targetID;
+    uint8_t senderID;
     uint8_t rssi;
 
-    uint8_t SENDERID;
     uint8_t ACK_RECEIVED;
     uint8_t ACK_REQUESTED;
 
