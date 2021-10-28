@@ -197,6 +197,7 @@
 #define NSS_Port            GPIOA
 #define NSS_Pin             GPIO_Pin_3
 #define CS_Pin              7
+#define RST_Pin             80
 
 #define EXTI_Port1          GPIO_PortSourceGPIOB
 #define EXTI_Port23         GPIO_PortSourceGPIOA
@@ -239,7 +240,7 @@ class RFM69HCW{
 public:
 
     /** @name                   Register access functions                       **/
-    RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode, uint8_t freqBand, uint8_t networkID); /* constructor */
+    RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode, uint8_t freqBand, uint8_t nodeID, uint8_t networkID); /* constructor */
     void rfm69_write(uint8_t address, uint8_t data);
     uint8_t rfm69_read(uint8_t address);
     void rfm69_write_burst(uint8_t address, uint8_t* data, uint8_t ndata);
@@ -248,6 +249,7 @@ public:
     /** @name                   Initialization functions                        **/
     void rfm69_mcu_init(uint8_t adress, uint8_t device, SPIDevice::SPIMODE spi_mode); /* sets up SPI connection */
     int rfm69_init(uint8_t freqBand, uint8_t networkID); /* connects to radio and sets initial state */
+    void rfm69_encrypt(const char* key);
 
     /** @name       Functions for transmitting or receiving packets             **/
     int rfm69_transmit_start(uint8_t packet_size, uint8_t address);
@@ -280,16 +282,7 @@ public:
 
     ~RFM69HCW(void);
 
-private:
-    RFM69STATE rfm69_condition; /* current state of radio */
-    SPIDevice *spi; /* spi connection to radio */
-
-    GPIO *csPin;
-    GPIO *resetGPIO;
-
-    uint8_t packet_buffer[RFM69_BUFFER_SIZE];  ///< packet buffer
-    uint8_t packet_size;                            ///< packet size
-
+    uint8_t DATA[RFM69_BUFFER_SIZE];
     uint8_t payloadLen;
     uint8_t dataLen;
     uint8_t targetID;
@@ -300,6 +293,13 @@ private:
     uint8_t ACK_REQUESTED;
 
     uint8_t _address;
+
+private:
+    RFM69STATE rfm69_condition; /* current state of radio */
+    SPIDevice *spi; /* spi connection to radio */
+
+    GPIO *csPin;
+
 };
 
 } /* cubesat namespace */

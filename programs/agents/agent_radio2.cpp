@@ -2,13 +2,20 @@
 #include "device/rfm69/rfm69.h"
 #include "device/bus/SPIDevice.h"
 
+// CHANGE THESE FOR EVERY NODE
+
 #define NODE 1
 #define OTHERNODE 2
-#define NETWORK 1
+#define NETWORK 100     // THIS STAYS THE SAME
 
-// Use /dev/spidev1.1
+// Using /dev/spidev1.1
 #define SPI_BUS     1
 #define SPI_CHANNEL 1
+
+#define ENCRYPT     1                       // (1) Enable Encryption, (0) Disable Encryption
+#define ENCRYPTKEY  "ABCDEFGHIJKLMOPQ"      // must be 16 bytes
+
+#define useACK      1
 
 #define MAXBUFFERSIZE 2560
 
@@ -41,18 +48,54 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    rfm69 = new RFM69HCW(spi_bus, spi_channel, spi_mode, freqBand, networkID);
+    rfm69 = new RFM69HCW(spi_bus, spi_channel, spi_mode, freqBand, (uint8_t) NODE, networkID);
     rfm69->rfm69_setHighPower(1);   // Make sure to do this for RFM69HCW (anything with "H")
+
+    if(ENCRYPT)
+        rfm69->rfm69_encrypt(ENCRYPTKEY);
 
     while(agent->running()) {
         string msg = "TEST MESSAGE";
         cout << "TX >> " << msg << endl;
 
-        if(rfm69->rfm69_sendWithRetry((uint8_t) OTHERNODE, msg, (uint8_t) msg.length(), (uint8_t) 2, (uint8_t) 10)) {
-            cout << "ACK RECEIVED" << endl;
+        if(useACK) {
+            if(rfm69->rfm69_sendWithRetry((uint8_t) OTHERNODE, msg, (uint8_t) msg.length(), (uint8_t) 2, (uint8_t) 10)) {
+                cout << "ACK RECEIVED" << endl;
+            } else {
+                cout << "NO ACK RECEIVED... Shutting Down" << endl;
+                break;
+            }
         } else {
-            cout << "NO ACK RECEIVED" << endl;
-            break;
+            rfm69->rfm69_send((uint8_t) OTHERNODE, msg, (uint8_t) msg.length(), false);
+            cout << "Packet Sent" << endl;
+        }
+
+
+        /* Receiving */
+        rfm69->rfm69_receiveBegin();
+        uint8_t timedOut = 0;
+        uint8_t TOSLEEP = 0.1;
+        uint8_t TIMEOUT = 5;
+        while(!(rfm69->rfm69_receiveDone())) {
+            timedOut += TOSLEEP;
+            COSMOS_SLEEP(timedOut);
+            if(timedOut > TIMEOUT) {
+                cout << "Nothing Received" << endl;
+                break;
+            }
+        }
+
+        if(timedOut < TIMEOUT) {
+            printf("Received from node %d: ", rfm69->senderID);
+            for(uint8_t i = 0; i < rfm69->dataLen; i++) {
+                printf("%c", rfm69->DATA[i]);
+            }
+            printf(" [RSSI: %d]\n", rfm69->rssi);
+
+            if(rfm69->rfm69_ACKRequested()) {
+                rfm69->rfm69_sendACK("ACK", 3);
+                printf("ACK SENT\n");
+            }
         }
     }
 

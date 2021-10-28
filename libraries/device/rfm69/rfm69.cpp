@@ -14,7 +14,7 @@ namespace cubesat {
     @function
     Constructor
 */
-RFM69HCW::RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode, uint8_t freqBand, uint8_t networkID){
+RFM69HCW::RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode, uint8_t freqBand, uint8_t nodeID, uint8_t networkID){
     this->dataLen = 0;
     this->senderID = 0;
     this->targetID = 0;
@@ -24,13 +24,12 @@ RFM69HCW::RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode,
     this->rssi = 0;
 
     this->csPin = new GPIO(CS_Pin);
-    this->resetGPIO = new GPIO(CS_Pin);
 
     /* call rfm69_init() */
     rfm69_mcu_init(address, device, spi_mode);
     rfm69_init(freqBand, networkID);
 
-    this->_address = 1;
+    this->_address = nodeID;
 }
 
 /**
@@ -100,14 +99,16 @@ int RFM69HCW::rfm69_init(uint8_t freqBand, uint8_t networkID){
 
     // Reset radio
     cout << "Resetting Radio . . .";
-    this->resetGPIO->setDirection(OUTPUT);
-    this->resetGPIO->setValue(HIGH);
+    GPIO *resetGPIO = new GPIO(RST_Pin);
+    resetGPIO->setDirection(OUTPUT);
+    resetGPIO->setValue(HIGH);
     COSMOS_SLEEP(0.2); // wait 0.2s
-    this->resetGPIO->setValue(LOW);
+    resetGPIO->setValue(LOW);
     COSMOS_SLEEP(0.2); // wait 0.2s
     cout << " Radio RESET!" << endl;
+    delete resetGPIO;
 
-    setCSPin(HIGH);
+    //setCSPin(HIGH);
 
     // Ensure that the radio is able to read and write through SPI
     for(int cycle = 0; rfm69_read(REG_SYNCVALUE1) != 0xaa; cycle++) {
@@ -130,6 +131,9 @@ int RFM69HCW::rfm69_init(uint8_t freqBand, uint8_t networkID){
     for (int i = 0; CONFIG[i][0] != 255; i++) {
         rfm69_write(CONFIG[i][0], CONFIG[i][1]);
     }
+
+    // Reset encryption
+    rfm69_encrypt(0);
 
     rfm69_setHighPower(1);
     setMode(RFM69_STBY);
@@ -180,6 +184,25 @@ void RFM69HCW::setMode(RFM69STATE mode) {
   while(this->rfm69_condition == RFM69_SLEEP && (rfm69_read(REG_IRQFLAGS1) & RF_IRQFLAGS1_MODEREADY) == 0x00);
 
   this->rfm69_condition = mode;
+}
+
+/**
+    @function
+    To enable encryption: radio.encrypt("ABCDEFGHIJKLMNOP");
+    To disable encryption: radio.encrypt(null) or radio.encrypt(0)
+    KEY HAS TO BE 16 bytes !!!
+*/
+void RFM69HCW::rfm69_encrypt(const char* key)  {
+  setMode(RFM69_STBY);
+  if (key != 0)
+  {
+    rfm69_select();
+    this->spi->write(REG_AESKEY1 | 0x80);
+    for (uint8_t i = 0; i < 16; i++)
+      this->spi->write(key[i]);
+    rfm69_unselect();
+  }
+  rfm69_write(REG_PACKETCONFIG2, (rfm69_read(REG_PACKETCONFIG2) & 0xFE) | (key ? 1 : 0));
 }
   
 
@@ -233,14 +256,13 @@ int RFM69HCW::getRSSI(int forceTrigger){
   }
   rssi = -rfm69_read(REG_RSSIVALUE);
   rssi >>= 1;
-  rssi += 20;
   return rssi;
 
 }
 
 bool RFM69HCW::rfm69_sendWithRetry(uint8_t toAddress, string buffer, uint8_t bufferSize, uint8_t retries, uint8_t retryWaitTime) {
     for(uint8_t attempt = 1; attempt <= retries; attempt++) {
-        cout << "ACK ATTEMPT #" << (int)attempt << endl;
+        cout << "ACK ATTEMPT #" << (int)attempt << " (" << (int)retryWaitTime << "s)" << endl;
         rfm69_send(toAddress, buffer, bufferSize, true);
 
         auto start = std::chrono::steady_clock::now();
@@ -275,7 +297,7 @@ void RFM69HCW::rfm69_send(uint8_t toAddress, string buffer, uint8_t bufferSize, 
     auto start = std::chrono::steady_clock::now();
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end - start;
-    while(!rfm69_canSend() /*&& elapsed_seconds.count() < RF69_CSMA_LIMIT_S*/) {
+    while(!rfm69_canSend() && elapsed_seconds.count() < RF69_CSMA_LIMIT_S) {
         rfm69_receiveDone();
         end = std::chrono::steady_clock::now();
         elapsed_seconds = end - start;
@@ -288,11 +310,9 @@ void RFM69HCW::rfm69_send(uint8_t toAddress, string buffer, uint8_t bufferSize, 
 void RFM69HCW::rfm69_sendFrame(uint8_t toAddress, string buffer, uint8_t bufferSize, bool requestACK, bool sendACK) {
     setMode(RFM69_STBY); // turn off receiver to prevent reception while filling fifo
 
-    while ((rfm69_read(REG_IRQFLAGS1) & RF_IRQFLAGS1_MODEREADY) == 0x00) { // wait for ModeReady
-        cout << "READ1: " << rfm69_read(REG_IRQFLAGS1) << "   result = " << (rfm69_read(REG_IRQFLAGS1) & RF_IRQFLAGS1_MODEREADY) << endl;
-    }
+    while ((rfm69_read(REG_IRQFLAGS1) & RF_IRQFLAGS1_MODEREADY) == 0x00);
 
-    rfm69_write(REG_DIOMAPPING1, RF_DIOMAPPING1_DIO0_00); // DIO0 is "Packet Sent"
+    //rfm69_write(REG_DIOMAPPING1, RF_DIOMAPPING1_DIO0_00); // DIO0 is "Packet Sent"
     if (bufferSize > RFM69_BUFFER_SIZE) bufferSize = RFM69_BUFFER_SIZE;
 
     // control byte
@@ -313,6 +333,11 @@ void RFM69HCW::rfm69_sendFrame(uint8_t toAddress, string buffer, uint8_t bufferS
     for(uint8_t i = 0; i < bufferSize; i++) {
         this->spi->write(buffer[i]);
     }
+
+    uint8_t readfifo = rfm69_read(REG_FIFO); // no clue why adding this line makes it work.
+    // i think it has something to do with "writing to FIFO" maybe the above code isn't correct.
+    // maybe i need interupts for DIO0
+
     rfm69_unselect();
 
     // no need to wait for transmit mode to be ready since its handled by the radio
@@ -320,15 +345,22 @@ void RFM69HCW::rfm69_sendFrame(uint8_t toAddress, string buffer, uint8_t bufferS
     //while (RFM69_ReadDIO0Pin()) == 0 && !Timeout_IsTimeout1()); // wait for DIO0 to turn HIGH signalling transmission finish
 
     while( (rfm69_read(REG_IRQFLAGS2) & RF_IRQFLAGS2_PACKETSENT) == 0x00) { // wait for ModeReady
-        cout << "READ2: " << rfm69_read(REG_IRQFLAGS2) << "   result = " << (rfm69_read(REG_IRQFLAGS2) & RF_IRQFLAGS2_PACKETSENT) << endl;
+        printf("IRQFLAGS1 = 0x%X    IRQFLAGS2 = 0x%X    REG_FIFO = 0x%X\n", rfm69_read(REG_IRQFLAGS1), rfm69_read(REG_IRQFLAGS2), readfifo);
     }
-    setMode(RFM69_STBY);
+
+    printf("IRQFLAGS1 = 0x%X    IRQFLAGS2 = 0x%X    REG_FIFO = 0x%X\n", rfm69_read(REG_IRQFLAGS1), rfm69_read(REG_IRQFLAGS2), readfifo);
+
+    setMode(RFM69_RX);
 }
 
 bool RFM69HCW::rfm69_ACKReceived(uint8_t fromNodeID) {
     if (rfm69_receiveDone())
         return (this->senderID == fromNodeID || fromNodeID == RF69_BROADCAST_ADDR) && ACK_RECEIVED;
     return false;
+}
+
+bool RFM69HCW::rfm69_ACKRequested()  {
+  return this->ACK_REQUESTED && (this->targetID != RF69_BROADCAST_ADDR);
 }
 
 void RFM69HCW::rfm69_sendACK(string buffer, uint8_t bufferSize) {
@@ -413,17 +445,17 @@ void RFM69HCW::setCSPin(uint8_t mode) {
     default:
         break;
     }
-    COSMOS_SLEEP(0.1);
+    COSMOS_SLEEP(0.15);
 }
 
 // select the RFM69 transceiver (save SPI settings, set CS low)
 void RFM69HCW::rfm69_select(void)  {
-  setCSPin(LOW);
+  //setCSPin(LOW);
 }
 
 // unselect the RFM69 transceiver (set CS high, restore SPI settings)
 void RFM69HCW::rfm69_unselect(void) {
-  setCSPin(HIGH);
+  //setCSPin(HIGH);
 }
 
 //put transceiver in sleep mode to save battery - to wake or resume receiving just call RFM69_receiveDone()
@@ -437,7 +469,6 @@ void RFM69HCW::rfm69_sleep() {
 */
 RFM69HCW::~RFM69HCW(){
     delete this->csPin;
-    delete this->resetGPIO;
 
     this->spi->close();
     delete this->spi;
