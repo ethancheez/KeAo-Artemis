@@ -6,16 +6,16 @@
 
 #define NODE 1
 #define OTHERNODE 2
-#define NETWORK 100     // THIS STAYS THE SAME
+#define NETWORK 1     // THIS STAYS THE SAME
 
 // Using /dev/spidev1.1
 #define SPI_BUS     1
 #define SPI_CHANNEL 1
 
 #define ENCRYPT     1                       // (1) Enable Encryption, (0) Disable Encryption
-#define ENCRYPTKEY  "ABCDEFGHIJKLMOPQ"      // must be 16 bytes
+#define ENCRYPTKEY  "1234567890123456"      // must be 16 bytes
 
-#define useACK      1
+#define useACK      0
 
 #define MAXBUFFERSIZE 2560
 
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
         rfm69->rfm69_encrypt(ENCRYPTKEY);
 
     while(agent->running()) {
-        string msg = "TEST MESSAGE";
+        string msg = "TEST";
         cout << "TX >> " << msg << endl;
 
         if(useACK) {
@@ -73,19 +73,21 @@ int main(int argc, char *argv[])
 
         /* Receiving */
         rfm69->rfm69_receiveBegin();
-        uint8_t timedOut = 0;
-        uint8_t TOSLEEP = 0.1;
         uint8_t TIMEOUT = 5;
+        auto start = std::chrono::steady_clock::now();
+        auto end = std::chrono::steady_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end - start;
         while(!(rfm69->rfm69_receiveDone())) {
-            timedOut += TOSLEEP;
-            COSMOS_SLEEP(timedOut);
-            if(timedOut > TIMEOUT) {
+            //cout << "receiving..." << endl;
+            if(elapsed_seconds.count() > TIMEOUT) {
                 cout << "Nothing Received" << endl;
                 break;
             }
+            end = std::chrono::steady_clock::now();
+            elapsed_seconds = end - start;
         }
 
-        if(timedOut < TIMEOUT) {
+        if(elapsed_seconds.count() < TIMEOUT) {
             printf("Received from node %d: ", rfm69->senderID);
             for(uint8_t i = 0; i < rfm69->dataLen; i++) {
                 printf("%c", rfm69->DATA[i]);

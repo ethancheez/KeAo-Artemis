@@ -278,6 +278,12 @@ public:
     int getRSSI(int);
     void rfm69_setHighPower(int);
     void rfm69_sleep(void);
+    void rfm69_setPowerLevel(uint8_t powerLevel);
+    uint8_t rfm69_getPowerLevel();
+
+    /** Internal Functions **/
+    void interruptHandler(void);
+    void isr0(void);
 
 
     ~RFM69HCW(void);
@@ -299,6 +305,10 @@ private:
     SPIDevice *spi; /* spi connection to radio */
 
     GPIO *csPin;
+
+    bool spyMode;
+    bool haveData;
+    uint8_t powerLevel;
 
 };
 

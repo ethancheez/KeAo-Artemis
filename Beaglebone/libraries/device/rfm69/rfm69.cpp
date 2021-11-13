@@ -19,6 +19,9 @@ RFM69HCW::RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode,
     this->senderID = 0;
     this->targetID = 0;
     this->payloadLen = 0;
+    this->spyMode = false;
+    this->powerLevel = 31;
+    this->haveData = false;
     this->ACK_REQUESTED = 0;
     this->ACK_RECEIVED = 0;
     this->rssi = 0;
@@ -345,10 +348,10 @@ void RFM69HCW::rfm69_sendFrame(uint8_t toAddress, string buffer, uint8_t bufferS
     //while (RFM69_ReadDIO0Pin()) == 0 && !Timeout_IsTimeout1()); // wait for DIO0 to turn HIGH signalling transmission finish
 
     while( (rfm69_read(REG_IRQFLAGS2) & RF_IRQFLAGS2_PACKETSENT) == 0x00) { // wait for ModeReady
-        printf("IRQFLAGS1 = 0x%X    IRQFLAGS2 = 0x%X    REG_FIFO = 0x%X\n", rfm69_read(REG_IRQFLAGS1), rfm69_read(REG_IRQFLAGS2), readfifo);
+        printf("IRQFLAGS2 = 0x%X    REG_FIFO = 0x%X\n", rfm69_read(REG_IRQFLAGS2), readfifo);
     }
 
-    printf("IRQFLAGS1 = 0x%X    IRQFLAGS2 = 0x%X    REG_FIFO = 0x%X\n", rfm69_read(REG_IRQFLAGS1), rfm69_read(REG_IRQFLAGS2), readfifo);
+    //printf("IRQFLAGS1 = 0x%X    IRQFLAGS2 = 0x%X    REG_FIFO = 0x%X\n", rfm69_read(REG_IRQFLAGS1), rfm69_read(REG_IRQFLAGS2), rfm69_read(REG_FIFO));
 
     setMode(RFM69_RX);
 }
@@ -401,7 +404,12 @@ void RFM69HCW::rfm69_receiveBegin(void) {
 }
 
 bool RFM69HCW::rfm69_receiveDone(void) {
-    //cout << "receiveDone" << endl;
+
+    if(this->haveData) {
+        this->haveData = false;
+        interruptHandler();
+    }
+
     if (this->rfm69_condition == RFM69_RX && this->payloadLen > 0) {
         setMode(RFM69_STBY); // enables interrupts
         return true;
@@ -426,12 +434,56 @@ void RFM69HCW::rfm69_setHighPower(int onOff) {
         rfm69_write(REG_OCP, RF_OCP_ON);
         rfm69_write(REG_PALEVEL, RF_PALEVEL_PA0_ON | RF_PALEVEL_PA1_OFF | RF_PALEVEL_PA2_OFF | MAX_POWER_LEVEL);
     }
+    rfm69_setPowerLevel(this->powerLevel);
 }
 
 void RFM69HCW::rfm69_setHighPowerRegs(bool state) {
     rfm69_write(REG_TESTPA1, state ? 0x5D : 0x55);
     rfm69_write(REG_TESTPA2, state ? 0x7C : 0x70);
 }
+
+// internal function - interrupt gets called when a packet is received
+void RFM69HCW::interruptHandler() {
+  if (this->rfm69_condition == RFM69_RX && (rfm69_read(REG_IRQFLAGS2) & RF_IRQFLAGS2_PAYLOADREADY))
+  {
+    setMode(RFM69_STBY);
+    rfm69_select();
+    this->spi->write(REG_FIFO & 0x7F);
+    this->payloadLen = this->spi->write(0);
+    this->payloadLen = this->payloadLen > 66 ? 66 : this->payloadLen; // precaution
+    this->targetID = this->spi->write(0);
+    this->senderID = this->spi->write(0);
+    uint8_t CTLbyte = this->spi->write(0);
+    this->targetID |= (uint16_t(CTLbyte) & 0x0C) << 6; //10 bit address (most significant 2 bits stored in bits(2,3) of CTL byte
+    this->senderID |= (uint16_t(CTLbyte) & 0x03) << 8; //10 bit address (most sifnigicant 2 bits stored in bits(0,1) of CTL byte
+
+    if(!(spyMode || this->targetID == this->_address || this->targetID == RF69_BROADCAST_ADDR) // match this node's address, or broadcast address or anything in spy mode
+       || this->payloadLen < 3) // address situation could receive packets that are malformed and don't fit this libraries extra fields
+    {
+      this->payloadLen = 0;
+      rfm69_unselect();
+      rfm69_receiveBegin();
+      return;
+    }
+
+    this->dataLen = this->payloadLen - 3;
+    this->ACK_RECEIVED = CTLbyte & RFM69_CTL_SENDACK; // extract ACK-received flag
+    this->ACK_REQUESTED = CTLbyte & RFM69_CTL_REQACK; // extract ACK-requested flag
+    uint8_t _pl = this->powerLevel; //interruptHook() can change _powerLevel so remember it
+
+    //interruptHook(CTLbyte);    // TWS: hook to derived class interrupt function
+
+    for (uint8_t i = 0; i < this->dataLen; i++) this->DATA[i] = this->spi->write(0);
+
+    this->DATA[this->dataLen] = 0; // add null at end of string
+    rfm69_unselect();
+    setMode(RFM69_RX);
+    if (_pl != this->powerLevel) rfm69_setPowerLevel(this->powerLevel); //set new _powerLevel if changed
+  }
+  this->rssi = getRSSI(0);
+}
+
+void RFM69HCW::isr0() { this->haveData = true; }
 
 void RFM69HCW::setCSPin(uint8_t mode) {
     this->csPin->setDirection(OUTPUT);
@@ -461,6 +513,46 @@ void RFM69HCW::rfm69_unselect(void) {
 //put transceiver in sleep mode to save battery - to wake or resume receiving just call RFM69_receiveDone()
 void RFM69HCW::rfm69_sleep() {
   setMode(RFM69_SLEEP);
+}
+
+// Control transmitter output power (this is NOT a dBm value!)
+// the power configurations are explained in the SX1231H datasheet (Table 10 on p21; RegPaLevel p66): http://www.semtech.com/images/datasheet/sx1231h.pdf
+// valid powerLevel parameter values are 0-31 and result in a directly proportional effect on the output/transmission power
+// this function implements 2 modes as follows:
+//   - for RFM69 W/CW the range is from 0-31 [-18dBm to 13dBm] (PA0 only on RFIO pin)
+//   - for RFM69 HW/HCW the range is from 0-22 [-2dBm to 20dBm]  (PA1 & PA2 on PA_BOOST pin & high Power PA settings - see section 3.3.7 in datasheet, p22)
+//   - the HW/HCW 0-24 range is split into 3 REG_PALEVEL parts:
+//     -  0-15 = REG_PALEVEL 16-31, ie [-2 to 13dBm] & PA1 only
+//     - 16-19 = REG_PALEVEL 26-29, ie [12 to 15dBm] & PA1+PA2
+//     - 20-23 = REG_PALEVEL 28-31, ie [17 to 20dBm] & PA1+PA2+HiPower (HiPower is only enabled before going in TX mode, ie by setMode(RF69_MODE_TX)
+// The HW/HCW range overlaps are to smooth out transitions between the 3 PA domains, based on actual current/RSSI measurements
+// Any changes to this function also demand changes in dependent function setPowerDBm()
+void RFM69HCW::rfm69_setPowerLevel(uint8_t powerLevel) {
+  uint8_t PA_SETTING;
+
+  if (powerLevel>23) powerLevel = 23;
+  this->powerLevel =  powerLevel;
+
+  //now set Pout value & active PAs based on _powerLevel range as outlined in summary above
+  if (this->powerLevel < 16) {
+    powerLevel += 16;
+    PA_SETTING = RF_PALEVEL_PA1_ON; // enable PA1 only
+  } else {
+    if (this->powerLevel < 20)
+      powerLevel += 10;
+    else
+      powerLevel += 8;
+    PA_SETTING = RF_PALEVEL_PA1_ON | RF_PALEVEL_PA2_ON; // enable PA1+PA2
+  }
+  rfm69_setHighPowerRegs(true); //always call this in case we're crossing power boundaries in TX mode
+
+  //write value to REG_PALEVEL
+  rfm69_write(REG_PALEVEL, PA_SETTING | powerLevel);
+}
+
+// return stored _powerLevel
+uint8_t RFM69HCW::rfm69_getPowerLevel() {
+  return this->powerLevel;
 }
 
 /**
