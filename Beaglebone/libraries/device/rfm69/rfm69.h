@@ -24,6 +24,7 @@
 */ 
 
 #include "device/bus/SPIDevice.h"
+#include "device/gpio/GPIO.h"
 
 // types of modulation
 /// @cond
@@ -87,6 +88,14 @@
 #define FSTEP               61
 #define PI                  3.14159265359
 #define RFM69_BUFFER_SIZE   61
+#define CSMA_LIMIT          -90
+#define RF69_CSMA_LIMIT_S   1
+#define RF69_CSMA_LIMIT_MS  1000
+#define RF69_BROADCAST_ADDR 255
+
+#define RFM69_CTL_SENDACK   0x80
+#define RFM69_CTL_REQACK    0x40
+
 /*****************************************************************************/
 
 #include "device/rfm69/rfm69_table.h"
@@ -187,6 +196,8 @@
 
 #define NSS_Port            GPIOA
 #define NSS_Pin             GPIO_Pin_3
+#define CS_Pin              7
+#define RST_Pin             80
 
 #define EXTI_Port1          GPIO_PortSourceGPIOB
 #define EXTI_Port23         GPIO_PortSourceGPIOA
@@ -200,6 +211,15 @@
 
 /// @}
 /*****************************************************************************/
+
+// available frequency bands
+#define RF69_315MHZ            31 // non trivial values to avoid misconfiguration
+#define RF69_433MHZ            43
+#define RF69_868MHZ            86
+#define RF69_915MHZ            91
+
+/*****************************************************************************/
+
 using namespace exploringBB;
 
 namespace cubesat{
@@ -211,7 +231,8 @@ enum RFM69STATE{
     RFM69_STBY,             ///< radiomodule is in standby mode
     RFM69_RX,               ///< receiver is on (radiomodule waits for the packet)
     RFM69_TX,               ///< transmitter is on (radiomodule transmits data)
-    RFM69_NEW_PACK          ///< the packet received successfully, radiomodule is in sleep mode
+    RFM69_NEW_PACK,         ///< the packet received successfully, radiomodule is in sleep mode
+    RFM69_SYNTH
 };
 
 class RFM69HCW{
@@ -219,7 +240,7 @@ class RFM69HCW{
 public:
 
     /** @name                   Register access functions                       **/
-    RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode); /* constructor */
+    RFM69HCW(uint8_t address, uint8_t device, SPIDevice::SPIMODE spi_mode, uint8_t freqBand, uint8_t nodeID, uint8_t networkID); /* constructor */
     void rfm69_write(uint8_t address, uint8_t data);
     uint8_t rfm69_read(uint8_t address);
     void rfm69_write_burst(uint8_t address, uint8_t* data, uint8_t ndata);
@@ -227,7 +248,8 @@ public:
 
     /** @name                   Initialization functions                        **/
     void rfm69_mcu_init(uint8_t adress, uint8_t device, SPIDevice::SPIMODE spi_mode); /* sets up SPI connection */
-    int rfm69_init(void); /* connects to radio and sets initial state */
+    int rfm69_init(uint8_t freqBand, uint8_t networkID); /* connects to radio and sets initial state */
+    void rfm69_encrypt(const char* key);
 
     /** @name       Functions for transmitting or receiving packets             **/
     int rfm69_transmit_start(uint8_t packet_size, uint8_t address);
@@ -235,24 +257,58 @@ public:
     void rfm69_receive_start(void);
     int rfm69_receive_small_packet(void);
 
+    void rfm69_setHighPowerRegs(bool state);
+
+    bool rfm69_canSend(void);
+    void rfm69_send(uint8_t toAddress, std::string buffer, uint8_t bufferSize, bool requestACK);
+    bool rfm69_sendWithRetry(uint8_t toAddress, std::string buffer, uint8_t bufferSize, uint8_t retries, uint8_t retryWaitTime); // 40ms roundtrip req for 61byte packets
+    void rfm69_sendFrame(uint8_t toAddress, std::string buffer, uint8_t bufferSize, bool requestACK, bool sendACK);
+    bool rfm69_ACKReceived(uint8_t fromNodeID);
+    void rfm69_receiveBegin(void);
+    bool rfm69_receiveDone(void);
+    bool rfm69_ACKRequested(void);
+    void rfm69_sendACK(string buffer, uint8_t bufferSize);
+
     /** @name               Radiomodule management functions                    **/
-    void rfm69_sleep(void);
-    void rfm69_stby(void);
-    void rfm69_clear_fifo(void);
-    void EXTI0_IRQHandler(void);
-    void EXTI1_IRQHandler(void);
-    void EXTI2_IRQHandler(void);
     void getData( char *data);
-    void setMode(uint8_t mode);
+    void setMode(RFM69STATE mode);
+    void setCSPin(uint8_t mode);
+    void rfm69_select(void);
+    void rfm69_unselect(void);
     int getRSSI(int);
     void rfm69_setHighPower(int);
+    void rfm69_sleep(void);
+    void rfm69_setPowerLevel(uint8_t powerLevel);
+    uint8_t rfm69_getPowerLevel();
+
+    /** Internal Functions **/
+    void interruptHandler(void);
+    void isr0(void);
+
+
     ~RFM69HCW(void);
+
+    uint8_t DATA[RFM69_BUFFER_SIZE];
+    uint8_t payloadLen;
+    uint8_t dataLen;
+    uint8_t targetID;
+    uint8_t senderID;
+    uint8_t rssi;
+
+    uint8_t ACK_RECEIVED;
+    uint8_t ACK_REQUESTED;
+
+    uint8_t _address;
 
 private:
     RFM69STATE rfm69_condition; /* current state of radio */
     SPIDevice *spi; /* spi connection to radio */
-    uint8_t packet_buffer[RFM69_BUFFER_SIZE ];  ///< packet buffer
-    uint8_t packet_size;                            ///< packet size
+
+    GPIO *csPin;
+
+    bool spyMode;
+    bool haveData;
+    uint8_t powerLevel;
 
 };
 

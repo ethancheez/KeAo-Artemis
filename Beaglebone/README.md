@@ -1,4 +1,4 @@
-# KeAo COSMOS
+# KeAo - RFM69HCW on Beaglebone Black
 
 This is a documentation of getting the RFM69HCW connected to the Beaglebone Black.
 
