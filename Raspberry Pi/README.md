@@ -1,7 +1,7 @@
 
-# KeAo - RFM69HCW on Raspberry Pi using wiringPi
+# KeAo - RFM69HCW on Raspberry Pi
 
-This is a documentation of getting the RFM69HCW connected to the Raspberry Pi using the wiringPi library. Note that this does not use any COSMOS dependencies. This is purely compiled on the Raspberry Pi using g++.
+This is a documentation of getting the RFM69HCW connected to the Raspberry Pi using the wiringPi library. Note that using the wiringPi library does not use any COSMOS dependencies. It is purely compiled on the Raspberry Pi using g++.
 
 ## Getting Started
 Note: First make sure the Raspberry Pi Zero is flashed.
