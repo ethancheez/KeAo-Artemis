@@ -15,7 +15,7 @@
 #define ENCRYPTKEY  "1234567890123456"      // must be 16 bytes
 
 // RPi Pinouts
-#define intPin  8
+#define intPin  16
 #define rstPin  25
 #define spiBus  0
 
