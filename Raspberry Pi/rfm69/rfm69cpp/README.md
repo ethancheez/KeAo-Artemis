@@ -24,6 +24,8 @@ This directory contains four different codes corresponding to radio1, radio2, pi
 | RESET | 22 (GPIO 25) |
 | DIO0 | 18 (GPIO 24) |
 
+![](https://notenoughtech.com/wp-content/uploads/2016/04/Raspberry-Pi-GPIO-Layout-Model-B-Plus-rotated-2700x900.png)
+
 ## wiringPi
 To run the cpp files in this directory, the wiringPi library is required.
 
