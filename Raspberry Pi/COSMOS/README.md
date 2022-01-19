@@ -1,25 +1,57 @@
 
 
-# KeAo - RFM69HCW on Raspberry Pi using wiringPi and COSMOS
 
-## Installing wiringPi
+# RFM69HCW on Raspberry Pi using wiringPi and COSMOS
 
-Visit [this markdown file](https://github.com/ethancheez/KeAo-COSMOS/blob/main/Raspberry%20Pi/rfm69/rfm69cpp/README.md) to install wiringPi on the Raspberry Pi. Skip the "Compiling" section.
+The `rfm69` directory belongs in the `~/cosmos/source/projects/` directory.
 
-## Linking wiringPi with COSMOS-CORE
+## Installing wiringPi on Linux
 
-Edit the CMakeLists.txt file in `cosmos/source/core` with your favorite text editor.
-
-Edit line 69:
+1. Check if you have wiringPi installed. Run `gpio -v`. 
+	- If the command isn't recognized, then wiringPi isn't installed. Go to step 3.
+	- If the command is recognized, you have wiringPi. If you wish to update it, go to step 2.
+2. If wiringPi is installed, and you want to update it, run the following commands:
 ```
-set(COSMOS_CXX_FLAGS "-Wall -pedantic -std=c++11 -U__STRICT_ANSI__ -Wno-invalid-offsetof -Wno-format")
+$ sudo apt-get purge wiringpi
+$ hash -r
+```
+3. Install git if it isn't already installed. 
+```
+$ sudo apt-get install git-core
+```
+4. Clone wiringPi GitHub repo:
+```
+$ git clone https://github.com/WiringPi/WiringPi.git
+```
+5. Run the following commands to install the library:
+```
+$ cd WiringPi
+$ git pull origin
+$ ./build
+```
+6. Check to make sure wiringPi is installed:
+	- Note: there will be an error `Oops: Unable to determine board revision`. You can ignore this since the linux machine isn't an actual Raspberry Pi. This is just so Qt Creator can recognize the wiringPi library while you edit code.
+```
+$ gpio -v
 ```
 
-Add the `-lwiringPi` tag in the end. It should now look like this:
+## Compiling on the Raspberry Pi
+
+If you do not have the cross-compiler installed on your machine, you can transfer the COSMOS project into your Raspberry Pi and compile there. You can do this using FileZilla or whatever you are most comfortable with.
+
+The directory to save the COSMOS project: `~/cosmos/source/projects/`
+
+Navigate to `~/cosmos/source/projects/rfm69` and run the following commands to compile:
 ```
-set(COSMOS_CXX_FLAGS "-Wall -pedantic -std=c++11 -U__STRICT_ANSI__ -Wno-invalid-offsetof -Wno-format -lwiringPi")
+$ mkdir build
+$ cd build
+$ cmake ../source/
+$ make -j2
+$ sudo make -j2 install
+$ mv agent_rfm69 ~/cosmos/bin
 ```
 
-Save and close the file.
-
-You can now build the agents normally.
+You should now be able to run the agent by running:
+```
+$ agent_rfm69
+```
