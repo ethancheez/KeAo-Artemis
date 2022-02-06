@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <executable name="dist/Artemis_PDU/debug/Artemis_PDU.X.debug.elf">
+    <memory name="program">
+      <units>bytes</units>
+      <length>524288</length>
+      <used>5456</used>
+      <free>518832</free>
+    </memory>
+    <memory name="data">
+      <units>bytes</units>
+      <length>196608</length>
+      <used>2033</used>
+      <free>194575</free>
+    </memory>
+  </executable>
+</project>

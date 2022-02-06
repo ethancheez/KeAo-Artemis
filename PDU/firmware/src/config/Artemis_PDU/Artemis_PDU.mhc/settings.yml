@@ -1,0 +1,14 @@
+configName: Artemis_PDU
+folderName: Artemis_PDU
+format_version: v1.0
+frameworkPath: ..\..\Harmony3
+processor: ATSAME51N19A
+projectName: Artemis_PDU
+settings:
+  PackageFilter: csp;dev_packs;quick_docs
+  FORCE_OPTIMIZATION: 'false'
+  GENERATE_BACKUP: 'true'
+  TRUSTZONE: 'false'
+  CMSISPath: .\dev_packs\arm\CMSIS\5.8.0
+  MERGE_STRATEGY: USER_ALL
+  DFPPath: .\dev_packs\Microchip\SAME51_DFP\3.5.104\atdf\ATSAME51N19A.atdf
