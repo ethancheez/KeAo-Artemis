@@ -59,7 +59,7 @@
 // *****************************************************************************
 
 
-#define SERCOM4_I2CM_SPEED_HZ           11000
+#define SERCOM4_I2CM_SPEED_HZ           100000
 
 /* SERCOM4 I2C baud value */
 #define SERCOM4_I2CM_BAUD_VALUE         (0xFFU)

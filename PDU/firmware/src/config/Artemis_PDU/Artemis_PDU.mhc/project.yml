@@ -97,13 +97,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 4D153FFD36A395C1CA9CCBE1E9863D62
-- generatedChecksum: F3C69BB6C9FE4AEABAE8F94B148E2CC3
+- generatedChecksum: 3CA84981C2EEDE62BF95FF54B8C13911
   logicalPath: config/Artemis_PDU/peripheral/sercom/i2c_master
   name: plib_sercom4_i2c_master.c
   physicalPath: peripheral/sercom/i2c_master
   security: NON_SECURE
   type: SOURCE
-  userChecksum: F3C69BB6C9FE4AEABAE8F94B148E2CC3
+  userChecksum: 3CA84981C2EEDE62BF95FF54B8C13911
 - generatedChecksum: F90BC31146188C748D0CEBFE196F2CAA
   logicalPath: config/Artemis_PDU
   name: startup_xc32.c
