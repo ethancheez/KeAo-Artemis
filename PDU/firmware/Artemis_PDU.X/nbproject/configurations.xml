@@ -29,9 +29,9 @@
               <itemPath>../src/config/Artemis_PDU/peripheral/port/plib_port.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="sercom" projectFiles="true">
-              <logicalFolder name="f3" displayName="i2c_master" projectFiles="true">
-                <itemPath>../src/config/Artemis_PDU/peripheral/sercom/i2c_master/plib_sercom_i2c_master_common.h</itemPath>
-                <itemPath>../src/config/Artemis_PDU/peripheral/sercom/i2c_master/plib_sercom4_i2c_master.h</itemPath>
+              <logicalFolder name="f3" displayName="i2c_slave" projectFiles="true">
+                <itemPath>../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom_i2c_slave_common.h</itemPath>
+                <itemPath>../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom4_i2c_slave.h</itemPath>
               </logicalFolder>
               <logicalFolder name="f2" displayName="spi_master" projectFiles="true">
                 <itemPath>../src/config/Artemis_PDU/peripheral/sercom/spi_master/plib_sercom2_spi_master.h</itemPath>
@@ -216,8 +216,8 @@
               <itemPath>../src/config/Artemis_PDU/peripheral/port/plib_port.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="sercom" projectFiles="true">
-              <logicalFolder name="f3" displayName="i2c_master" projectFiles="true">
-                <itemPath>../src/config/Artemis_PDU/peripheral/sercom/i2c_master/plib_sercom4_i2c_master.c</itemPath>
+              <logicalFolder name="f3" displayName="i2c_slave" projectFiles="true">
+                <itemPath>../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom4_i2c_slave.c</itemPath>
               </logicalFolder>
               <logicalFolder name="f2" displayName="spi_master" projectFiles="true">
                 <itemPath>../src/config/Artemis_PDU/peripheral/sercom/spi_master/plib_sercom2_spi_master.c</itemPath>

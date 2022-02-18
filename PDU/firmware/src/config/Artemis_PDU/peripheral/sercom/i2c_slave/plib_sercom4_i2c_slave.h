@@ -63,8 +63,8 @@
 // DOM-IGNORE-END
 
 void SERCOM4_I2C_Initialize(void);
-void SERCOM4_I2C_CallbackRegister(SERCOM_I2C_SLAVE_CALLBACK callback, uintptr_t contextHandle);
-bool SERCOM4_I2C_IsBusy(void);
+SERCOM_I2C_SLAVE_INTFLAG SERCOM4_I2C_InterruptFlagsGet(void);
+void SERCOM4_I2C_InterruptFlagsClear(SERCOM_I2C_SLAVE_INTFLAG intFlags);
 uint8_t SERCOM4_I2C_ReadByte(void);
 void SERCOM4_I2C_WriteByte(uint8_t wrByte);
 SERCOM_I2C_SLAVE_ERROR SERCOM4_I2C_ErrorGet(void);
