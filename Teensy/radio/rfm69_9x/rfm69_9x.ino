@@ -16,7 +16,7 @@
 /* RFM9x PIN CONFIG */
 #define RFM9x_CS_PIN  37
 #define RFM9x_INT_PIN 30
-#define RFM9x_RST_PIN 38
+#define RFM9x_RST_PIN 40
 
 /* SPI MISO/MOSI/SCK CONFIG */
 #define SPI_MISO 39
