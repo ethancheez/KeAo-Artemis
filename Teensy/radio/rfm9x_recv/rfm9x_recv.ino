@@ -8,24 +8,35 @@
 
 #include <SPI.h>
 #include <RH_RF95.h>
+#include <RHHardwareSPI1.h>
 
-#define RFM95_CS 10
-#define RFM95_RST 9
-#define RFM95_INT 2
+#define RFM95_CS 37
+#define RFM95_RST 40
+#define RFM95_INT 30
+
+/* SPI MISO/MOSI/SCK CONFIG */
+#define SPI_MISO 39
+#define SPI_MOSI 26
+#define SPI_SCK 27
 
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF95_FREQ 434.0
 
 // Singleton instance of the radio driver
-RH_RF95 rf95(RFM95_CS, RFM95_INT);
+RH_RF95 rf95(RFM95_CS, RFM95_INT, hardware_spi1);
 
 void setup() 
 {  
+
+  SPI1.setMISO(SPI_MISO);
+  SPI1.setMOSI(SPI_MOSI);
+  SPI1.setSCK(SPI_SCK);
+  
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
 
   while (!Serial);
-  Serial.begin(9600);
+  Serial.begin(115200);
   delay(100);
 
   Serial.println("Arduino LoRa RX Test!");
