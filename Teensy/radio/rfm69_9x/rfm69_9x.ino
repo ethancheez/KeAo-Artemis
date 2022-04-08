@@ -240,16 +240,19 @@ void RFM9x_send() {
 
 /* ---------- RFM9X RECEIVE ---------- */
 void RFM9x_recv() {
-  uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
-  uint8_t len = sizeof(buf);
+  uint8_t recv_buf[RH_RF95_MAX_MESSAGE_LEN];
+  uint8_t recv_buf_len = sizeof(recv_buf);
 
   if (rfm9x.waitAvailableTimeout(100))
   { 
     // Should be a reply message for us now   
-    if (rfm9x.recv(buf, &len))
+    if (rfm9x.recv(recv_buf, &recv_buf_len))
    {
       Serial.print("RFM9x: Got reply: ");
-      Serial.println((char*)buf);
+      for(int i = 0; i < recv_buf_len; i++) {
+        Serial.print((char)recv_buf[i]);
+      }
+      Serial.println();
       Serial.print("RSSI: ");
       Serial.println(rfm9x.lastRssi(), DEC);    
     }
