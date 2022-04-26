@@ -1,1 +1,1 @@
-# RFM69W on Teensy 4.1
+# RFM69 and RFM9x on Teensy 4.1
