@@ -19,6 +19,5 @@ void setup()
 
 void loop()
 {
-  delay(5000);
-  threads.kill(thread_list[0].thread_id);
+  
 }
