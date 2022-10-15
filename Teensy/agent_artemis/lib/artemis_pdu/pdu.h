@@ -1,3 +1,6 @@
+#ifndef _PDU_H
+#define _PDU_H
+
 #include <stdint.h>
 
 namespace Artemis
@@ -31,3 +34,5 @@ namespace Artemis
         };
     }
 }
+
+#endif

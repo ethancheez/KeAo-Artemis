@@ -8,7 +8,8 @@ void Artemis::Teensy::Channels::rfm23_channel()
 
     while (true)
     {
-        rfm23.RFM23_SEND("hello world");
+        // rfm23.RFM23_RECV();
+        rfm23.RFM23_SEND("hi");
         delay(5000);
     }
 }

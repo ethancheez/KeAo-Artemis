@@ -1,5 +1,5 @@
 #ifndef _ASTRODEVLIB_H
-#define _ASTRODEVLIB_H 1
+#define _ASTRODEVLIB_H 
 
 #include <stdint.h>
 

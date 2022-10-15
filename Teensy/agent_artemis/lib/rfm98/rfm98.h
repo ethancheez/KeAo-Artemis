@@ -1,3 +1,6 @@
+#ifndef _RFM98_H
+#define _RFM98_H
+
 #include <SPI.h>
 #include <RH_RF95.h>
 #include <RHHardwareSPI1.h>
@@ -42,3 +45,5 @@ namespace Artemis
         }
     }
 }
+
+#endif

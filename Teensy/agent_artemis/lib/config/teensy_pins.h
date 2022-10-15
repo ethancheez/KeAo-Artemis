@@ -1,3 +1,6 @@
+#ifndef _TEENSYPINS_H
+#define _TEENSYPINS_H
+
 enum TEENSY_PINS
 {
     UART4_RXD,
@@ -43,3 +46,5 @@ enum TEENSY_PINS
     A16_UNUSED,
     AIN2
 };
+
+#endif
