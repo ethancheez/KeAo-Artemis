@@ -1,7 +1,8 @@
-#ifndef _ARTEMISCHANNELS_H
-#define _ARTEMISCHANNELS_H
+#ifndef _ARTEMIS_CHANNELS_H
+#define _ARTEMIS_CHANNELS_H
 
 #include <TeensyThreads.h>
+#include <cmd_queue.h>
 #include <rfm23.h>
 #include <rfm98.h>
 #include <Wire.h>
@@ -10,6 +11,7 @@
 #include <Adafruit_LSM6DSOX.h>
 #include <Adafruit_INA219.h>
 #include <pdu.h>
+#include <support/packetcomm.h>
 
 namespace Artemis
 {
@@ -19,6 +21,7 @@ namespace Artemis
         {
             void rfm23_channel();
             void rfm98_channel();
+            void astrodev_channel();
             void magnetometer_channel();
             void accelerometer_gyroscope_channel();
             void temperature_channel();
@@ -28,4 +31,4 @@ namespace Artemis
     }
 }
 
-#endif
+#endif // _ARTEMIS_CHANNELS_H

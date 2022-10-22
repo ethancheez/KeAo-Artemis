@@ -42,4 +42,4 @@ namespace Artemis {
     }
 }
 
-#endif
+#endif // _RFM23_H

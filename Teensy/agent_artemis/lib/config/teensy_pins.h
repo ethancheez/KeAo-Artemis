@@ -47,4 +47,4 @@ enum TEENSY_PINS
     AIN2
 };
 
-#endif
+#endif  // _TEENSY_PINS_H

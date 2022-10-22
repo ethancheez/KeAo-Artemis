@@ -46,4 +46,4 @@ namespace Artemis
     }
 }
 
-#endif
+#endif  // _RFM98_H

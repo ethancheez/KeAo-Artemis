@@ -1,9 +1,9 @@
 #include "artemis_channels.h"
 
-Artemis::Teensy::Radio::RFM23 rfm23(RFM23_CS_PIN, RFM23_INT_PIN, hardware_spi1);
-
 void Artemis::Teensy::Channels::rfm23_channel()
 {
+    Artemis::Teensy::Radio::RFM23 rfm23(RFM23_CS_PIN, RFM23_INT_PIN, hardware_spi1);
+    
     rfm23.RFM23_INIT();
 
     while (true)
