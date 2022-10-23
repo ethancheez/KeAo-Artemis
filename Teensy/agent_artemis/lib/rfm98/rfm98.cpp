@@ -10,6 +10,7 @@ namespace Artemis
 
             void RFM98::RFM98_INIT()
             {
+                Threads::Scope scope(spi1_mtx);
                 SPI1.setMISO(RFM98_SPI_MISO);
                 SPI1.setMOSI(RFM98_SPI_MOSI);
                 SPI1.setSCK(RFM98_SPI_SCK);
@@ -44,6 +45,7 @@ namespace Artemis
                 Serial.print(msg);
                 Serial.println("]");
 
+                Threads::Scope scope(spi1_mtx);
                 rfm98.send((uint8_t *)msg, strlen(msg));
 
                 rfm98.waitPacketSent();
@@ -51,6 +53,7 @@ namespace Artemis
 
             void RFM98::RFM98_RECV()
             {
+                Threads::Scope scope(spi1_mtx);
                 if (rfm98.waitAvailableTimeout(100))
                 {
                     if (rfm98.recv(RFM98_RECV_BUF, &RFM98_RECV_LEN))

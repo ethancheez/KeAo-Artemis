@@ -10,6 +10,7 @@ namespace Artemis
 
             bool RFM23::RFM23_INIT()
             {
+                Threads::Scope scope(spi1_mtx);
                 SPI1.setMISO(RFM23_SPI_MISO);
                 SPI1.setMOSI(RFM23_SPI_MOSI);
                 SPI1.setSCK(RFM23_SPI_SCK);
@@ -41,6 +42,7 @@ namespace Artemis
 
             void RFM23::RFM23_RESET()
             {
+                Threads::Scope scope(spi1_mtx);
                 rfm23.reset();
             }
 
@@ -52,6 +54,7 @@ namespace Artemis
                 Serial.print(msg);
                 Serial.println("]");
 
+                Threads::Scope scope(spi1_mtx);
                 rfm23.send((uint8_t *)msg, strlen(msg));
 
                 rfm23.waitPacketSent();
@@ -63,6 +66,7 @@ namespace Artemis
                 digitalWrite(RFM23_RX_ON, LOW);
                 digitalWrite(RFM23_TX_ON, HIGH);
 
+                Threads::Scope scope(spi1_mtx);
                 if (rfm23.waitAvailableTimeout(100))
                 {
                     if (rfm23.recv(RFM23_RECV_BUF, &RFM23_RECV_LEN))

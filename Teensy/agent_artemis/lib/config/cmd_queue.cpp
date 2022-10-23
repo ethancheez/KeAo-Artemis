@@ -1,6 +1,6 @@
 #include <cmd_queue.h>
 
-// Mutex
+// Mutex for Command Queues
 Threads::Mutex main_queue_mtx;
 Threads::Mutex astrodev_queue_mtx;
 Threads::Mutex rfm23_queue_mtx;
@@ -21,3 +21,7 @@ std::queue<Cosmos::Support::PacketComm> temperature_queue;
 std::queue<Cosmos::Support::PacketComm> magnetometer_queue;
 std::queue<Cosmos::Support::PacketComm> current_queue;
 std::queue<Cosmos::Support::PacketComm> accelerometer_gyroscope_queue;
+
+// Other Mutex
+Threads::Mutex spi_mtx;
+Threads::Mutex spi1_mtx;

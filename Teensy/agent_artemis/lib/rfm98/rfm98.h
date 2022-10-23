@@ -5,6 +5,7 @@
 #include <RH_RF95.h>
 #include <RHHardwareSPI1.h>
 #include <teensy_pins.h>
+#include <cmd_queue.h>
 
 /* RFM98 FREQUENCY CONFIG */
 #define RFM98_FREQ 434.0

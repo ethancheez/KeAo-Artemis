@@ -5,7 +5,7 @@
 #include <TeensyThreads.h>
 #include <support/packetcomm.h>
 
-// Mutex
+// Mutex for Command Queues
 extern Threads::Mutex main_queue_mtx;
 extern Threads::Mutex astrodev_queue_mtx;
 extern Threads::Mutex rfm23_queue_mtx;
@@ -26,5 +26,9 @@ extern std::queue<Cosmos::Support::PacketComm> temperature_queue;
 extern std::queue<Cosmos::Support::PacketComm> magnetometer_queue;
 extern std::queue<Cosmos::Support::PacketComm> current_queue;
 extern std::queue<Cosmos::Support::PacketComm> accelerometer_gyroscope_queue;
+
+// Other Mutex
+extern Threads::Mutex spi_mtx;
+extern Threads::Mutex spi1_mtx;
 
 #endif // _CMD_QUEUE_H

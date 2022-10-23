@@ -5,6 +5,7 @@
 #include <RH_RF22.h>
 #include <RHHardwareSPI1.h>
 #include <teensy_pins.h>
+#include <cmd_queue.h>
 
 /* RFM23 FREQUENCY CONFIG */
 #define RFM23_FREQ   430.0
