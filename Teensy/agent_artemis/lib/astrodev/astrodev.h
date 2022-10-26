@@ -1,154 +1,274 @@
 #ifndef _ASTRODEVLIB_H
-#define _ASTRODEVLIB_H 
+#define _ASTRODEVLIB_H
 
 #include <stdint.h>
+#include <Arduino.h>
+#include <queue>
+#include <vector>
+#include <map>
+#include <support/packetcomm.h>
 
-#define ASTRODEV_HEADER_SIZE 8
-#define ASTRODEV_PAYLOAD_TRAILER_SIZE 2
-#define ASTRODEV_OVERHEAD_SIZE_NO_PAYLOAD (ASTRODEV_HEADER_SIZE)
-#define ASTRODEV_OVERHEAD_SIZE_WITH_PAYLOAD (ASTRODEV_HEADER_SIZE + ASTRODEV_PAYLOAD_TRAILER_SIZE)
-
-#define ASTRODEV_SYNC0 'H'
-#define ASTRODEV_SYNC1 'e'
-
-#define ASTRODEV_COMMAND 0x10
-#define ASTRODEV_RESPONSE 0x20
-
-// Command List
-#define ASTRODEV_NOOP 0x01
-#define ASTRODEV_RESET 0x02
-#define ASTRODEV_TRANSMIT 0x03
-#define ASTRODEV_RECEIVE 0x04
-#define ASTRODEV_GETTCVCONFIG 0x05
-#define ASTRODEV_SETTCVCONFIG 0x06
-#define ASTRODEV_TELEMETRY 0x07
-#define ASTRODEV_FLASH 0x08
-#define ASTRODEV_RFCONFIG 0x09
-#define ASTRODEV_BEACONDATA 0x10
-#define ASTRODEV_BEACONCONFIG 0x11
-#define ASTRODEV_FIRMWAREREV 0x12
-#define ASTRODEV_DIOKEY 0x13
-#define ASTRODEV_FIRMWAREUPDATE 0x14
-#define ASTRODEV_FIRMWAREPACKET 0x15
-#define ASTRODEV_WRITE_KEY_A_128 0x16
-#define ASTRODEV_WRITE_KEY_B_128 0x17
-#define ASTRODEV_WRITE_KEY_A_256 0x18
-#define ASTRODEV_WRITE_KEY_B_256 0x19
-#define ASTRODEV_FASTSETPA 0x20
-#define ASTRODEV_GET_RTC 0x41
-#define ASTRODEV_SET_RTC 0x42
-#define ASTRODEV_ALARM_RTC 0x43
-
-#define ASTRODEV_16BYTE_OA_KEY "ABCDEFGHIJKLMNOP"
-
-#define ASTRODEV_RF_BAUD(rate) (rate?4800<<rate:1200)
-#define ASTRODEV_UART_BAUD(rate) (9600<<rate)
-
-enum
-	{
-	ASTRODEV_BAUD_RATE_9600,
-	ASTRODEV_BAUD_RATE_19200,
-	ASTRODEV_BAUD_RATE_38400,
-	ASTRODEV_BAUD_RATE_76800,
-	ASTRODEV_BAUD_RATE_115200
-	};
-
-enum
-	{
-	ASTRODEV_RF_BAUD_RATE_1200,
-	ASTRODEV_RF_BAUD_RATE_9600,
-	ASTRODEV_RF_BAUD_RATE_19200,
-    ASTRODEV_RF_BAUD_RATE_38400,
-    ASTRODEV_RF_BAUD_RATE_57600,
-    ASTRODEV_RF_BAUD_RATE_115200,
-    };
-
-enum
-	{
-	ASTRODEV_MODULATION_GFSK,
-	ASTRODEV_MODULATION_AFSK,
-	ASTRODEV_MODULATION_BPSK
-	};
-
-// OA Commands
-#define ASTRODEV_TELEMETRY_DUMP_COMMAND 0x30
-#define ASTRODEV_PING_RETURN_COMMAND 0x31
-#define ASTRODEV_CODE_UPLOAD_COMMAND 0x32
-#define ASTRODEV_RADIO_RESET_COMMAND 0x33
-#define ASTRODEV_PIN_TOGGLE_COMMAND 0x34
-
-#define ASTRODEV_ID 1
-#define ASTRODEV_BAUD 9600
-#define ASTRODEV_BITS 8
-#define ASTRODEV_PARITY 0
-#define ASTRODEV_STOPBITS 1
-
-#define ASTRODEV_MTU 254
-
-typedef struct
+namespace Artemis
 {
-    uint8_t interface_baud_rate;    //Radio Interface Baud Rate (9600=0x00)
-    uint8_t tx_power_amp_level;     //Tx Power Amp level (min = 0x00 max = 0xFF)
-    uint8_t rx_rf_baud_rate;        //Radio RX RF Baud Rate (9600=0x00)
-    uint8_t tx_rf_baud_rate;        //Radio TX RF Baud Rate (9600=0x00)
-    uint8_t rx_modulation;          //(0x00 = GFSK);
-    uint8_t tx_modulation;          //(0x00 = GFSK);
-    uint32_t rx_freq;               //Channel Rx Frequency (ex: 45000000)
-    uint32_t tx_freq;               //Channel Tx Frequency (ex: 45000000)
-    unsigned char source[6];        //AX25 Mode Source Call Sign (default NOCALL)
-    unsigned char destination[6];   //AX25 Mode Destination Call Sign (default CQ)
-    uint16_t tx_preamble;           //AX25 Mode Tx Preamble Byte Length (0x00 = 20 flags)
-    uint16_t tx_postamble;          //AX25 Mode Tx Postamble Byte Length (0x00 = 20 flags)
-    uint16_t function_config;       //Radio Configuration Discrete Behaviors
-    uint16_t function_config2;      //Radio Configuration Discrete Behaviors 2
-} RADIO_CONFIGURATION_TYPE;
-#define RADIO_CONFIG_SIZE 34        //sizeof(RADIO_CONFIGURATION_TYPE)
+    namespace Teensy
+    {
+        namespace Radio
+        {
+            class Astrodev
+            {
+            public:
+                static constexpr uint8_t SYNC0 = 'H';
+                static constexpr uint8_t SYNC1 = 'e';
+                static constexpr uint8_t COMMAND = 0x10;
+                static constexpr uint8_t RESPONSE = 0x10;
+                static constexpr uint8_t MTU = 254;
+                static constexpr uint16_t PACKETCOMM_DATA_SIZE = MTU - (sizeof(Cosmos::Support::PacketComm::Header) + 2);
 
-typedef struct
-{
-    uint8_t front_end_level;        //0 to 63 Value
-    uint8_t tx_power_amp_level;     //0 to 255 value, non-linear
-    uint32_t tx_frequency_offset;   //Up to 20 kHz
-    uint32_t rx_frequency_offset;   //Up to 20 kHz
-    uint8_t tx_frequency_deviation; //Set for your baud rate options: 0 (2.7 kHz),1 (5.4 kHz),2 (10.8 kHz),3 (21.6 kHz),4 (43.2 kHz) CAUTION
-    uint8_t rx_frequency_deviation; //N/A for release 3.10
-    uint8_t pre_transmit_delay;     //Delay in tens of milliseconds. Default 1 second = 100;
-    uint8_t post_transmit_delay;    //Delay in tens of milliseconds. Default 0 (NOT IMPLEMENTED USE POSTAMBLE)
-} RADIO_RF_CONFIGURATION_TYPE;
-#define RF_CONFIG_SIZE 14
+                std::map<uint8_t, uint16_t> RF_BAUD = {{0, 9600}, {1, 19200}, {2, 38400}, {3, 57600}, {4, 115200}};
+                std::map<uint8_t, uint16_t> RF_INDEX = {{1200, 0}, {9600, 1}, {19200, 2}, {38400, 3}, {57600, 4}, {115200, 5}};
+                std::map<uint8_t, uint16_t> UART_BAUD = {{0, 1200}, {1, 9600}, {2, 19200}, {3, 38400}, {4, 57600}, {5, 115200}};
+                std::map<uint8_t, uint16_t> UART_INDEX = {{9600, 0}, {19200, 1}, {38400, 2}, {57600, 3}, {115200, 4}};
 
-typedef struct
-{
-    uint8_t beacon_interval;        //value of 0 is off, 2.5 sec delay per LSB
-} RADIO_BEACON_CONFIGURATION_TYPE;
-#define BEACON_CONFIG_SIZE 1
+                Astrodev();
 
-typedef struct telem_type
-{
-    uint16_t op_counter;
-    int16_t msp430_temp;
-    uint8_t time_count[3];
-    uint8_t rssi;
-    uint32_t bytes_received;
-    uint32_t bytes_transmitted;
-    uint8_t rssi_lastpacket;
-    uint8_t rtc_alarm_flag;
-} TELEMETRY_STRUCTURE_type;
+                enum class Command
+                {
+                    NAK = 0x00,
+                    NOOP = 0x01,
+                    RESET = 0x02,
+                    TRANSMIT = 0x03,
+                    RECEIVE = 0x04,
+                    GETTCVCONFIG = 0x05,
+                    SETTCVCONFIG = 0x06,
+                    TELEMETRY = 0x07,
+                    FLASH = 0x08,
+                    RFCONFIG = 0x09,
+                    BEACONDATA = 0x10,
+                    BEACONCONFIG = 0x11,
+                    FIRMWAREREV = 0x12,
+                    DIOKEY = 0x13,
+                    FIRMWAREUPDATE = 0x14,
+                    FIRMWAREPACKET = 0x15,
+                    WRITE_KEY_A_128 = 0x16,
+                    WRITE_KEY_B_128 = 0x17,
+                    WRITE_KEY_A_256 = 0x18,
+                    WRITE_KEY_B_256 = 0x19,
+                    FASTSETPA = 0x20,
+                    GET_RTC = 0x41,
+                    SET_RTC = 0x42,
+                    ALARM_RTC = 0x42
+                };
 
-typedef struct RTC_type
-{
-    unsigned short int year;    // Year = 0x2021
-    unsigned char mon;          // Month = 0x10 = October
-    unsigned char day;          // Day = 0x07 = 7th
-    unsigned char dow;          // Day of week = 0x05 = Friday
-    unsigned char hour;         // Hour = 0x11
-    unsigned char min;          // Minute = 0x59
-    unsigned char sec;          // Seconds = 0x30
-    unsigned char alarm_dow;    // RTC Day of week alarm = 0x2
-    unsigned char alarm_day;    // RTC Day Alarm = 0x20
-    unsigned char alarm_hour;   // RTC Hour Alarm
-    unsigned char alarm_min;    // RTC Minute Alarm
-} RTC_STRUCTURE_type;
+                enum class Modulation
+                {
+                    ASTRODEV_MODULATION_GFSK,
+                    ASTRODEV_MODULATION_AFSK,
+                    ASTRODEV_MODULATION_BPSK
+                };
 
+                enum class OACommand
+                {
+                    TELEMETRY_DUMP = 0x30,
+                    PING_RETURN = 0x31,
+                    CODE_UPLOAD = 0x32,
+                    RADIO_RESET = 0x33,
+                    PIN_TOGGLE = 0x34,
+                };
 
-#endif // _ASTRODEVLIB_H 
+                struct __attribute__((packed)) uart_status
+                {
+                    bool buffer_full : 1;
+                    bool gpio_a_high : 1;
+                    bool gpio_b_high : 1;
+                    bool external_event_high : 1;
+                };
+
+                struct __attribute__((packed)) function_config1
+                {
+                    // Nybble 1
+                    unsigned ext_event_pin12_functions : 2; // 0: Off, Logic Low / 1: 2.5s Toggle / 2: TX Packet Toggle (12ms) / 3: Rx Packet Toggle (1.25ms)
+                    unsigned config2_pin13_functions : 2;   // 0: Off, Logic Low / 1: Tx/Rx Switch / 2: 2.5Hz WDT / 3: Rx Packet Toggle (1.25ms)
+
+                    // Nybble 2
+                    unsigned config1_pin14_dio_enable : 1;  // 0: CONFIG1 Off, Logic Low  /  1: CONFIG1 Digital IO Over the Air Key Enable
+                    unsigned config1_pin14_dio_pattern : 1; // 0: CONFIG1 Pattern A, Latch High  /  1: CONFIG1 Pattern B, Toggle, 72ms High
+                    unsigned rx_crc_enable : 1;             // RX CRC Enable 1/Disable 0
+                    unsigned tx_crc_enable : 1;             // TBD // TX CRC Enable 1/Disable 0
+
+                    // Nybble 3
+                    unsigned tlm_packet_logging_enable : 1; // Telemetry Packet Logging Enable 1/Disable 0
+                    unsigned tlm_packet_logging_rate : 2;   // Logging Rate 0 1/10 Hz, 1 1 Hz, 2 2 Hz,3 4 Hz
+                    unsigned tlm_dump_enable : 1;           // Telemetry Dump Enable 1/Disable 0
+
+                    // Nybble 4
+                    unsigned oa_commands_enable : 1;        // Enable OA Commands Enable 1/Disable 0
+                    unsigned code_upload_enable : 1;        // Code Upload Enable 1/Disable 0
+                    unsigned radio_reset_enable : 1;        // Radio Reset Enable 1/Disable 0
+                    unsigned factory_defaults_restored : 1; // Flag: Factory settings restore complete
+                };
+
+                struct __attribute__((packed)) function_config2
+                {
+                    // Nybble 1
+                    unsigned rx_afc_enable : 1;   // Receiver Automatic Frequency Control On/Off
+                    unsigned test_mode_rx_cw : 1; // RX CW (CAUTION TEST MODE), Set to 0 for normal operation
+                    unsigned test_mode_tx_cw : 1; // TX CW (CAUTION TEST MODE), Set to 0 for normal operation
+                    unsigned test_mode_tbd : 1;   // TBD (CAUTION TEST MODE), Set to 0 for normal operation
+
+                    // Nybble 2-4
+                    unsigned zeros : 4; // Set to 0
+                };
+
+                struct __attribute__((packed)) tcv_config
+                {
+                    uint8_t interface_baud_rate;
+                    uint8_t power_amp_level;
+                    uint8_t rx_baud_rate;
+                    uint8_t tx_baud_rate;
+                    uint8_t rx_modulation;
+                    uint8_t tx_modulation;
+                    uint16_t rx_freq_low;
+                    uint16_t rx_freq_high;
+                    uint16_t tx_freq_low;
+                    uint16_t tx_freq_high;
+                    uint8_t ax25_source[6];
+                    uint8_t ax25_destination[6];
+                    uint16_t ax25_preamble_length;
+                    uint16_t ax25_postamble_length;
+                    function_config1 config1;
+                    function_config2 config2;
+                    uint16_t cs;
+                };
+
+                struct __attribute__((packed)) rf_config
+                {
+                    uint8_t front_end_level;
+                    uint8_t power_amp_level;
+                    uint16_t tx_freq;
+                    uint16_t rx_freq;
+                    uint16_t cs;
+                };
+
+                struct __attribute__((packed)) telemetry
+                {
+                    uint16_t op_counter;
+                    int16_t msp430_temp;
+                    unsigned time_count : 24;
+                    uint8_t rssi;
+                    uint32_t bytes_rx;
+                    uint32_t bytes_tx;
+                    uint16_t cs;
+                };
+
+                struct __attribute__((packed)) firmware
+                {
+                    float rev;
+                    uint16_t cs;
+                };
+
+                struct __attribute__((packed)) rtc
+                {
+                    uint16_t year;      // Year = 0x2021
+                    uint8_t mon;        // Month = 0x10 = October
+                    uint8_t day;        // Day = 0x07 = 7th
+                    uint8_t dow;        // Day of week = 0x05 = Friday
+                    uint8_t hour;       // Hour = 0x11
+                    uint8_t min;        // Minute = 0x59
+                    uint8_t sec;        // Seconds = 0x30
+                    uint8_t alarm_dow;  // RTC Day of week alarm = 0x2
+                    uint8_t alarm_day;  // RTC Day Alarm = 0x20
+                    uint8_t alarm_hour; // RTC Hour Alarm
+                    uint8_t alarm_min;  // RTC Minute Alarm
+                };
+
+                struct __attribute__((packed)) beacon_config
+                {
+                    uint8_t beacon_interval; // 0 is off, 2.5 sec delay per LSB
+                    uint16_t cs;
+                };
+
+                struct __attribute__((packed)) frame
+                {
+                    union
+                    {
+                        struct
+                        {
+                            uint8_t sync0;
+                            uint8_t sync1;
+                            uint8_t type;
+                            uint8_t command;
+                            unsigned ack : 4;
+                            uart_status status;
+                            uint8_t size;
+                            uint16_t cs;
+                        } header;
+                        uint8_t preamble[8];
+                    };
+                    union
+                    {
+                        uint8_t payload[MTU + 20];
+                        tcv_config tcv;
+                        rf_config rf;
+                        firmware firmw;
+                        telemetry telem;
+                    };
+                };
+
+                telemetry last_telem;
+                int32_t last_error = 0;
+                bool last_ack = false;
+                Command last_command = Command::NAK;
+
+                int32_t Queue(std::queue<Cosmos::Support::PacketComm> &queue, Threads::Mutex &mtx, const Cosmos::Support::PacketComm &p);
+                int32_t DeQueue(std::queue<Cosmos::Support::PacketComm> &queue, Threads::Mutex &mtx, Cosmos::Support::PacketComm &p);
+                int32_t PacketIn(Cosmos::Support::PacketComm &p);
+                int32_t PacketInSize();
+                int32_t PacketOut(Cosmos::Support::PacketComm &p);
+                int32_t PacketOutSize();
+                int32_t Clear(std::queue<Cosmos::Support::PacketComm> &queue, Threads::Mutex &mtx);
+                int32_t Init(uint32_t baud_rate = 9600);
+                void Join();
+                int32_t Packetize(Cosmos::Support::PacketComm &packet);
+                int32_t UnPacketize(Cosmos::Support::PacketComm &packet);
+
+                int32_t Ping();
+                int32_t Reset();
+                int32_t SendData(std::vector<uint8_t> data);
+                int32_t GetTCVConfig();
+                int32_t SetTCVConfig(tcv_config config);
+                int32_t GetTelemetry();
+                int32_t SetRFConfig(rf_config config);
+                int32_t Transmit(frame message);
+                uint16_t CalcCS(uint8_t *data, uint16_t size);
+
+                int32_t connect(String dev);
+                int32_t disconnect();
+                int32_t recvframe();
+                int32_t setupframe(frame *frame);
+                uint16_t loadframe(uint8_t *data, uint16_t size);
+                int32_t unloadframe(uint8_t *data, uint16_t size);
+                int32_t checkframe(frame *frame);
+                int32_t rfconfig();
+                int32_t firmwarerev();
+                int32_t transmit(uint8_t *data, uint16_t size);
+                int32_t receive(uint8_t *data, uint16_t size);
+
+            private:
+                bool running = true;
+
+                std::queue<std::vector<uint8_t>> queue_in;
+                Threads::Mutex qmutex_in;
+                int32_t push_queue_in(std::vector<uint8_t> data);
+                int32_t pop_queue_in(std::vector<uint8_t> &data);
+                int32_t check_queue_in();
+
+                std::queue<Cosmos::Support::PacketComm> packet_queue_out;
+                void receive_loop();
+                Threads rthread;
+                Threads::Mutex qmutex_out;
+            };
+        }
+    }
+}
+
+#endif // _ASTRODEVLIB_H

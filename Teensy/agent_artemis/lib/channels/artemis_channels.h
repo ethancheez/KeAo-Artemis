@@ -5,6 +5,7 @@
 #include <cmd_queue.h>
 #include <rfm23.h>
 #include <rfm98.h>
+#include <astrodev.h>
 #include <Wire.h>
 #include <Adafruit_LIS3MDL.h>
 #include <Adafruit_Sensor.h>
