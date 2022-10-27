@@ -1,4 +1,4 @@
-#include <cmd_queue.h>
+#include <artemis_defs.h>
 
 // Mutex for Command Queues
 Threads::Mutex main_queue_mtx;

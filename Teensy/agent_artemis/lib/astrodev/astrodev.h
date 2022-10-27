@@ -226,7 +226,7 @@ namespace Artemis
                 int32_t PacketOut(Cosmos::Support::PacketComm &p);
                 int32_t PacketOutSize();
                 int32_t Clear(std::queue<Cosmos::Support::PacketComm> &queue, Threads::Mutex &mtx);
-                int32_t Init(uint32_t baud_rate = 9600);
+                int32_t Init(HardwareSerial *serial = &Serial8, uint32_t baud_rate = 9600);
                 void Join();
                 int32_t Packetize(Cosmos::Support::PacketComm &packet);
                 int32_t UnPacketize(Cosmos::Support::PacketComm &packet);
@@ -255,6 +255,7 @@ namespace Artemis
 
             private:
                 bool running = true;
+                HardwareSerial *serial;
 
                 std::queue<std::vector<uint8_t>> queue_in;
                 Threads::Mutex qmutex_in;

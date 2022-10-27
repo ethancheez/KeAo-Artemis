@@ -10,17 +10,17 @@ namespace Artemis
             {
             }
 
-            int32_t Astrodev::Init(uint32_t baud_rate)
+            int32_t Astrodev::Init(HardwareSerial *serial_port, uint32_t baud_rate)
             {
                 int32_t iretn;
+                this->serial = serial_port;
+                this->serial->begin(baud_rate);
 
-                Serial8.begin(baud_rate);
-
-                if ((iretn=Ping()) < 0)
+                if ((iretn = Ping()) < 0)
                 {
                     Reset();
                     delay(20000);
-                    if ((iretn=Ping()) < 0)
+                    if ((iretn = Ping()) < 0)
                     {
                         return iretn;
                     }
@@ -45,7 +45,7 @@ namespace Artemis
                 message.header.cs = CalcCS(&message.preamble[2], 4);
                 for (uint16_t i = 0; i < 8; i++)
                 {
-                    Serial8.print(message.preamble[i]);
+                    this->serial->print(message.preamble[i]);
                 }
 
                 union
@@ -58,7 +58,7 @@ namespace Artemis
                 message.payload[message.header.size + 1] = csb[1];
                 for (uint16_t i = 0; i < message.header.size + 2; i++)
                 {
-                    Serial8.print(message.payload[i]);
+                    this->serial->print(message.payload[i]);
                 }
 
                 return message.header.size + 10;
