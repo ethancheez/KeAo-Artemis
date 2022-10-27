@@ -24,10 +24,6 @@ namespace Artemis
             void rfm23_channel();
             void rfm98_channel();
             void astrodev_channel();
-            void magnetometer_channel();
-            void accelerometer_gyroscope_channel();
-            void temperature_channel();
-            void current_channel();
             void pdu_channel();
         }
     }
