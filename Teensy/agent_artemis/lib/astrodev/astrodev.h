@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include <support/packetcomm.h>
+#include <support/configCosmos.h>
 
 namespace Artemis
 {
@@ -22,7 +23,7 @@ namespace Artemis
                 static constexpr uint8_t COMMAND = 0x10;
                 static constexpr uint8_t RESPONSE = 0x10;
                 static constexpr uint8_t MTU = 254;
-                static constexpr uint16_t PACKETCOMM_DATA_SIZE = MTU - (sizeof(Cosmos::Support::PacketComm::Header) + 2);
+                static constexpr uint16_t PACKETCOMM_DATA_SIZE = MTU - (COSMOS_SIZEOF(PacketComm::Header) + 2);
 
                 std::map<uint8_t, uint16_t> RF_BAUD = {{0, 9600}, {1, 19200}, {2, 38400}, {3, 57600}, {4, 115200}};
                 std::map<uint8_t, uint16_t> RF_INDEX = {{1200, 0}, {9600, 1}, {19200, 2}, {38400, 3}, {57600, 4}, {115200, 5}};
@@ -219,21 +220,21 @@ namespace Artemis
                 bool last_ack = false;
                 Command last_command = Command::NAK;
 
-                int32_t Queue(std::queue<Cosmos::Support::PacketComm> &queue, Threads::Mutex &mtx, const Cosmos::Support::PacketComm &p);
-                int32_t DeQueue(std::queue<Cosmos::Support::PacketComm> &queue, Threads::Mutex &mtx, Cosmos::Support::PacketComm &p);
-                int32_t PacketIn(Cosmos::Support::PacketComm &p);
+                int32_t Queue(queue<PacketComm> &queue, Threads::Mutex &mtx, const PacketComm &p);
+                int32_t DeQueue(queue<PacketComm> &queue, Threads::Mutex &mtx, PacketComm &p);
+                int32_t PacketIn(PacketComm &p);
                 int32_t PacketInSize();
-                int32_t PacketOut(Cosmos::Support::PacketComm &p);
+                int32_t PacketOut(PacketComm &p);
                 int32_t PacketOutSize();
-                int32_t Clear(std::queue<Cosmos::Support::PacketComm> &queue, Threads::Mutex &mtx);
+                int32_t Clear(queue<PacketComm> &queue, Threads::Mutex &mtx);
                 int32_t Init(HardwareSerial *serial = &Serial8, uint32_t baud_rate = 9600);
                 void Join();
-                int32_t Packetize(Cosmos::Support::PacketComm &packet);
-                int32_t UnPacketize(Cosmos::Support::PacketComm &packet);
+                int32_t Packetize(PacketComm &packet);
+                int32_t UnPacketize(PacketComm &packet);
 
                 int32_t Ping();
                 int32_t Reset();
-                int32_t SendData(std::vector<uint8_t> data);
+                int32_t SendData(vector<uint8_t> data);
                 int32_t GetTCVConfig();
                 int32_t SetTCVConfig(tcv_config config);
                 int32_t GetTelemetry();
@@ -257,13 +258,13 @@ namespace Artemis
                 bool running = true;
                 HardwareSerial *serial;
 
-                std::queue<std::vector<uint8_t>> queue_in;
+                queue<vector<uint8_t>> queue_in;
                 Threads::Mutex qmutex_in;
-                int32_t push_queue_in(std::vector<uint8_t> data);
-                int32_t pop_queue_in(std::vector<uint8_t> &data);
+                int32_t push_queue_in(vector<uint8_t> data);
+                int32_t pop_queue_in(vector<uint8_t> &data);
                 int32_t check_queue_in();
 
-                std::queue<Cosmos::Support::PacketComm> packet_queue_out;
+                queue<PacketComm> packet_queue_out;
                 void receive_loop();
                 Threads rthread;
                 Threads::Mutex qmutex_out;

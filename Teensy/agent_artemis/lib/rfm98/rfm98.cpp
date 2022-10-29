@@ -39,34 +39,45 @@ namespace Artemis
                 delay(10);
             }
 
-            void RFM98::RFM98_SEND(const char *msg)
+            void RFM98::RFM98_SEND(const unsigned char *msg, size_t length)
             {
                 Serial.print("[RFM98] Sending: [");
-                Serial.print(msg);
+                for (size_t i = 0; i < length; ++i)
+                {
+                    Serial.print(*(msg + i));
+                    Serial.print(" ");
+                }
                 Serial.println("]");
 
                 Threads::Scope scope(spi1_mtx);
-                rfm98.send((uint8_t *)msg, strlen(msg));
+                rfm98.send((uint8_t *)msg, length);
 
                 rfm98.waitPacketSent();
             }
 
             void RFM98::RFM98_RECV()
             {
+                uint8_t bytes_received = 0;
+
                 Threads::Scope scope(spi1_mtx);
                 if (rfm98.waitAvailableTimeout(100))
                 {
-                    if (rfm98.recv(RFM98_RECV_BUF, &RFM98_RECV_LEN))
+                    packet.packetized.resize(RFM98_RECV_LEN);
+                    if (rfm98.recv(packet.packetized.data(), &bytes_received))
                     {
                         Serial.print("[RFM98] Reply: [");
                         for (int i = 0; i < RFM98_RECV_LEN; i++)
                         {
-                            Serial.print((char)RFM98_RECV_BUF[i]);
+                            Serial.print((char)packet.packetized[i]);
                         }
                         Serial.println("]");
                         Serial.print("RSSI: ");
                         Serial.println(rfm98.lastRssi(), DEC);
-                        memset(RFM98_RECV_BUF, '\0', RH_RF95_MAX_MESSAGE_LEN);
+                        // send packet to the main queue
+                        packet.packetized.resize(bytes_received);
+                        packet.RawUnPacketize();
+                        main_queue.push(packet);
+                        packet.packetized.resize(RFM98_RECV_LEN, 0);
                     }
                     else
                     {

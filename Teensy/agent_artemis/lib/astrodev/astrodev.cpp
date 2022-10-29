@@ -86,7 +86,7 @@ namespace Artemis
                 return iretn;
             }
 
-            int32_t Astrodev::SendData(std::vector<uint8_t> data)
+            int32_t Astrodev::SendData(vector<uint8_t> data)
             {
                 int32_t iretn;
                 frame message;

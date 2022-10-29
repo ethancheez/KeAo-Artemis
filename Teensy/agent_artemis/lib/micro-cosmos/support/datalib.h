@@ -15,6 +15,7 @@ static const struct _node_list_struct _node_list[] = {
     {1, "ground"},
     {2, "teensy"},
     {3, "rpi"},
+    {4, "pleiades"},
 };
 
 namespace Cosmos
