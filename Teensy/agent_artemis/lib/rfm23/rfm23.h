@@ -33,8 +33,6 @@ namespace Artemis
             {
             private:
                 RH_RF22 rfm23;
-                uint8_t RFM23_RECV_BUF[RH_RF22_MAX_MESSAGE_LEN];
-                uint8_t RFM23_RECV_LEN = sizeof(RFM23_RECV_BUF);
                 PacketComm packet;
 
             public:
@@ -42,7 +40,7 @@ namespace Artemis
                 void RFM23_RESET();
                 bool RFM23_INIT();
                 void RFM23_SEND(const unsigned char *input, size_t length);
-                void RFM23_RECV();
+                PacketComm RFM23_RECV();
             };
         }
     }

@@ -16,7 +16,6 @@ namespace Artemis
                 SPI1.setSCK(RFM23_SPI_SCK);
                 pinMode(RFM23_RX_ON, OUTPUT);
                 pinMode(RFM23_TX_ON, OUTPUT);
-                packet.packetized.resize(RFM23_RECV_LEN);
 
                 unsigned long timeoutStart = millis();
                 while (!rfm23.init())
@@ -55,13 +54,13 @@ namespace Artemis
             {
                 digitalWrite(RFM23_RX_ON, HIGH);
                 digitalWrite(RFM23_TX_ON, LOW);
-                Serial.print("[RFM23] Sending: [");
-                for (size_t i = 0; i < length; ++i)
-                {
-                    Serial.print(*(msg + i));
-                    Serial.print(" ");
-                }
-                Serial.println("]");
+                // Serial.print("[RFM23] Sending: [");
+                // for (size_t i = 0; i < length; ++i)
+                // {
+                //     Serial.print(*(msg + i));
+                //     Serial.print(" ");
+                // }
+                // Serial.println("]");
 
                 Threads::Scope scope(spi1_mtx);
                 rfm23.send((uint8_t *)msg, length);
@@ -69,9 +68,9 @@ namespace Artemis
                 rfm23.waitPacketSent();
             }
 
-            void RFM23::RFM23_RECV()
+            PacketComm RFM23::RFM23_RECV()
             {
-
+                packet.packetized.resize(0);
                 digitalWrite(RFM23_RX_ON, LOW);
                 digitalWrite(RFM23_TX_ON, HIGH);
                 uint8_t bytesrecieved = 0;
@@ -79,29 +78,26 @@ namespace Artemis
                 Threads::Scope scope(spi1_mtx);
                 if (rfm23.waitAvailableTimeout(100))
                 {
-                    Serial.println("inside recv");
-                    packet.packetized.resize(RFM23_RECV_LEN);
+                    packet.packetized.resize(RH_RF22_MAX_MESSAGE_LEN);
                     if (rfm23.recv(packet.packetized.data(), &bytesrecieved))
                     {
-                        Serial.print("[RFM23] Reply: [");
-                        for (int i = 0; i < bytesrecieved; i++)
-                        {
-                            Serial.print((char)packet.packetized[i]);
-                        }
-                        Serial.println("]");
-                        Serial.print("RSSI: ");
-                        Serial.println(rfm23.lastRssi(), DEC);
-                        // send packet to the main queue
+                        // Serial.print("[RFM23] Reply: [");
+                        // for (int i = 0; i < bytesrecieved; i++)
+                        // {
+                        //     Serial.print((char)packet.packetized[i]);
+                        // }
+                        // Serial.println("]");
+                        // Serial.print("RSSI: ");
+                        // Serial.println(rfm23.lastRssi(), DEC);
+
                         packet.packetized.resize(bytesrecieved);
                         packet.RawUnPacketize();
-                        main_queue.push(packet);
-                        packet.packetized.resize(RFM23_RECV_LEN, 0);
-                    }
-                    else
-                    {
-                        Serial.println("Receive failed");
+                        // main_queue.push(packet);
+                        // packet.packetized.resize(RFM23_RECV_LEN, 0);
                     }
                 }
+
+                return packet;
             }
         }
     }

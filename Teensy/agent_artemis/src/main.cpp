@@ -10,6 +10,8 @@ namespace
   NodeData::NODE_ID_TYPE teensy_node_id;
   NodeData::NODE_ID_TYPE rpi_node_id;
   NodeData::NODE_ID_TYPE pleiades_node_id;
+
+  PacketComm packet;
 }
 
 /* Helper Function Defs */
@@ -44,11 +46,6 @@ float magx = {0}, magy = {0}, magz = {0};
 float accelx = {0}, accely = {0}, accelz = {0};
 float gyrox = {0}, gyroy = {0}, gyroz = {0};
 float imutemp = {0};
-
-// Max threads = 16
-vector<struct thread_struct> thread_list;
-
-PacketComm packet;
 
 void setup()
 {
@@ -104,6 +101,23 @@ void loop()
     }
     else if (packet.header.dest == teensy_node_id)
     {
+      switch (packet.header.type)
+      {
+      case PacketComm::TypeId::CommandEpsCommunicate:
+      case PacketComm::TypeId::CommandEpsMinimumPower:
+      case PacketComm::TypeId::CommandEpsReset:
+      case PacketComm::TypeId::CommandEpsSetTime:
+      case PacketComm::TypeId::CommandEpsState:
+      case PacketComm::TypeId::CommandEpsSwitchName:
+      case PacketComm::TypeId::CommandEpsSwitchNames:
+      case PacketComm::TypeId::CommandEpsSwitchNumber:
+      case PacketComm::TypeId::CommandEpsSwitchStatus:
+      case PacketComm::TypeId::CommandEpsWatchdog:
+        packet.PushQueue(pdu_queue, pdu_queue_mtx);
+        break;
+      default:
+        break;
+      }
     }
   }
 }

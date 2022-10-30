@@ -1,5 +1,7 @@
 #include <artemis_defs.h>
 
+vector<struct thread_struct> thread_list;
+
 // Nodes
 NodeData nodeData;
 
@@ -20,3 +22,19 @@ queue<PacketComm> pdu_queue;
 // Other Mutex
 Threads::Mutex spi_mtx;
 Threads::Mutex spi1_mtx;
+
+// Utility Functions
+int kill_thread(char *thread_name)
+{
+    for (auto it = thread_list.begin(); it != thread_list.end(); it++)
+    {
+        if (it->thread_name == thread_name)
+        {
+            int ret = it->thread_id;
+            threads.kill(it->thread_id);
+            thread_list.erase(it);
+            return ret;
+        }
+    }
+    return -1;
+}

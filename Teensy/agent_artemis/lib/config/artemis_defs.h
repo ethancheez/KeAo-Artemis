@@ -1,7 +1,6 @@
 #ifndef _ARTEMIS_DEFS_H
 #define _ARTEMIS_DEFS_H
 
-#include <queue>
 #include <TeensyThreads.h>
 #include <support/packetcomm.h>
 #include <support/configCosmos.h>
@@ -73,6 +72,9 @@ enum ARTEMIS_RADIOS : uint8_t
   ASTRODEV,
 };
 
+// Max threads = 16
+extern vector<struct thread_struct> thread_list;
+
 // Nodes
 extern NodeData nodeData;
 
@@ -93,5 +95,8 @@ extern queue<PacketComm> pdu_queue;
 // Other Mutex
 extern Threads::Mutex spi_mtx;
 extern Threads::Mutex spi1_mtx;
+
+// Utility Functions
+int kill_thread(char *thread_name);
 
 #endif // _ARTEMIS_DEFS_H
