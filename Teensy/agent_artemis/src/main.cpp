@@ -43,7 +43,7 @@ float imutemp = {0};
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   delay(3000);
 
   // setup_magnetometer();
@@ -51,8 +51,8 @@ void setup()
   // setup_current();
 
   // Threads
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
-  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
 
@@ -62,11 +62,11 @@ void setup()
 void loop()
 {
   packet.header.orig = teensy_node_id;
-  packet.header.dest = pleiades_node_id;
-  packet.header.radio = ARTEMIS_RADIOS::RFM98;
-  packet.header.type = PacketComm::TypeId::CommandPing;
+  packet.header.dest = ground_node_id;
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
+  packet.header.type = PacketComm::TypeId::DataPong;
   packet.data.resize(0);
-  const char *data = "Ping";
+  const char *data = "Pong";
   for (size_t i = 0; i < strlen(data); i++) {
     packet.data.push_back(data[i]);
   }

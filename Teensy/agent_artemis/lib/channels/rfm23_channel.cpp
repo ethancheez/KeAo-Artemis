@@ -12,16 +12,32 @@ void Artemis::Teensy::Channels::rfm23_channel()
     {
         if (PullQueue(&packet, rfm23_queue, rfm23_queue_mtx))
         {
-            Serial.println((int)packet.header.type);
+            switch (packet.header.type)
+            {
+            case PacketComm::TypeId::DataBeacon:
+            case PacketComm::TypeId::DataPong:
+            case PacketComm::TypeId::DataEpsResponse:
+            case PacketComm::TypeId::DataRadioResponse:
+            case PacketComm::TypeId::DataAdcsResponse:
+            case PacketComm::TypeId::DataResponse:
+                packet.Wrap();
+                rfm23.send(packet.wrapped.data(), packet.wrapped.size());
+                packet.wrapped.resize(0);
+                break;
+            default:
+                break;
+            }
         }
 
-        packet = rfm23.recv();
-
-        // Got data from radio
-        if (packet.packetized.size() > 0)
+        packet.data.resize(0);
+        if (rfm23.recv(&packet))
         {
-            Serial.println("rfm23 recv");
-            packet.packetized.resize(0);
+            Serial.print("[RFM23] RECEIVED: [");
+            for (size_t i = 0; i < packet.data.size(); i++)
+            {
+                Serial.print((char)packet.data[i]);
+            }
+            Serial.println("]");
         }
     }
 }

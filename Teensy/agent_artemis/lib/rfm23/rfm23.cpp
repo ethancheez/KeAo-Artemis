@@ -54,50 +54,38 @@ namespace Artemis
             {
                 digitalWrite(RFM23_RX_ON, HIGH);
                 digitalWrite(RFM23_TX_ON, LOW);
-                // Serial.print("[RFM23] Sending: [");
-                // for (size_t i = 0; i < length; ++i)
-                // {
-                //     Serial.print(*(msg + i));
-                //     Serial.print(" ");
-                // }
-                // Serial.println("]");
 
                 Threads::Scope scope(spi1_mtx);
                 rfm23.send((uint8_t *)msg, length);
-
                 rfm23.waitPacketSent();
+
+                Serial.print("[RFM23] SENDING: [");
+                for(size_t i = 0; i < length; i++) {
+                    Serial.print(msg[i]);
+                }
+                Serial.println("]");
             }
 
-            PacketComm RFM23::recv()
+            bool RFM23::recv(PacketComm *packet)
             {
-                packet.packetized.resize(0);
+                packet->wrapped.resize(0);
                 digitalWrite(RFM23_RX_ON, LOW);
                 digitalWrite(RFM23_TX_ON, HIGH);
-                uint8_t bytesrecieved = 0;
+                uint8_t bytes_recieved = sizeof(packet->wrapped);
 
                 Threads::Scope scope(spi1_mtx);
                 if (rfm23.waitAvailableTimeout(100))
                 {
-                    packet.packetized.resize(RH_RF22_MAX_MESSAGE_LEN);
-                    if (rfm23.recv(packet.packetized.data(), &bytesrecieved))
+                    packet->wrapped.resize(RH_RF22_MAX_MESSAGE_LEN);
+                    if (rfm23.recv(packet->wrapped.data(), &bytes_recieved))
                     {
-                        // Serial.print("[RFM23] Reply: [");
-                        // for (int i = 0; i < bytesrecieved; i++)
-                        // {
-                        //     Serial.print((char)packet.packetized[i]);
-                        // }
-                        // Serial.println("]");
-                        // Serial.print("RSSI: ");
-                        // Serial.println(rfm23.lastRssi(), DEC);
-
-                        packet.packetized.resize(bytesrecieved);
-                        packet.RawUnPacketize();
-                        // main_queue.push(packet);
-                        // packet.packetized.resize(RFM23_RECV_LEN, 0);
+                        packet->wrapped.resize(bytes_recieved);
+                        packet->Unwrap();
+                        return true;
                     }
                 }
 
-                return packet;
+                return false;
             }
         }
     }

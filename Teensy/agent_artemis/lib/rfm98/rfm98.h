@@ -32,16 +32,13 @@ namespace Artemis
             {
             private:
                 RH_RF95 rfm98;
-                uint8_t RFM98_RECV_BUF[RH_RF95_MAX_MESSAGE_LEN];
-                uint8_t RFM98_RECV_LEN = sizeof(RFM98_RECV_BUF);
-                PacketComm packet;
 
             public:
                 RFM98(uint8_t slaveSelectPin = RFM98_CS_PIN, uint8_t interruptPin = RFM98_INT_PIN, RHGenericSPI &spi = hardware_spi1);
                 void reset();
                 bool init();
                 void send(const unsigned char *input, size_t length);
-                void recv();
+                bool recv(PacketComm *packet);
             };
         }
     }

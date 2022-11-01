@@ -47,44 +47,35 @@ namespace Artemis
 
             void RFM98::send(const unsigned char *msg, size_t length)
             {
-                // Serial.print("[RFM98] Sending: [");
-                // for (size_t i = 0; i < length; ++i)
-                // {
-                //     Serial.print(*(msg + i));
-                //     Serial.print(" ");
-                // }
-                // Serial.println("]");
-
                 Threads::Scope scope(spi1_mtx);
                 rfm98.send((uint8_t *)msg, length);
-
                 rfm98.waitPacketSent();
+                
+                Serial.print("[RFM98] SENDING: [");
+                for(size_t i = 0; i < length; i++) {
+                    Serial.print(msg[i]);
+                }
+                Serial.println("]");
             }
 
-            void RFM98::recv()
+            bool RFM98::recv(PacketComm *packet)
             {
-                packet.wrapped.resize(0);
-                uint8_t bytes_received = 0;
+                packet->wrapped.resize(0);
+                uint8_t bytes_received = sizeof(packet->wrapped);
 
                 Threads::Scope scope(spi1_mtx);
                 if (rfm98.waitAvailableTimeout(100))
                 {
-                    packet.wrapped.resize(RFM98_RECV_LEN);
-                    if (rfm98.recv(packet.wrapped.data(), &bytes_received))
+                    packet->wrapped.resize(RH_RF95_MAX_MESSAGE_LEN);
+                    if (rfm98.recv(packet->wrapped.data(), &bytes_received))
                     {
-                        packet.wrapped.resize(bytes_received);
-                        packet.Unwrap();
-
-                        Serial.print("[RFM98] Reply: [");
-                        for (int i = 0; i < bytes_received; i++)
-                        {
-                            Serial.print((char)packet.wrapped[i], HEX);
-                        }
-                        Serial.println("]");
-                        // Serial.print("RSSI: ");
-                        // Serial.println(rfm98.lastRssi(), DEC);
+                        packet->wrapped.resize(bytes_received);
+                        packet->Unwrap();
+                        return true;
                     }
                 }
+
+                return false;
             }
         }
     }

@@ -33,14 +33,13 @@ namespace Artemis
             {
             private:
                 RH_RF22 rfm23;
-                PacketComm packet;
 
             public:
                 RFM23(uint8_t slaveSelectPin = RFM23_CS_PIN, uint8_t interruptPin = RFM23_INT_PIN, RHGenericSPI &spi = hardware_spi1);
                 void reset();
                 bool init();
                 void send(const unsigned char *input, size_t length);
-                PacketComm recv();
+                bool recv(PacketComm *packet);
             };
         }
     }
