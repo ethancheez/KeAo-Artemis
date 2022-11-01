@@ -5,12 +5,22 @@ PacketComm packet;
 
 void Artemis::Teensy::Channels::rfm98_channel()
 {
-    rfm98.RFM98_INIT();
+    while (!rfm98.init())
+        ;
 
     while (true)
     {
-        if (packet.PullQueue(rfm98_queue, rfm98_queue_mtx))
+        if (PullQueue(&packet, rfm98_queue, rfm98_queue_mtx))
         {
+            packet.Wrap();
+            for (size_t i = 0; i < packet.wrapped.size(); i++)
+            {
+                Serial.print(packet.wrapped[i], HEX);
+            }
+            Serial.println();
+            rfm98.send(packet.wrapped.data(), packet.wrapped.size());
         }
+
+        rfm98.recv();
     }
 }

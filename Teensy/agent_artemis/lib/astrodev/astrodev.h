@@ -8,6 +8,7 @@
 #include <map>
 #include <support/packetcomm.h>
 #include <support/configCosmos.h>
+#include <TeensyThreads.h>
 
 namespace Artemis
 {

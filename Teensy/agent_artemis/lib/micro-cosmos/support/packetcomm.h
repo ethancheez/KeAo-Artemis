@@ -1,12 +1,10 @@
-#ifndef _PACKETCOMM_H
-#define _PACKETCOMM_H
+#ifndef PACKETCOMM_H
+#define PACKETCOMM_H
 
-#include <support/configCosmos.h>
-#include <math/crclib.h>
-#include <support/sliplib.h>
-#include <device/general/ax25class.h>
-#include <support/datalib.h>
-#include <TeensyThreads.h>
+#include "support/configCosmos.h"
+#include "math/crclib.h"
+#include "support/sliplib.h"
+#include "device/general/ax25class.h"
 
 namespace Cosmos
 {
@@ -27,7 +25,7 @@ namespace Cosmos
                 uint16_t tf_data_field_status;
             };
 
-            PacketComm();
+            // PacketComm();
             void CalcCRC();
             bool CheckCRC();
             int32_t Unwrap(bool checkcrc = true);
@@ -39,9 +37,6 @@ namespace Cosmos
             bool ASMPacketize();
             bool AX25Packetize(string dest_call = "", string sour_call = "", uint8_t dest_stat = 0x60, uint8_t sour_stat = 0x61, uint8_t cont = 0x03, uint8_t prot = 0xf0);
             bool SLIPPacketize();
-
-            int32_t PushQueue(queue<PacketComm> &queue, Threads::Mutex &mtx);
-            int32_t PullQueue(queue<PacketComm> &queue, Threads::Mutex &mtx);
 
             enum class TypeId : uint8_t
             {
@@ -247,8 +242,8 @@ namespace Cosmos
                 uint16_t data_size = 0;
                 TypeId type = TypeId::CommandPing;
                 uint8_t radio = 0;
-                NodeData::NODE_ID_TYPE orig = NodeData::NODEIDORIG;
-                NodeData::NODE_ID_TYPE dest = NodeData::NODEIDDEST;
+                uint8_t orig = 254; // refer to NodeData::NODEIDORIG;
+                uint8_t dest = 255; // refer to NodeData::NODEIDDEST;
                 // Maybe response_id here
             } header;
 
@@ -282,4 +277,4 @@ namespace Cosmos
     }
 }
 
-#endif // _PACKETCOMM_H
+#endif // PACKETCOMM_H

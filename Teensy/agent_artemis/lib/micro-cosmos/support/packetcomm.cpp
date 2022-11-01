@@ -1,12 +1,12 @@
-#include <support/packetcomm.h>
+#include "packetcomm.h"
 
 namespace Cosmos
 {
     namespace Support
     {
-        PacketComm::PacketComm()
-        {
-        }
+        // PacketComm::PacketComm()
+        //{
+        // }
 
         void PacketComm::CalcCRC()
         {
@@ -59,13 +59,13 @@ namespace Cosmos
             return Unwrap(checkcrc);
         }
 
-        // bool PacketComm::RXSUnPacketize()
-        // {
-        //     memcpy(&ccsds_header, packetized.data(), 6);
-        //     wrapped.clear();
-        //     wrapped.insert(wrapped.begin(), &packetized[6], &packetized[packetized.size() - (packetized.size() < 189 ? 6 : 194 - packetized.size())]);
-        //     return Unwrap();
-        // }
+        //        bool PacketComm::RXSUnPacketize()
+        //        {
+        //            memcpy(&ccsds_header, packetized.data(), 6);
+        //            wrapped.clear();
+        //            wrapped.insert(wrapped.begin(), &packetized[6], &packetized[packetized.size()-(packetized.size()<189?6:194-packetized.size())]);
+        //            return Unwrap();
+        //        }
 
         bool PacketComm::SLIPUnPacketize()
         {
@@ -114,17 +114,17 @@ namespace Cosmos
             return true;
         }
 
-        // bool PacketComm::TXSPacketize()
-        // {
-        //     if (!Wrap())
-        //     {
-        //         return false;
-        //     }
-        //     packetized.clear();
-        //     packetized.insert(packetized.begin(), satsm.begin(), satsm.end());
-        //     packetized.insert(packetized.begin(), wrapped.begin(), wrapped.end());
-        //     return true;
-        // }
+        //        bool PacketComm::TXSPacketize()
+        //        {
+        //            if (!Wrap())
+        //            {
+        //                return false;
+        //            }
+        //            packetized.clear();
+        //            packetized.insert(packetized.begin(), satsm.begin(), satsm.end());
+        //            packetized.insert(packetized.begin(), wrapped.begin(), wrapped.end());
+        //            return true;
+        //        }
 
         bool PacketComm::SLIPPacketize()
         {
@@ -167,33 +167,10 @@ namespace Cosmos
             return true;
         }
 
-        // void PacketComm::SetSecret(uint32_t secretnumber)
-        // {
-        //     secret = secretnumber;
-        //     return;
-        // }
-
-        // Thread-safe way of pushing onto the packet queue
-        int32_t PacketComm::PushQueue(queue<PacketComm> &queue, Threads::Mutex &mtx)
-        {
-            Threads::Scope scope(mtx);
-            queue.push(*this);
-            return 1;
-        }
-        // Thread-safe way of pulling from the packet queue
-        int32_t PacketComm::PullQueue(queue<PacketComm> &queue, Threads::Mutex &mtx)
-        {
-            Threads::Scope scope(mtx);
-            if (queue.size() > 0)
-            {
-                *this = queue.front();
-                queue.pop();
-                return 1;
-            }
-            else
-            {
-                return 0;
-            }
-        }
+        //        void PacketComm::SetSecret(uint32_t secretnumber)
+        //        {
+        //            secret = secretnumber;
+        //            return;
+        //        }
     }
 }

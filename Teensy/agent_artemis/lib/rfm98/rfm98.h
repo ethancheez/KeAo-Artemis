@@ -38,10 +38,10 @@ namespace Artemis
 
             public:
                 RFM98(uint8_t slaveSelectPin = RFM98_CS_PIN, uint8_t interruptPin = RFM98_INT_PIN, RHGenericSPI &spi = hardware_spi1);
-                void RFM98_RESET();
-                void RFM98_INIT();
-                void RFM98_SEND(const unsigned char *input, size_t length);
-                void RFM98_RECV();
+                void reset();
+                bool init();
+                void send(const unsigned char *input, size_t length);
+                void recv();
             };
         }
     }

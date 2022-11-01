@@ -5,17 +5,17 @@ PacketComm packet;
 
 void Artemis::Teensy::Channels::rfm23_channel()
 {
-    while (!rfm23.RFM23_INIT())
+    while (!rfm23.init())
         ;
 
     while (true)
     {
-        if (packet.PullQueue(rfm23_queue, rfm23_queue_mtx))
+        if (PullQueue(&packet, rfm23_queue, rfm23_queue_mtx))
         {
             Serial.println((int)packet.header.type);
         }
 
-        packet = rfm23.RFM23_RECV();
+        packet = rfm23.recv();
 
         // Got data from radio
         if (packet.packetized.size() > 0)

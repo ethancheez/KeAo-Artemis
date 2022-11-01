@@ -1,16 +1,10 @@
 #include <Arduino.h>
 #include <vector>
 #include <artemis_channels.h>
-#include <support/datalib.h>
 #include <support/configCosmos.h>
 
 namespace
 {
-  NodeData::NODE_ID_TYPE ground_node_id;
-  NodeData::NODE_ID_TYPE teensy_node_id;
-  NodeData::NODE_ID_TYPE rpi_node_id;
-  NodeData::NODE_ID_TYPE pleiades_node_id;
-
   PacketComm packet;
 }
 
@@ -52,43 +46,45 @@ void setup()
   Serial.begin(115200);
   delay(3000);
 
-  // Initialize Node IDs
-  ground_node_id = nodeData.lookup_node_id("ground");
-  teensy_node_id = nodeData.lookup_node_id("teensy");
-  rpi_node_id = nodeData.lookup_node_id("rpi");
-  pleiades_node_id = nodeData.lookup_node_id("pleiades");
-
   // setup_magnetometer();
   // setup_imu();
   // setup_current();
 
   // Threads
-  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
 
-  packet.header.orig = teensy_node_id;
-  packet.header.dest = ground_node_id;
-  packet.header.radio = ARTEMIS_RADIOS::RFM23;
-  packet.header.type = PacketComm::TypeId::CommandTestRadio;
-
-  packet.PushQueue(main_queue, main_queue_mtx);
+  
 }
 
 void loop()
 {
-  if (packet.PullQueue(main_queue, main_queue_mtx))
+  packet.header.orig = teensy_node_id;
+  packet.header.dest = pleiades_node_id;
+  packet.header.radio = ARTEMIS_RADIOS::RFM98;
+  packet.header.type = PacketComm::TypeId::CommandPing;
+  packet.data.resize(0);
+  const char *data = "Ping";
+  for (size_t i = 0; i < strlen(data); i++) {
+    packet.data.push_back(data[i]);
+  }
+  packet.data.resize(strlen(data));
+  PushQueue(&packet, main_queue, main_queue_mtx);
+  delay(1000);
+
+  if (PullQueue(&packet, main_queue, main_queue_mtx))
   {
     if (packet.header.dest == ground_node_id)
     {
       switch (packet.header.radio)
       {
       case ARTEMIS_RADIOS::RFM23:
-        packet.PushQueue(rfm23_queue, rfm23_queue_mtx);
+        PushQueue(&packet, rfm23_queue, rfm23_queue_mtx);
         break;
       case ARTEMIS_RADIOS::ASTRODEV:
-        packet.PushQueue(astrodev_queue, astrodev_queue_mtx);
+        PushQueue(&packet, astrodev_queue, astrodev_queue_mtx);
         break;
       }
     }
@@ -97,7 +93,7 @@ void loop()
     }
     else if (packet.header.dest == pleiades_node_id)
     {
-      packet.PushQueue(rfm98_queue, rfm98_queue_mtx);
+      PushQueue(&packet, rfm98_queue, rfm98_queue_mtx);
     }
     else if (packet.header.dest == teensy_node_id)
     {
@@ -113,7 +109,7 @@ void loop()
       case PacketComm::TypeId::CommandEpsSwitchNumber:
       case PacketComm::TypeId::CommandEpsSwitchStatus:
       case PacketComm::TypeId::CommandEpsWatchdog:
-        packet.PushQueue(pdu_queue, pdu_queue_mtx);
+        PushQueue(&packet, pdu_queue, pdu_queue_mtx);
         break;
       default:
         break;

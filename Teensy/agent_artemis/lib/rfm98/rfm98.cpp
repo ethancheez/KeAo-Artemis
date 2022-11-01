@@ -8,7 +8,7 @@ namespace Artemis
         {
             RFM98::RFM98(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi) : rfm98(slaveSelectPin, interruptPin, spi) {}
 
-            void RFM98::RFM98_INIT()
+            bool RFM98::init()
             {
                 Threads::Scope scope(spi1_mtx);
                 SPI1.setMISO(RFM98_SPI_MISO);
@@ -18,20 +18,26 @@ namespace Artemis
                 pinMode(RFM98_RST_PIN, OUTPUT);
                 digitalWrite(RFM98_RST_PIN, LOW);
 
-                RFM98_RESET();
+                reset();
 
-                while (!(rfm98.init()))
+                unsigned long timeoutStart = millis();
+                while (!rfm98.init())
                 {
-                    Serial.println("RFM98 INIT FAILED");
+                    if (millis() - timeoutStart > 10000)
+                    {
+                        Serial.println("[RFM98] INIT FAILED");
+                        return false;
+                    }
                 }
 
                 rfm98.setFrequency(RFM98_FREQ);
                 rfm98.setTxPower(RFM98_TX_POWER, false);
 
-                Serial.println("RFM98 successfully initialized!");
+                Serial.println("[RFM98] INIT SUCCESS");
+                return true;
             }
 
-            void RFM98::RFM98_RESET()
+            void RFM98::reset()
             {
                 digitalWrite(RFM98_RST_PIN, LOW);
                 delay(10);
@@ -39,15 +45,15 @@ namespace Artemis
                 delay(10);
             }
 
-            void RFM98::RFM98_SEND(const unsigned char *msg, size_t length)
+            void RFM98::send(const unsigned char *msg, size_t length)
             {
-                Serial.print("[RFM98] Sending: [");
-                for (size_t i = 0; i < length; ++i)
-                {
-                    Serial.print(*(msg + i));
-                    Serial.print(" ");
-                }
-                Serial.println("]");
+                // Serial.print("[RFM98] Sending: [");
+                // for (size_t i = 0; i < length; ++i)
+                // {
+                //     Serial.print(*(msg + i));
+                //     Serial.print(" ");
+                // }
+                // Serial.println("]");
 
                 Threads::Scope scope(spi1_mtx);
                 rfm98.send((uint8_t *)msg, length);
@@ -55,33 +61,28 @@ namespace Artemis
                 rfm98.waitPacketSent();
             }
 
-            void RFM98::RFM98_RECV()
+            void RFM98::recv()
             {
+                packet.wrapped.resize(0);
                 uint8_t bytes_received = 0;
 
                 Threads::Scope scope(spi1_mtx);
                 if (rfm98.waitAvailableTimeout(100))
                 {
-                    packet.packetized.resize(RFM98_RECV_LEN);
-                    if (rfm98.recv(packet.packetized.data(), &bytes_received))
+                    packet.wrapped.resize(RFM98_RECV_LEN);
+                    if (rfm98.recv(packet.wrapped.data(), &bytes_received))
                     {
+                        packet.wrapped.resize(bytes_received);
+                        packet.Unwrap();
+
                         Serial.print("[RFM98] Reply: [");
-                        for (int i = 0; i < RFM98_RECV_LEN; i++)
+                        for (int i = 0; i < bytes_received; i++)
                         {
-                            Serial.print((char)packet.packetized[i]);
+                            Serial.print((char)packet.wrapped[i], HEX);
                         }
                         Serial.println("]");
-                        Serial.print("RSSI: ");
-                        Serial.println(rfm98.lastRssi(), DEC);
-                        // send packet to the main queue
-                        packet.packetized.resize(bytes_received);
-                        packet.RawUnPacketize();
-                        main_queue.push(packet);
-                        packet.packetized.resize(RFM98_RECV_LEN, 0);
-                    }
-                    else
-                    {
-                        Serial.println("Receive failed");
+                        // Serial.print("RSSI: ");
+                        // Serial.println(rfm98.lastRssi(), DEC);
                     }
                 }
             }

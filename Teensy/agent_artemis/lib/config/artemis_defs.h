@@ -4,7 +4,6 @@
 #include <TeensyThreads.h>
 #include <support/packetcomm.h>
 #include <support/configCosmos.h>
-#include <support/datalib.h>
 
 // Sensor Defs
 #define ARTEMIS_CURRENT_SENSOR_COUNT 5
@@ -67,6 +66,7 @@ enum TEENSY_PINS
 
 enum ARTEMIS_RADIOS : uint8_t
 {
+  NONE,
   RFM23,
   RFM98,
   ASTRODEV,
@@ -76,7 +76,10 @@ enum ARTEMIS_RADIOS : uint8_t
 extern vector<struct thread_struct> thread_list;
 
 // Nodes
-extern NodeData nodeData;
+const uint8_t ground_node_id = 1;
+const uint8_t teensy_node_id = 2;
+const uint8_t rpi_node_id = 3;
+const uint8_t pleiades_node_id = 4;
 
 // Mutex for Command Queues
 extern Threads::Mutex main_queue_mtx;
@@ -98,5 +101,7 @@ extern Threads::Mutex spi1_mtx;
 
 // Utility Functions
 int kill_thread(char *thread_name);
+int32_t PushQueue(PacketComm *packet, queue<PacketComm> &queue, Threads::Mutex &mtx);
+int32_t PullQueue(PacketComm *packet, queue<PacketComm> &queue, Threads::Mutex &mtx);
 
 #endif // _ARTEMIS_DEFS_H

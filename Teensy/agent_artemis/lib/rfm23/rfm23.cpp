@@ -8,7 +8,7 @@ namespace Artemis
         {
             RFM23::RFM23(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi) : rfm23(slaveSelectPin, interruptPin, spi) {}
 
-            bool RFM23::RFM23_INIT()
+            bool RFM23::init()
             {
                 Threads::Scope scope(spi1_mtx);
                 SPI1.setMISO(RFM23_SPI_MISO);
@@ -44,13 +44,13 @@ namespace Artemis
                 return true;
             }
 
-            void RFM23::RFM23_RESET()
+            void RFM23::reset()
             {
                 Threads::Scope scope(spi1_mtx);
                 rfm23.reset();
             }
 
-            void RFM23::RFM23_SEND(const unsigned char *msg, size_t length)
+            void RFM23::send(const unsigned char *msg, size_t length)
             {
                 digitalWrite(RFM23_RX_ON, HIGH);
                 digitalWrite(RFM23_TX_ON, LOW);
@@ -68,7 +68,7 @@ namespace Artemis
                 rfm23.waitPacketSent();
             }
 
-            PacketComm RFM23::RFM23_RECV()
+            PacketComm RFM23::recv()
             {
                 packet.packetized.resize(0);
                 digitalWrite(RFM23_RX_ON, LOW);
