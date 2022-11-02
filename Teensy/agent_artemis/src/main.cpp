@@ -2,11 +2,7 @@
 #include <vector>
 #include <artemis_channels.h>
 #include <support/configCosmos.h>
-
-namespace
-{
-  PacketComm packet;
-}
+#include <USBHost_t36.h>
 
 /* Helper Function Defs */
 bool setup_magnetometer(void);
@@ -17,33 +13,42 @@ void read_temperature(void);
 void read_current(void);
 void read_imu(void);
 
-Adafruit_LIS3MDL magnetometer;
-Adafruit_LSM6DSOX imu;
-Adafruit_INA219 current_1(0x40); // Solar 1
-Adafruit_INA219 current_2(0x41); // Solar 2
-Adafruit_INA219 current_3(0x42); // Solar 3
-Adafruit_INA219 current_4(0x43); // Solar 4
-Adafruit_INA219 current_5(0x44); // Battery
+namespace
+{
+  PacketComm packet;
 
-// Current Sensors
-const char *current_sen_names[ARTEMIS_CURRENT_SENSOR_COUNT] = {"solar_panel_1", "solar_panel_2", "solar_panel_3", "solar_panel_4", "battery_board"};
-float busvoltage[ARTEMIS_CURRENT_SENSOR_COUNT] = {0}, current[ARTEMIS_CURRENT_SENSOR_COUNT] = {0}, power[ARTEMIS_CURRENT_SENSOR_COUNT] = {0};
-Adafruit_INA219 *p[ARTEMIS_CURRENT_SENSOR_COUNT] = {&current_1, &current_2, &current_3, &current_4, &current_5};
+  USBHost usb;
+  Adafruit_LIS3MDL magnetometer;
+  Adafruit_LSM6DSOX imu;
+  Adafruit_INA219 current_1(0x40); // Solar 1
+  Adafruit_INA219 current_2(0x41); // Solar 2
+  Adafruit_INA219 current_3(0x42); // Solar 3
+  Adafruit_INA219 current_4(0x43); // Solar 4
+  Adafruit_INA219 current_5(0x44); // Battery
 
-// Temperature Sensors
-const int temps[ARTEMIS_TEMP_SENSOR_COUNT] = {A0, A1, A6, A7, A8, A9, A17};
-const char *temp_sen_names[ARTEMIS_TEMP_SENSOR_COUNT] = {"solar_panel_1", "solar_panel_2", "solar_panel_3", "solar_panel_4", "battery_board"};
-float voltage[ARTEMIS_TEMP_SENSOR_COUNT] = {0}, temperatureC[ARTEMIS_TEMP_SENSOR_COUNT] = {0};
+  // Current Sensors
+  const char *current_sen_names[ARTEMIS_CURRENT_SENSOR_COUNT] = {"solar_panel_1", "solar_panel_2", "solar_panel_3", "solar_panel_4", "battery_board"};
+  float busvoltage[ARTEMIS_CURRENT_SENSOR_COUNT] = {0}, current[ARTEMIS_CURRENT_SENSOR_COUNT] = {0}, power[ARTEMIS_CURRENT_SENSOR_COUNT] = {0};
+  Adafruit_INA219 *p[ARTEMIS_CURRENT_SENSOR_COUNT] = {&current_1, &current_2, &current_3, &current_4, &current_5};
 
-// IMU
-float magx = {0}, magy = {0}, magz = {0};
-float accelx = {0}, accely = {0}, accelz = {0};
-float gyrox = {0}, gyroy = {0}, gyroz = {0};
-float imutemp = {0};
+  // Temperature Sensors
+  const int temps[ARTEMIS_TEMP_SENSOR_COUNT] = {A0, A1, A6, A7, A8, A9, A17};
+  const char *temp_sen_names[ARTEMIS_TEMP_SENSOR_COUNT] = {"solar_panel_1", "solar_panel_2", "solar_panel_3", "solar_panel_4", "battery_board"};
+  float voltage[ARTEMIS_TEMP_SENSOR_COUNT] = {0}, temperatureC[ARTEMIS_TEMP_SENSOR_COUNT] = {0};
+
+  // IMU
+  float magx = {0}, magy = {0}, magz = {0};
+  float accelx = {0}, accely = {0}, accelz = {0};
+  float gyrox = {0}, gyroy = {0}, gyroz = {0};
+  float imutemp = {0};
+}
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
+  usb.begin();
+  pinMode(RPI_ENABLE, OUTPUT);
+  digitalWrite(RPI_ENABLE, HIGH);
   delay(3000);
 
   // setup_magnetometer();
@@ -55,23 +60,21 @@ void setup()
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
-
-  
 }
 
 void loop()
 {
-  packet.header.orig = teensy_node_id;
-  packet.header.dest = ground_node_id;
-  packet.header.radio = ARTEMIS_RADIOS::RFM23;
-  packet.header.type = PacketComm::TypeId::DataPong;
-  packet.data.resize(0);
-  const char *data = "Pong";
-  for (size_t i = 0; i < strlen(data); i++) {
-    packet.data.push_back(data[i]);
-  }
-  packet.data.resize(strlen(data));
-  PushQueue(&packet, main_queue, main_queue_mtx);
+  // packet.header.orig = teensy_node_id;
+  // packet.header.dest = ground_node_id;
+  // packet.header.radio = ARTEMIS_RADIOS::RFM23;
+  // packet.header.type = PacketComm::TypeId::DataPong;
+  // packet.data.resize(0);
+  // const char *data = "Pong";
+  // for (size_t i = 0; i < strlen(data); i++) {
+  //   packet.data.push_back(data[i]);
+  // }
+  // packet.data.resize(strlen(data));
+  // PushQueue(&packet, main_queue, main_queue_mtx);
   delay(1000);
 
   if (PullQueue(&packet, main_queue, main_queue_mtx))

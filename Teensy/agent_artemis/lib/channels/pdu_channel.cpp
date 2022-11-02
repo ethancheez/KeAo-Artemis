@@ -2,10 +2,11 @@
 
 #define VBATT_PAYLOAD 1
 
+Artemis::Teensy::PDU pdu(115200);
+PacketComm packet;
+
 void Artemis::Teensy::Channels::pdu_channel()
 {
-    Artemis::Teensy::PDU pdu(115200);
-
     // Enable burn wire
     pdu.PDU_SWITCH(Artemis::Teensy::PDU::BURN, true);
     delay(30000);
@@ -15,5 +16,12 @@ void Artemis::Teensy::Channels::pdu_channel()
     if (VBATT_PAYLOAD)
     {
         pdu.PDU_SWITCH(Artemis::Teensy::PDU::VBATT, true);
+    }
+
+    while (true)
+    {
+        if (PullQueue(&packet, pdu_queue, pdu_queue_mtx))
+        {
+        }
     }
 }

@@ -30,6 +30,7 @@ namespace Artemis
                 rfm23.setFrequency(RFM23_FREQ);   // frequency default is 434MHz
                 rfm23.setTxPower(RFM23_TX_POWER); // 20 is the max
 
+                rfm23.sleep();
                 timeoutStart = millis();
                 while (!rfm23.setModemConfig(RH_RF22::FSK_Rb_512Fd2_5))
                 {
@@ -39,6 +40,7 @@ namespace Artemis
                         return false;
                     }
                 }
+                rfm23.sleep();
 
                 Serial.println("[RFM23] INIT SUCCESS");
                 return true;
@@ -59,6 +61,7 @@ namespace Artemis
                 rfm23.send((uint8_t *)msg, length);
                 rfm23.waitPacketSent();
 
+                rfm23.sleep();
                 Serial.print("[RFM23] SENDING: [");
                 for(size_t i = 0; i < length; i++) {
                     Serial.print(msg[i]);
