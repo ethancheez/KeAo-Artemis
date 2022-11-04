@@ -1,14 +1,12 @@
 #ifndef _ASTRODEVLIB_H
 #define _ASTRODEVLIB_H
 
-#include <stdint.h>
-#include <Arduino.h>
-#include <queue>
-#include <vector>
-#include <map>
-#include <support/packetcomm.h>
 #include <support/configCosmos.h>
+#include <support/packetcomm.h>
+#include <support/cosmos-errno.h>
+#include <Arduino.h>
 #include <TeensyThreads.h>
+#include <atomic>
 
 namespace Artemis
 {
@@ -77,8 +75,10 @@ namespace Artemis
                     PIN_TOGGLE = 0x34,
                 };
 
-                struct __attribute__((packed)) uart_status
+                // Radio response replaces size bytes
+                struct __attribute__((packed)) response
                 {
+                    uint8_t ack : 4;
                     bool buffer_full : 1;
                     bool gpio_a_high : 1;
                     bool gpio_b_high : 1;
@@ -118,7 +118,7 @@ namespace Artemis
                     unsigned test_mode_tbd : 1;   // TBD (CAUTION TEST MODE), Set to 0 for normal operation
 
                     // Nybble 2-4
-                    unsigned zeros : 4; // Set to 0
+                    unsigned zeros : 12; // Set to 0
                 };
 
                 struct __attribute__((packed)) tcv_config
@@ -139,7 +139,6 @@ namespace Artemis
                     uint16_t ax25_postamble_length;
                     function_config1 config1;
                     function_config2 config2;
-                    uint16_t cs;
                 };
 
                 struct __attribute__((packed)) rf_config
@@ -199,9 +198,14 @@ namespace Artemis
                             uint8_t sync1;
                             uint8_t type;
                             uint8_t command;
-                            unsigned ack : 4;
-                            uart_status status;
-                            uint8_t size;
+                            union
+                            {
+                                response status;
+                                // MSB of size is first, and only the second byte is actually used, for max payload size of 255
+                                // i.e., bytes are flipped, be careful
+                                uint8_t sizehi;
+                            };
+                            uint8_t sizelo;
                             uint16_t cs;
                         } header;
                         uint8_t preamble[8];
@@ -219,55 +223,48 @@ namespace Artemis
                 telemetry last_telem;
                 int32_t last_error = 0;
                 bool last_ack = false;
+                std::atomic<bool> buffer_full;
                 Command last_command = Command::NAK;
+                tcv_config tcv_configuration;
 
-                int32_t Queue(queue<PacketComm> &queue, Threads::Mutex &mtx, const PacketComm &p);
-                int32_t DeQueue(queue<PacketComm> &queue, Threads::Mutex &mtx, PacketComm &p);
-                int32_t PacketIn(PacketComm &p);
-                int32_t PacketInSize();
-                int32_t PacketOut(PacketComm &p);
-                int32_t PacketOutSize();
-                int32_t Clear(queue<PacketComm> &queue, Threads::Mutex &mtx);
-                int32_t Init(HardwareSerial *serial = &Serial8, uint32_t baud_rate = 9600);
-                void Join();
-                int32_t Packetize(PacketComm &packet);
-                int32_t UnPacketize(PacketComm &packet);
-
+                // int32_t Queue(queue<PacketComm> &queue, mutex &mtx, const PacketComm &p);
+                // int32_t DeQueue(queue<PacketComm> &queue, mutex &mtx, PacketComm &p);
+                // int32_t PacketIn(PacketComm &p);
+                // int32_t PacketInSize();
+                // int32_t PacketOut(PacketComm &p);
+                // int32_t PacketOutSize();
+                // int32_t Clear(queue<PacketComm> &queue, mutex &mtx);
+                int32_t Init(HardwareSerial *serial, uint32_t speed = 38400);
+                // void Join();
+                // int32_t Packetize(PacketComm& packet);
+                // int32_t UnPacketize(PacketComm& packet);
                 int32_t Ping();
+                int32_t Ping(bool get_response);
                 int32_t Reset();
-                int32_t SendData(vector<uint8_t> data);
+                int32_t Reset(bool get_response);
+                // int32_t SendData(vector<uint8_t> data);
                 int32_t GetTCVConfig();
-                int32_t SetTCVConfig(tcv_config config);
+                int32_t GetTCVConfig(bool get_response);
+                int32_t SetTCVConfig();
+                int32_t SetTCVConfig(bool get_response);
                 int32_t GetTelemetry();
                 int32_t SetRFConfig(rf_config config);
-                int32_t Transmit(frame message);
+                int32_t Transmit(frame &message);
+                int32_t Transmit(Cosmos::Support::PacketComm &packet);
+                int32_t Receive(frame &message);
                 uint16_t CalcCS(uint8_t *data, uint16_t size);
 
-                int32_t connect(String dev);
-                int32_t disconnect();
-                int32_t recvframe();
-                int32_t setupframe(frame *frame);
-                uint16_t loadframe(uint8_t *data, uint16_t size);
-                int32_t unloadframe(uint8_t *data, uint16_t size);
-                int32_t checkframe(frame *frame);
-                int32_t rfconfig();
-                int32_t firmwarerev();
-                int32_t transmit(uint8_t *data, uint16_t size);
-                int32_t receive(uint8_t *data, uint16_t size);
-
             private:
-                bool running = true;
                 HardwareSerial *serial;
+                bool running = true;
+
+                // Reusable frame object for sending
+                frame tmessage;
 
                 queue<vector<uint8_t>> queue_in;
                 Threads::Mutex qmutex_in;
-                int32_t push_queue_in(vector<uint8_t> data);
-                int32_t pop_queue_in(vector<uint8_t> &data);
-                int32_t check_queue_in();
 
                 queue<PacketComm> packet_queue_out;
-                void receive_loop();
-                Threads rthread;
                 Threads::Mutex qmutex_out;
             };
         }
