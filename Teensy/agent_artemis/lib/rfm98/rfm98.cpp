@@ -10,7 +10,7 @@ namespace Artemis
 
             bool RFM98::init()
             {
-                Threads::Scope scope(spi1_mtx);
+                Threads::Scope lock(spi1_mtx);
                 SPI1.setMISO(RFM98_SPI_MISO);
                 SPI1.setMOSI(RFM98_SPI_MOSI);
                 SPI1.setSCK(RFM98_SPI_SCK);
@@ -49,7 +49,7 @@ namespace Artemis
 
             void RFM98::send(const unsigned char *msg, size_t length)
             {
-                Threads::Scope scope(spi1_mtx);
+                Threads::Scope lock(spi1_mtx);
                 rfm98.setModeTx();
                 rfm98.send((uint8_t *)msg, length);
                 rfm98.waitPacketSent();
@@ -67,7 +67,7 @@ namespace Artemis
                 packet->wrapped.resize(0);
                 uint8_t bytes_received = sizeof(packet->wrapped);
 
-                Threads::Scope scope(spi1_mtx);
+                Threads::Scope lock(spi1_mtx);
                 rfm98.setModeRx();
                 if (rfm98.waitAvailableTimeout(100))
                 {

@@ -31,7 +31,7 @@ void receiveData(int byte_count)
     if (byte_count == 0)
         return;
 
-    Threads::Scope scope(i2c1_mtx);
+    Threads::Scope lock(i2c1_mtx);
     for (int i = 0; i < byte_count; i++)
     {
         byte data = I2C_Wire1.read();
@@ -47,7 +47,7 @@ void sendData()
         return;
     }
 
-    Threads::Scope scope(i2c1_mtx);
+    Threads::Scope lock(i2c1_mtx);
     I2C_Wire1.write(packet.wrapped[send_index]);
     Serial.print(packet.wrapped[send_index], HEX);
     send_index++;

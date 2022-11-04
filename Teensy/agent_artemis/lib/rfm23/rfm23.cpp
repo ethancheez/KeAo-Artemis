@@ -10,7 +10,7 @@ namespace Artemis
 
             bool RFM23::init()
             {
-                Threads::Scope scope(spi1_mtx);
+                Threads::Scope lock(spi1_mtx);
                 SPI1.setMISO(RFM23_SPI_MISO);
                 SPI1.setMOSI(RFM23_SPI_MOSI);
                 SPI1.setSCK(RFM23_SPI_SCK);
@@ -49,7 +49,7 @@ namespace Artemis
 
             void RFM23::reset()
             {
-                Threads::Scope scope(spi1_mtx);
+                Threads::Scope lock(spi1_mtx);
                 rfm23.reset();
             }
 
@@ -58,7 +58,7 @@ namespace Artemis
                 digitalWrite(RFM23_RX_ON, HIGH);
                 digitalWrite(RFM23_TX_ON, LOW);
 
-                Threads::Scope scope(spi1_mtx);
+                Threads::Scope lock(spi1_mtx);
                 rfm23.setModeTx();
                 rfm23.send((uint8_t *)msg, length);
                 rfm23.waitPacketSent();
@@ -80,7 +80,7 @@ namespace Artemis
                 packet->wrapped.resize(0);
                 uint8_t bytes_recieved = sizeof(packet->wrapped);
 
-                Threads::Scope scope(spi1_mtx);
+                Threads::Scope lock(spi1_mtx);
                 rfm23.setModeRx();
                 if (rfm23.waitAvailableTimeout(100))
                 {
