@@ -2,11 +2,16 @@
 #include <deque>
 #include <Arduino.h>
 
+/* TODO:    Test astrodev channel without astrodev threads
+ *          See if we need individual threads for sending/receiving
+ */
+
 #define ASTRODEV_BAUD 9600
 using namespace Artemis::Teensy::Radio;
 
 int32_t astrodev_init(HardwareSerial *new_serial, uint32_t speed);
 bool astrodev_recv();
+bool astrodev_send();
 
 namespace
 {
@@ -26,10 +31,28 @@ void Artemis::Teensy::Channels::astrodev_channel()
     }
     Serial.println("[LI-3] Radio init successful");
 
+    packet.wrapped.resize(0);
+
     while (true)
     {
         if (PullQueue(&packet, astrodev_queue, astrodev_queue_mtx))
         {
+            switch (packet.header.type)
+            {
+            case PacketComm::TypeId::DataBeacon:
+            case PacketComm::TypeId::DataPong:
+            case PacketComm::TypeId::DataEpsResponse:
+            case PacketComm::TypeId::DataRadioResponse:
+            case PacketComm::TypeId::DataAdcsResponse:
+            case PacketComm::TypeId::DataResponse:
+                // No need to wrap packet, handled in astrodev library
+                if (!astrodev_send())
+                {
+                    Serial.println("[LI-3] Transmit Failed. Packet Lost");
+                }
+            default:
+                break;
+            }
         }
         if (astrodev_recv())
         {
@@ -146,4 +169,46 @@ bool astrodev_recv()
         return false;
     }
     return true;
+}
+
+bool astrodev_send()
+{
+    int32_t iretn = 0;
+    int8_t retries = 0;
+    while (true)
+    {
+        if (!astrodev.buffer_full.load())
+        {
+            // Attempt transmit if transfer bull is not full
+            iretn = astrodev.Transmit(packet);
+            Serial.print("Transmit iretn: ");
+            Serial.println(iretn);
+            if (iretn < 0)
+            {
+                return false;
+            }
+            // Transmit successful
+            return true;
+        }
+        else
+        {
+            Serial.println("Buffer full, waiting a bit");
+            // Retry 3 times
+            if (++retries > 3)
+            {
+                return false;
+            }
+            // Wait until transfer buffer is not full
+            delay(100);
+            // Let recv_loop handle getting the response back and clearing buffer_full flag
+            iretn = astrodev.Ping(false);
+            if (!astrodev.buffer_full.load())
+            {
+                Serial.println("buffer full flag cleared");
+                delay(10);
+                // Return to start of loop to attempt transmit
+                continue;
+            }
+        }
+    }
 }
