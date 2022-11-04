@@ -1,31 +1,31 @@
 /********************************************************************
-* Copyright (C) 2015 by Interstel Technologies, Inc.
-*   and Hawaii Space Flight Laboratory.
-*
-* This file is part of the COSMOS/core that is the central
-* module for COSMOS. For more information on COSMOS go to
-* <http://cosmos-project.com>
-*
-* The COSMOS/core software is licenced under the
-* GNU Lesser General Public License (LGPL) version 3 licence.
-*
-* You should have received a copy of the
-* GNU Lesser General Public License
-* If not, go to <http://www.gnu.org/licenses/>
-*
-* COSMOS/core is free software: you can redistribute it and/or
-* modify it under the terms of the GNU Lesser General Public License
-* as published by the Free Software Foundation, either version 3 of
-* the License, or (at your option) any later version.
-*
-* COSMOS/core is distributed in the hope that it will be useful, but
-* WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* Lesser General Public License for more details.
-*
-* Refer to the "licences" folder for further information on the
-* condititons and terms to use this software.
-********************************************************************/
+ * Copyright (C) 2015 by Interstel Technologies, Inc.
+ *   and Hawaii Space Flight Laboratory.
+ *
+ * This file is part of the COSMOS/core that is the central
+ * module for COSMOS. For more information on COSMOS go to
+ * <http://cosmos-project.com>
+ *
+ * The COSMOS/core software is licenced under the
+ * GNU Lesser General Public License (LGPL) version 3 licence.
+ *
+ * You should have received a copy of the
+ * GNU Lesser General Public License
+ * If not, go to <http://www.gnu.org/licenses/>
+ *
+ * COSMOS/core is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * COSMOS/core is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * Refer to the "licences" folder for further information on the
+ * condititons and terms to use this software.
+ ********************************************************************/
 
 #ifndef _COSMOS_ERROR_H
 #define _COSMOS_ERROR_H 1
@@ -33,10 +33,12 @@
 #include "support/configCosmos.h"
 #include <errno.h>
 
-namespace Cosmos {
-    namespace Support {
+namespace Cosmos
+{
+    namespace Support
+    {
         enum ErrorNumbers : int16_t
-            {
+        {
             COSMOS_ERROR_BASE = -200,
 
             COSMOS_GS232B_ERROR_OPEN = -201,
@@ -128,7 +130,7 @@ namespace Cosmos {
             COSMOS_ORBIT_ERROR_NOTSUPPORTED = -332,
             COSMOS_TLE_ERROR_NOTFOUND = -334,
 
-            COSMOS_NODE_ERROR_NODE = -341,            // node.ini does not exist
+            COSMOS_NODE_ERROR_NODE = -341, // node.ini does not exist
             COSMOS_NODE_ERROR_GROUNDSTATION = -342,
             COSMOS_NODE_ERROR_ROOTDIR = -343,
 
@@ -163,7 +165,6 @@ namespace Cosmos {
             COSMOS_SERIAL_ERROR_BUFFER_SIZE_EXCEEDED = -387,
             COSMOS_SERIAL_ERROR_BAD_ESCAPE = -388,
             COSMOS_SERIAL_ERROR_OPEN = -389,
-
 
             COSMOS_IC9100_ERROR_OPEN = -391,
             COSMOS_IC9100_ERROR_CLOSED = -392,
@@ -217,11 +218,11 @@ namespace Cosmos {
             COSMOS_SOCKET_ERROR_CS = -481,
             COSMOS_SOCKET_ERROR_PROTOCOL = -482,
             COSMOS_SOCKET_READ_TIMEOUT = -483,
-            COSMOS_SOCKET_ERROR_OPEN   = -484,
-            COSMOS_SOCKET_ERROR_OPEN_RECEIVE    = -485,
-            COSMOS_SOCKET_ERROR_OPEN_TRANSMIT  = -486,
-            COSMOS_SOCKET_ERROR_OPEN_CONNECT  = -487,
-            COSMOS_SOCKET_ERROR_CLOSE  = -488,
+            COSMOS_SOCKET_ERROR_OPEN = -484,
+            COSMOS_SOCKET_ERROR_OPEN_RECEIVE = -485,
+            COSMOS_SOCKET_ERROR_OPEN_TRANSMIT = -486,
+            COSMOS_SOCKET_ERROR_OPEN_CONNECT = -487,
+            COSMOS_SOCKET_ERROR_CLOSE = -488,
 
             COSMOS_TRIMBLE_ERROR_CS = -491,
 
@@ -231,7 +232,7 @@ namespace Cosmos {
             COSMOS_JPLEPHEM_ERROR_NUTATIONS = -504,
             COSMOS_JPLEPHEM_ERROR_LIBRATIONS = -505,
 
-            COSMOS_GEOMAG_ERROR_NOTFOUND = -511,              // WMM File not found
+            COSMOS_GEOMAG_ERROR_NOTFOUND = -511, // WMM File not found
             COSMOS_GEOMAG_ERROR_OUTOFRANGE = -512,
 
             COSMOS_PRKX2SU_ERROR_OPEN = -521,
@@ -241,8 +242,7 @@ namespace Cosmos {
 
             COSMOS_CONVERT_ERROR_UTC = -531,
 
-
-            COSMOS_CUBEADCS_SERIALCOMM_RESPONSE    = -601,
+            COSMOS_CUBEADCS_SERIALCOMM_RESPONSE = -601,
             COSMOS_CUBEADCS_INVALID_RESPONSE = -602,
             COSMOS_CUBEADCS_NOT_CONNECTED = -603,
             COSMOS_CUBEADCS_SERIAL_PROTOCOL = -604,
@@ -272,74 +272,72 @@ namespace Cosmos {
 
             COSMOS_PACKET_TYPE_MISMATCH = -651, // If the type id of a packet is not handled
 
-            COSMOS_GENERAL_OK = -0,      /* everything is all right */
-            COSMOS_GENERAL_ERROR_NO_SIGNAL         = -2001,     /* there's no free signal */
-            COSMOS_GENERAL_ERROR_NOTSTARTED       = -2002,     /* uninitialized error */
-            COSMOS_GENERAL_ERROR_NULLPOINTER      = -2003,     /* you gave a null pointer to the function */
-            COSMOS_GENERAL_ERROR_OOPS             = -2004,     /* internal error, something's erong */
-            COSMOS_GENERAL_ERROR_MEMORY           = -2005,     /* there's no memory for more of something */
-            COSMOS_GENERAL_ERROR_OPEN             = -2006,     /* file doesnt exist or you aren't good user */
-            COSMOS_GENERAL_ERROR_CRC              = -2007,     /* crc error */
-            COSMOS_GENERAL_ERROR_OVERSIZE         = -2008,     /* input was too large */
-            COSMOS_GENERAL_ERROR_ZEROSIZE         = -2009,     /* input cannot be zero size */
-            COSMOS_GENERAL_ERROR_UNIMPLEMENTED    = -2010,     /* command is not implemented */
-            COSMOS_GENERAL_ERROR_EMPTY            = -2011,     /* usually indicates that a buffer was empty */
-            COSMOS_GENERAL_ERROR_UNHANDLED_ERR    = -2012,     /* error that is not currently handled */
-            COSMOS_GENERAL_ERROR_UNDERSIZE        = -2013,     /* packet is smaller than expected size */
-            COSMOS_GENERAL_ERROR_BAD_SIZE         = -2014,     /* packet is an invalid size */
-            COSMOS_GENERAL_ERROR_TIMEOUT          = -2015,     /* a timer expired */
-            COSMOS_GENERAL_ERROR_INPUT            = -2016,     /* invalid input was provided */
-            COSMOS_GENERAL_ERROR_OUTPUT           = -2017,     /* output from a routine returned bad output, possibly related to bad input */
-            COSMOS_GENERAL_ERROR_UNDEFINED        = -2018,
-            COSMOS_GENERAL_ERROR_OUTOFRANGE        = -2019,
-            COSMOS_GENERAL_ERROR_NOTREADY          = -2020,
-            COSMOS_GENERAL_ERROR_BUSY              = -2021,
-            COSMOS_GENERAL_ERROR_NO_CARRIER        = -2022,
-            COSMOS_GENERAL_ERROR_NO_DIALTONE        = -2023,
-            COSMOS_GENERAL_ERROR_NO_ANSWER        = -2024,
-            COSMOS_GENERAL_ERROR_DUPLICATE         = -2025,
-            COSMOS_GENERAL_ERROR_MISMATCH         = -2026,
-            COSMOS_GENERAL_ERROR_ERROR             = -2027,
-            COSMOS_GENERAL_ERROR_ARGS             = -2028,
-            COSMOS_GENERAL_ERROR_TOO_LOW           = -2029,
-            COSMOS_GENERAL_ERROR_POSITION          = -2030,
-            COSMOS_GENERAL_ERROR_ATTITUDE          = -2031,
-            COSMOS_GENERAL_ERROR_NAME               = -2032,   //  No or unusable name
-            COSMOS_GENERAL_ERROR_BAD_FD            = -2033,   // No or unusable file descriptor
-            COSMOS_GENERAL_ERROR_BAD_ACK            = -2034,   // Bad acknowledgement
+            COSMOS_GENERAL_OK = -0,                     /* everything is all right */
+            COSMOS_GENERAL_ERROR_NO_SIGNAL = -2001,     /* there's no free signal */
+            COSMOS_GENERAL_ERROR_NOTSTARTED = -2002,    /* uninitialized error */
+            COSMOS_GENERAL_ERROR_NULLPOINTER = -2003,   /* you gave a null pointer to the function */
+            COSMOS_GENERAL_ERROR_OOPS = -2004,          /* internal error, something's erong */
+            COSMOS_GENERAL_ERROR_MEMORY = -2005,        /* there's no memory for more of something */
+            COSMOS_GENERAL_ERROR_OPEN = -2006,          /* file doesnt exist or you aren't good user */
+            COSMOS_GENERAL_ERROR_CRC = -2007,           /* crc error */
+            COSMOS_GENERAL_ERROR_OVERSIZE = -2008,      /* input was too large */
+            COSMOS_GENERAL_ERROR_ZEROSIZE = -2009,      /* input cannot be zero size */
+            COSMOS_GENERAL_ERROR_UNIMPLEMENTED = -2010, /* command is not implemented */
+            COSMOS_GENERAL_ERROR_EMPTY = -2011,         /* usually indicates that a buffer was empty */
+            COSMOS_GENERAL_ERROR_UNHANDLED_ERR = -2012, /* error that is not currently handled */
+            COSMOS_GENERAL_ERROR_UNDERSIZE = -2013,     /* packet is smaller than expected size */
+            COSMOS_GENERAL_ERROR_BAD_SIZE = -2014,      /* packet is an invalid size */
+            COSMOS_GENERAL_ERROR_TIMEOUT = -2015,       /* a timer expired */
+            COSMOS_GENERAL_ERROR_INPUT = -2016,         /* invalid input was provided */
+            COSMOS_GENERAL_ERROR_OUTPUT = -2017,        /* output from a routine returned bad output, possibly related to bad input */
+            COSMOS_GENERAL_ERROR_UNDEFINED = -2018,
+            COSMOS_GENERAL_ERROR_OUTOFRANGE = -2019,
+            COSMOS_GENERAL_ERROR_NOTREADY = -2020,
+            COSMOS_GENERAL_ERROR_BUSY = -2021,
+            COSMOS_GENERAL_ERROR_NO_CARRIER = -2022,
+            COSMOS_GENERAL_ERROR_NO_DIALTONE = -2023,
+            COSMOS_GENERAL_ERROR_NO_ANSWER = -2024,
+            COSMOS_GENERAL_ERROR_DUPLICATE = -2025,
+            COSMOS_GENERAL_ERROR_MISMATCH = -2026,
+            COSMOS_GENERAL_ERROR_ERROR = -2027,
+            COSMOS_GENERAL_ERROR_ARGS = -2028,
+            COSMOS_GENERAL_ERROR_TOO_LOW = -2029,
+            COSMOS_GENERAL_ERROR_POSITION = -2030,
+            COSMOS_GENERAL_ERROR_ATTITUDE = -2031,
+            COSMOS_GENERAL_ERROR_NAME = -2032,    //  No or unusable name
+            COSMOS_GENERAL_ERROR_BAD_FD = -2033,  // No or unusable file descriptor
+            COSMOS_GENERAL_ERROR_BAD_ACK = -2034, // Bad acknowledgement
 
             COSMOS_GPHOTO2_ERROR = -3000,
 
             COSMOS_ERROR_END = -3001
-            };
-        class Error {
+        };
+        class Error
+        {
         public:
             Error();
 
-
-
-            typedef  std::map<int16_t, string> ErrorMap;
+            typedef std::map<int16_t, string> ErrorMap;
             ErrorMap ErrorStrings;
 
             enum LogType
-                {
+            {
                 LOG_NONE = 0,
                 LOG_STDOUT_FAST = 1,
                 LOG_STDOUT_FFLUSH = 2,
                 LOG_FILE_FAST = 3,
                 LOG_FILE_FFLUSH = 4,
                 LOG_FILE_CLOSE = 5
-                };
+            };
 
             string ErrorString(int16_t number);
-            int32_t Set(uint16_t type=0, string ipathname="", double iinterval=1800., string iextension="log");
+            int32_t Set(uint16_t type = 0, string ipathname = "", double iinterval = 1800., string iextension = "log");
             int32_t Type(uint16_t type);
             int32_t Type();
             FILE *Open();
             int32_t Close();
             int32_t Printf(string output);
             int32_t Printf(const char *fmt, ...);
-
 
         private:
             double interval = 30. / 1440.;
@@ -370,7 +368,7 @@ namespace Cosmos {
 #define GS232B_ERROR_OPEN -201
 #define GS232B_ERROR_CLOSED -202
 #define GS232B_ERROR_OUTOFRANGE -203
-#define	GS232B_ERROR_SEND -204
+#define GS232B_ERROR_SEND -204
 
         //! Error opening MicroStrain device
 #define MICROSTRAIN_ERROR_OPEN -211
@@ -412,7 +410,7 @@ namespace Cosmos {
 #define JSON_ERROR_EOS -256
 #define JSON_ERROR_SCAN -257
 #define JSON_ERROR_JSTRING -258
-#define JSON_ERROR_NAN	-259
+#define JSON_ERROR_NAN -259
 
 #define SLIP_ERROR_CRC -261
 #define SLIP_ERROR_PACKING -262
@@ -457,7 +455,7 @@ namespace Cosmos {
 #define ORBIT_ERROR_NOTSUPPORTED -332
 #define TLE_ERROR_NOTFOUND -334
 
-#define NODE_ERROR_NODE -341            // node.ini does not exist
+#define NODE_ERROR_NODE -341 // node.ini does not exist
 #define NODE_ERROR_GROUNDSTATION -342
 #define NODE_ERROR_ROOTDIR -343
 
@@ -478,9 +476,9 @@ namespace Cosmos {
 #define CSSL_ERROR_READ -382
 #define CSSL_ERROR_TIMEOUT -383
 #define CSSL_ERROR_EOT -384
-#define CSSL_ERROR_SLIPIN -385 
-#define CSSL_ERROR_SLIPOUT -386 
-#define CSSL_ERROR_BUFFER_SIZE_EXCEEDED -387 
+#define CSSL_ERROR_SLIPIN -385
+#define CSSL_ERROR_SLIPOUT -386
+#define CSSL_ERROR_BUFFER_SIZE_EXCEEDED -387
 #define CSSL_ERROR_BAD_ESCAPE -388
 
 #define SERIAL_ERROR_CHECKSUM -381
@@ -492,7 +490,6 @@ namespace Cosmos {
 #define SERIAL_ERROR_BUFFER_SIZE_EXCEEDED -387
 #define SERIAL_ERROR_BAD_ESCAPE -388
 #define SERIAL_ERROR_OPEN -389
-
 
 #define IC9100_ERROR_OPEN -391
 #define IC9100_ERROR_CLOSED -392
@@ -546,11 +543,11 @@ namespace Cosmos {
 #define SOCKET_ERROR_CS -481
 #define SOCKET_ERROR_PROTOCOL -482
 #define SOCKET_READ_TIMEOUT -483
-#define SOCKET_ERROR_OPEN   -484
-#define SOCKET_ERROR_OPEN_RECEIVE    -485
-#define SOCKET_ERROR_OPEN_TRANSMIT  -486
-#define SOCKET_ERROR_OPEN_CONNECT  -487
-#define SOCKET_ERROR_CLOSE  -488
+#define SOCKET_ERROR_OPEN -484
+#define SOCKET_ERROR_OPEN_RECEIVE -485
+#define SOCKET_ERROR_OPEN_TRANSMIT -486
+#define SOCKET_ERROR_OPEN_CONNECT -487
+#define SOCKET_ERROR_CLOSE -488
 
 #define TRIMBLE_ERROR_CS -491
 
@@ -560,18 +557,17 @@ namespace Cosmos {
 #define JPLEPHEM_ERROR_NUTATIONS -504
 #define JPLEPHEM_ERROR_LIBRATIONS -505
 
-#define GEOMAG_ERROR_NOTFOUND -511              // WMM File not found
+#define GEOMAG_ERROR_NOTFOUND -511 // WMM File not found
 #define GEOMAG_ERROR_OUTOFRANGE -512
 
 #define PRKX2SU_ERROR_OPEN -521
 #define PRKX2SU_ERROR_CLOSED -522
 #define PRKX2SU_ERROR_OUTOFRANGE -523
-#define	PRKX2SU_ERROR_SEND -524
+#define PRKX2SU_ERROR_SEND -524
 
 #define CONVERT_ERROR_UTC -531
 
-
-#define CUBEADCS_SERIALCOMM_RESPONSE    -601
+#define CUBEADCS_SERIALCOMM_RESPONSE -601
 #define CUBEADCS_INVALID_RESPONSE -602
 #define CUBEADCS_NOT_CONNECTED -603
 #define CUBEADCS_SERIAL_PROTOCOL -604
@@ -591,66 +587,64 @@ namespace Cosmos {
 #define SCPI_ERROR_OUTSIDE_LIMITS -633
 #define SCPI_ERROR_OUTSIDE_RANGE -634
 
-#define GENERAL_OK                        0      /* everything is all right */
-#define GENERAL_ERROR_NO_SIGNAL         -2001     /* there's no free signal */
-#define GENERAL_ERROR_NOTSTARTED       -2002     /* uninitialized error */
-#define GENERAL_ERROR_NULLPOINTER      -2003     /* you gave a null pointer to the function */
-#define GENERAL_ERROR_OOPS             -2004     /* internal error, something's erong */
-#define GENERAL_ERROR_MEMORY           -2005     /* there's no memory for more of something */
-#define GENERAL_ERROR_OPEN             -2006     /* file doesnt exist or you aren't good user */
-#define GENERAL_ERROR_CRC              -2007     /* crc error */
-#define GENERAL_ERROR_OVERSIZE         -2008     /* input was too large */
-#define GENERAL_ERROR_ZEROSIZE         -2009     /* input cannot be zero size */
-#define GENERAL_ERROR_UNIMPLEMENTED    -2010     /* command is not implemented */
-#define GENERAL_ERROR_EMPTY            -2011     /* usually indicates that a buffer was empty */
-#define GENERAL_ERROR_UNHANDLED_ERR    -2012     /* error that is not currently handled */
-#define GENERAL_ERROR_UNDERSIZE        -2013     /* packet is smaller than expected size */
-#define GENERAL_ERROR_BAD_SIZE         -2014     /* packet is an invalid size */
-#define GENERAL_ERROR_TIMEOUT          -2015     /* a timer expired */
-#define GENERAL_ERROR_INPUT            -2016     /* invalid input was provided */
-#define GENERAL_ERROR_OUTPUT           -2017     /* output from a routine returned bad output, possibly related to bad input */
-#define GENERAL_ERROR_UNDEFINED        -2018
-#define GENERAL_ERROR_OUTOFRANGE        -2019
-#define GENERAL_ERROR_NOTREADY          -2020
-#define GENERAL_ERROR_BUSY              -2021
-#define GENERAL_ERROR_NO_CARRIER        -2022
-#define GENERAL_ERROR_NO_DIALTONE        -2023
-#define GENERAL_ERROR_NO_ANSWER        -2024
-#define GENERAL_ERROR_DUPLICATE         -2025
-#define GENERAL_ERROR_MISMATCH         -2026
-#define GENERAL_ERROR_ERROR             -2027
-#define GENERAL_ERROR_ARGS             -2028
-#define GENERAL_ERROR_TOO_LOW           -2029
-#define GENERAL_ERROR_POSITION          -2030
-#define GENERAL_ERROR_ATTITUDE          -2031
-#define GENERAL_ERROR_NAME               -2032   //  No or unusable name
-#define GENERAL_ERROR_BAD_FD            -2033   // No or unusable file descriptor
-#define GENERAL_ERROR_BAD_ACK            -2034   // Bad acknowledgement
-#define GENERAL_ERROR_EOF               -2035
+#define GENERAL_OK 0                      /* everything is all right */
+#define GENERAL_ERROR_NO_SIGNAL -2001     /* there's no free signal */
+#define GENERAL_ERROR_NOTSTARTED -2002    /* uninitialized error */
+#define GENERAL_ERROR_NULLPOINTER -2003   /* you gave a null pointer to the function */
+#define GENERAL_ERROR_OOPS -2004          /* internal error, something's erong */
+#define GENERAL_ERROR_MEMORY -2005        /* there's no memory for more of something */
+#define GENERAL_ERROR_OPEN -2006          /* file doesnt exist or you aren't good user */
+#define GENERAL_ERROR_CRC -2007           /* crc error */
+#define GENERAL_ERROR_OVERSIZE -2008      /* input was too large */
+#define GENERAL_ERROR_ZEROSIZE -2009      /* input cannot be zero size */
+#define GENERAL_ERROR_UNIMPLEMENTED -2010 /* command is not implemented */
+#define GENERAL_ERROR_EMPTY -2011         /* usually indicates that a buffer was empty */
+#define GENERAL_ERROR_UNHANDLED_ERR -2012 /* error that is not currently handled */
+#define GENERAL_ERROR_UNDERSIZE -2013     /* packet is smaller than expected size */
+#define GENERAL_ERROR_BAD_SIZE -2014      /* packet is an invalid size */
+#define GENERAL_ERROR_TIMEOUT -2015       /* a timer expired */
+#define GENERAL_ERROR_INPUT -2016         /* invalid input was provided */
+#define GENERAL_ERROR_OUTPUT -2017        /* output from a routine returned bad output, possibly related to bad input */
+#define GENERAL_ERROR_UNDEFINED -2018
+#define GENERAL_ERROR_OUTOFRANGE -2019
+#define GENERAL_ERROR_NOTREADY -2020
+#define GENERAL_ERROR_BUSY -2021
+#define GENERAL_ERROR_NO_CARRIER -2022
+#define GENERAL_ERROR_NO_DIALTONE -2023
+#define GENERAL_ERROR_NO_ANSWER -2024
+#define GENERAL_ERROR_DUPLICATE -2025
+#define GENERAL_ERROR_MISMATCH -2026
+#define GENERAL_ERROR_ERROR -2027
+#define GENERAL_ERROR_ARGS -2028
+#define GENERAL_ERROR_TOO_LOW -2029
+#define GENERAL_ERROR_POSITION -2030
+#define GENERAL_ERROR_ATTITUDE -2031
+#define GENERAL_ERROR_NAME -2032    //  No or unusable name
+#define GENERAL_ERROR_BAD_FD -2033  // No or unusable file descriptor
+#define GENERAL_ERROR_BAD_ACK -2034 // Bad acknowledgement
+#define GENERAL_ERROR_EOF -2035
 
 #define GPHOTO2_ERROR -3000
 
-
         //! @}
-
 
         //! \ingroup error
         //! \defgroup error_functions Errno support functions
         //! @{
         string cosmos_error_string(int32_t cosmos_errno);
-        int32_t set_cosmos_error_level(uint16_t level=0, string pathname="./");
-        FILE* get_cosmos_error_fd(double mjd=0.);
+        int32_t set_cosmos_error_level(uint16_t level = 0, string pathname = "./");
+        FILE *get_cosmos_error_fd(double mjd = 0.);
         int32_t close_cosmos_error_fd();
 
-#define cosmos_error_printf(mjd, ...) \
-    do { \
+#define cosmos_error_printf(mjd, ...)                          \
+    do                                                         \
+    {                                                          \
     if ((FILE* fd = get_cosmos_error_fd(mjd, path) != nullptr) \
         { \
     char _buf[512]; \
     fprintf(fd, __VA_ARGS__); \
-    } \
-    } while(0);
-
+    }                                                          \
+    } while (0);
 
         //! @}
     }

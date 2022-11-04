@@ -31,7 +31,7 @@
 #define _BYTELIB_H
 
 #include <vector>
-#include <math/constants.h>
+#include "math/constants.h"
 
 ByteOrder local_byte_order();
 

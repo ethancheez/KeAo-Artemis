@@ -69,7 +69,11 @@ namespace Cosmos
 
         bool PacketComm::SLIPUnPacketize()
         {
-            slip_unpack(packetized, wrapped);
+            int32_t iretn = slip_unpack(packetized, wrapped);
+            if (iretn <= 0)
+            {
+                return false;
+            }
             return Unwrap();
         }
 

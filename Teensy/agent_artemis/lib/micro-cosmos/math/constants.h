@@ -1,7 +1,7 @@
 #ifndef _MATH_CONSTANTS_H
 #define _MATH_CONSTANTS_H
 
-#include <support/configCosmos.h>
+#include "support/configCosmos.h"
 //#include <cstdint>
 
 //! \ingroup mathlib
@@ -45,7 +45,7 @@ const double D_SMALL = static_cast<double>(1e-76);
 #undef LITTLEENDIAN
 
 //! Enumeration of possible byte orders
-enum class ByteOrder //: std::uint8_t
+enum class ByteOrder : std::uint8_t
 {
     //! Big Endian byte order
     BIGENDIAN = 0, // was previouly ORDER_BIGENDIAN, replace by ByteOrder::BIGENDIAN

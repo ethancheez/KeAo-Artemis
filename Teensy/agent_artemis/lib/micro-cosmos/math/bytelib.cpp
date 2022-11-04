@@ -5,7 +5,7 @@
     \return Order as provided in ::ByteOrder.
 */
 
-//std::uint8_t local_byte_order()
+// std::uint8_t local_byte_order()
 ByteOrder local_byte_order()
 {
     uint16_t test = 1;
@@ -36,7 +36,7 @@ uint8_t uint8from(uint8_t *pointer, ByteOrder order)
     }
     else
     {
-        for (uint8_t ic=0; ic<8; ++ic)
+        for (uint8_t ic = 0; ic < 8; ++ic)
         {
             rev <<= 1;
             if ((rb & 1) == 1)
@@ -59,7 +59,7 @@ uint8_t uint8to(uint8_t *pointer, ByteOrder order)
     }
     else
     {
-        for (uint8_t ic=0; ic<8; ++ic)
+        for (uint8_t ic = 0; ic < 8; ++ic)
         {
             rev <<= 1;
             if ((rb & 1) == 1)
@@ -75,7 +75,7 @@ uint8_t uint8to(uint8_t *pointer, ByteOrder order)
 void uint8from(vector<uint8_t> src, vector<uint8_t> &dst, ByteOrder order)
 {
     dst.resize(src.size());
-    for (size_t i=0; i<src.size(); ++i)
+    for (size_t i = 0; i < src.size(); ++i)
     {
         dst[i] = uint8from(&src[i], order);
     }
@@ -84,12 +84,11 @@ void uint8from(vector<uint8_t> src, vector<uint8_t> &dst, ByteOrder order)
 void uint8to(vector<uint8_t> src, vector<uint8_t> &dst, ByteOrder order)
 {
     dst.resize(src.size());
-    for (size_t i=0; i<src.size(); ++i)
+    for (size_t i = 0; i < src.size(); ++i)
     {
         dst[i] = uint8from(&src[i], order);
     }
 }
-
 
 //! Memory to 16 bit unsigned integer
 /*! Return the 16 bit unsigned integer equivalent of a location in memory, corrected for the local byte order.
@@ -109,7 +108,7 @@ uint16_t uint16from(uint8_t *pointer, ByteOrder order)
     result = (uint16_t *)rb;
     if (local_byte_order() == order)
     {
-        memcpy((void *)rb,pointer,2);
+        memcpy((void *)rb, pointer, 2);
     }
     else
     {
@@ -133,7 +132,7 @@ int16_t int16from(uint8_t *pointer, ByteOrder order)
     uint16_t rb;
 
     result = (int16_t *)&rb;
-    rb = uint16from(pointer,order);
+    rb = uint16from(pointer, order);
 
     return (*result);
 }
@@ -156,7 +155,7 @@ uint32_t uint32from(uint8_t *pointer, ByteOrder order)
     result = (uint32_t *)rb;
     if (local_byte_order() == order)
     {
-        memcpy((void *)rb,pointer,4);
+        memcpy((void *)rb, pointer, 4);
     }
     else
     {
@@ -182,7 +181,7 @@ int32_t int32from(uint8_t *pointer, ByteOrder order)
     uint32_t rb;
 
     result = (int32_t *)&rb;
-    rb = uint32from(pointer,order);
+    rb = uint32from(pointer, order);
 
     return (*result);
 }
@@ -202,7 +201,7 @@ float floatfrom(uint8_t *pointer, ByteOrder order)
     rb = (uint8_t *)&result;
     if (local_byte_order() == order)
     {
-        memcpy((void *)rb,pointer,4);
+        memcpy((void *)rb, pointer, 4);
     }
     else
     {
@@ -230,7 +229,7 @@ double doublefrom(uint8_t *pointer, ByteOrder order)
     rb = (uint8_t *)&result;
     if (local_byte_order() == order)
     {
-        memcpy((void *)rb,pointer,8);
+        memcpy((void *)rb, pointer, 8);
     }
     else
     {
@@ -266,7 +265,7 @@ void uint32to(uint32_t value, uint8_t *pointer, ByteOrder order)
     *result = value;
     if (local_byte_order() == order)
     {
-        memcpy(pointer,(void *)rb,4);
+        memcpy(pointer, (void *)rb, 4);
     }
     else
     {
@@ -275,7 +274,6 @@ void uint32to(uint32_t value, uint8_t *pointer, ByteOrder order)
         pointer[2] = rb[1];
         pointer[3] = rb[0];
     }
-
 }
 
 //! 32 bit signed integer to memory
@@ -297,7 +295,7 @@ void int32to(int32_t value, uint8_t *pointer, ByteOrder order)
     *result = value;
     if (local_byte_order() == order)
     {
-        memcpy(pointer,(void *)rb,4);
+        memcpy(pointer, (void *)rb, 4);
     }
     else
     {
@@ -306,7 +304,6 @@ void int32to(int32_t value, uint8_t *pointer, ByteOrder order)
         pointer[2] = rb[1];
         pointer[3] = rb[0];
     }
-
 }
 
 //! 16 bit unsigned integer to memory
@@ -328,14 +325,13 @@ void uint16to(uint16_t value, uint8_t *pointer, ByteOrder order)
     *result = value;
     if (local_byte_order() == order)
     {
-        memcpy(pointer,(void *)rb,2);
+        memcpy(pointer, (void *)rb, 2);
     }
     else
     {
         pointer[0] = rb[1];
         pointer[1] = rb[0];
     }
-
 }
 
 //! 16 bit signed integer to memory
@@ -357,14 +353,13 @@ void int16to(int16_t value, uint8_t *pointer, ByteOrder order)
     *result = value;
     if (local_byte_order() == order)
     {
-        memcpy(pointer,(void *)rb,2);
+        memcpy(pointer, (void *)rb, 2);
     }
     else
     {
         pointer[0] = rb[1];
         pointer[1] = rb[0];
     }
-
 }
 
 //! 32 bit floating point to memory
@@ -386,7 +381,7 @@ void floatto(float value, uint8_t *pointer, ByteOrder order)
     *result = value;
     if (local_byte_order() == order)
     {
-        memcpy(pointer,(void *)rb,4);
+        memcpy(pointer, (void *)rb, 4);
     }
     else
     {
@@ -395,7 +390,6 @@ void floatto(float value, uint8_t *pointer, ByteOrder order)
         pointer[2] = rb[1];
         pointer[3] = rb[0];
     }
-
 }
 
 //! 64 bit floating point to memory
@@ -417,7 +411,7 @@ void doubleto(double value, uint8_t *pointer, ByteOrder order)
     *result = value;
     if (local_byte_order() == order)
     {
-        memcpy(pointer,(void *)rb,8);
+        memcpy(pointer, (void *)rb, 8);
     }
     else
     {
