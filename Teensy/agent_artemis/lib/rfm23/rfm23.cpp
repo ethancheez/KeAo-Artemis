@@ -22,11 +22,11 @@ namespace Artemis
                 {
                     if (millis() - timeoutStart > 10000)
                     {
+
                         Serial.println("[RFM23] INIT FAILED");
                         return false;
                     }
                 }
-
                 rfm23.setFrequency(RFM23_FREQ);   // frequency default is 434MHz
                 rfm23.setTxPower(RFM23_TX_POWER); // 20 is the max
 
@@ -43,6 +43,7 @@ namespace Artemis
                 rfm23.sleep();
 
                 Serial.println("[RFM23] INIT SUCCESS");
+                rfm23.setModeIdle();
                 return true;
             }
 
@@ -58,12 +59,15 @@ namespace Artemis
                 digitalWrite(RFM23_TX_ON, LOW);
 
                 Threads::Scope scope(spi1_mtx);
+                rfm23.setModeTx();
                 rfm23.send((uint8_t *)msg, length);
                 rfm23.waitPacketSent();
 
                 rfm23.sleep();
+                rfm23.setModeIdle();
                 Serial.print("[RFM23] SENDING: [");
-                for(size_t i = 0; i < length; i++) {
+                for (size_t i = 0; i < length; i++)
+                {
                     Serial.print(msg[i]);
                 }
                 Serial.println("]");
@@ -71,12 +75,13 @@ namespace Artemis
 
             bool RFM23::recv(PacketComm *packet)
             {
-                packet->wrapped.resize(0);
                 digitalWrite(RFM23_RX_ON, LOW);
                 digitalWrite(RFM23_TX_ON, HIGH);
+                packet->wrapped.resize(0);
                 uint8_t bytes_recieved = sizeof(packet->wrapped);
 
                 Threads::Scope scope(spi1_mtx);
+                rfm23.setModeRx();
                 if (rfm23.waitAvailableTimeout(100))
                 {
                     packet->wrapped.resize(RH_RF22_MAX_MESSAGE_LEN);
@@ -84,10 +89,12 @@ namespace Artemis
                     {
                         packet->wrapped.resize(bytes_recieved);
                         packet->Unwrap();
+                        rfm23.setModeIdle();
+
                         return true;
                     }
                 }
-
+                rfm23.setModeIdle();
                 return false;
             }
         }
