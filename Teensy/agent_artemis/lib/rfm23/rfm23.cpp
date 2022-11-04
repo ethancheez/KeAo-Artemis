@@ -75,8 +75,11 @@ namespace Artemis
 
             bool RFM23::recv(PacketComm *packet)
             {
+                int32_t iretn = 0;
+
                 digitalWrite(RFM23_RX_ON, LOW);
                 digitalWrite(RFM23_TX_ON, HIGH);
+                
                 packet->wrapped.resize(0);
                 uint8_t bytes_recieved = sizeof(packet->wrapped);
 
@@ -88,8 +91,13 @@ namespace Artemis
                     if (rfm23.recv(packet->wrapped.data(), &bytes_recieved))
                     {
                         packet->wrapped.resize(bytes_recieved);
-                        packet->Unwrap();
+                        iretn = packet->Unwrap();
                         rfm23.setModeIdle();
+
+                        if (iretn < 0)
+                        {
+                            return false;
+                        }
 
                         return true;
                     }

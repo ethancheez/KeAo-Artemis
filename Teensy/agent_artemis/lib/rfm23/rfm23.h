@@ -7,7 +7,7 @@
 #include <artemis_defs.h>
 
 /* RFM23 FREQUENCY CONFIG */
-#define RFM23_FREQ 430.0
+#define RFM23_FREQ 433.0
 
 /* RFM23 PIN CONFIG */
 #define RFM23_CS_PIN SPI1_CS1

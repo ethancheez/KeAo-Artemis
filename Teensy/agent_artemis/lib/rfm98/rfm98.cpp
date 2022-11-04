@@ -56,7 +56,8 @@ namespace Artemis
                 rfm98.sleep();
                 rfm98.setModeIdle();
                 Serial.print("[RFM98] SENDING: [");
-                for(size_t i = 0; i < length; i++) {
+                for (size_t i = 0; i < length; i++)
+                {
                     Serial.print(msg[i]);
                 }
                 Serial.println("]");
@@ -64,6 +65,7 @@ namespace Artemis
 
             bool RFM98::recv(PacketComm *packet)
             {
+                int32_t iretn = 0;
                 packet->wrapped.resize(0);
                 uint8_t bytes_received = sizeof(packet->wrapped);
 
@@ -78,6 +80,12 @@ namespace Artemis
                         packet->Unwrap();
                         rfm98.sleep();
                         rfm98.setModeIdle();
+
+                        if (iretn < 0)
+                        {
+                            return false;
+                        }
+
                         return true;
                     }
                 }
