@@ -10,6 +10,15 @@
 #define ARTEMIS_TEMP_SENSOR_COUNT 7
 #define AREF_VOLTAGE 3.3
 
+// Nodes
+enum NODES : uint8_t
+{
+  GROUND_NODE_ID = 1,
+  TEENSY_NODE_ID = 2,
+  RPI_NODE_ID = 3,
+  PLEIADES_NODE_ID = 4,
+};
+
 // Structs
 struct thread_struct
 {
@@ -74,12 +83,6 @@ enum ARTEMIS_RADIOS : uint8_t
 
 // Max threads = 16
 extern vector<struct thread_struct> thread_list;
-
-// Nodes
-const uint8_t ground_node_id = 1;
-const uint8_t teensy_node_id = 2;
-const uint8_t rpi_node_id = 3;
-const uint8_t pleiades_node_id = 4;
 
 // Mutex for Command Queues
 extern Threads::Mutex main_queue_mtx;

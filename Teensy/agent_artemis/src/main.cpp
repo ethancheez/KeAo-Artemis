@@ -65,8 +65,8 @@ void setup()
 
 void loop()
 {
-  packet.header.orig = teensy_node_id;
-  packet.header.dest = rpi_node_id;
+  packet.header.orig = NODES::TEENSY_NODE_ID;
+  packet.header.dest = NODES::RPI_NODE_ID;
   packet.header.radio = ARTEMIS_RADIOS::NONE;
   packet.header.type = PacketComm::TypeId::DataPong;
   packet.data.resize(0);
@@ -80,7 +80,7 @@ void loop()
 
   if (PullQueue(&packet, main_queue, main_queue_mtx))
   {
-    if (packet.header.dest == ground_node_id)
+    if (packet.header.dest == NODES::GROUND_NODE_ID)
     {
       switch (packet.header.radio)
       {
@@ -92,15 +92,15 @@ void loop()
         break;
       }
     }
-    else if (packet.header.dest == rpi_node_id)
+    else if (packet.header.dest == NODES::RPI_NODE_ID)
     {
       PushQueue(&packet, rpi_queue, rpi_queue_mtx);
     }
-    else if (packet.header.dest == pleiades_node_id)
+    else if (packet.header.dest == NODES::PLEIADES_NODE_ID)
     {
       PushQueue(&packet, rfm98_queue, rfm98_queue_mtx);
     }
-    else if (packet.header.dest == teensy_node_id)
+    else if (packet.header.dest == NODES::TEENSY_NODE_ID)
     {
       switch (packet.header.type)
       {
