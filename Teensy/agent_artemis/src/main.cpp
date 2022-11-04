@@ -56,25 +56,26 @@ void setup()
   // setup_current();
 
   // Threads
-  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rpi_channel), "rpi channel"});
 }
 
 void loop()
 {
-  // packet.header.orig = teensy_node_id;
-  // packet.header.dest = ground_node_id;
-  // packet.header.radio = ARTEMIS_RADIOS::RFM23;
-  // packet.header.type = PacketComm::TypeId::DataPong;
-  // packet.data.resize(0);
-  // const char *data = "Pong";
-  // for (size_t i = 0; i < strlen(data); i++) {
-  //   packet.data.push_back(data[i]);
-  // }
-  // packet.data.resize(strlen(data));
-  // PushQueue(&packet, main_queue, main_queue_mtx);
+  packet.header.orig = teensy_node_id;
+  packet.header.dest = rpi_node_id;
+  packet.header.radio = ARTEMIS_RADIOS::NONE;
+  packet.header.type = PacketComm::TypeId::DataPong;
+  packet.data.resize(0);
+  const char *data = "Pong";
+  for (size_t i = 0; i < strlen(data); i++) {
+    packet.data.push_back(data[i]);
+  }
+  packet.data.resize(strlen(data));
+  PushQueue(&packet, main_queue, main_queue_mtx);
   delay(1000);
 
   if (PullQueue(&packet, main_queue, main_queue_mtx))
@@ -93,6 +94,7 @@ void loop()
     }
     else if (packet.header.dest == rpi_node_id)
     {
+      PushQueue(&packet, rpi_queue, rpi_queue_mtx);
     }
     else if (packet.header.dest == pleiades_node_id)
     {
