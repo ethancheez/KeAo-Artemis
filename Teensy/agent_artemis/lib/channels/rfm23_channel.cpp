@@ -39,5 +39,6 @@ void Artemis::Teensy::Channels::rfm23_channel()
             }
             Serial.println("]");
         }
+        threads.delay(10);
     }
 }

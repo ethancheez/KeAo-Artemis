@@ -53,14 +53,14 @@ namespace Artemis
                 rfm23.reset();
             }
 
-            void RFM23::send(const unsigned char *msg, size_t length)
+            void RFM23::send(const uint8_t *msg, size_t length)
             {
                 digitalWrite(RFM23_RX_ON, HIGH);
                 digitalWrite(RFM23_TX_ON, LOW);
 
                 Threads::Scope lock(spi1_mtx);
                 rfm23.setModeTx();
-                rfm23.send((uint8_t *)msg, length);
+                rfm23.send(msg, length);
                 rfm23.waitPacketSent();
 
                 rfm23.sleep();
@@ -80,8 +80,7 @@ namespace Artemis
                 digitalWrite(RFM23_RX_ON, LOW);
                 digitalWrite(RFM23_TX_ON, HIGH);
                 
-                packet->wrapped.resize(0);
-                uint8_t bytes_recieved = sizeof(packet->wrapped);
+                uint8_t bytes_recieved = 0;
 
                 Threads::Scope lock(spi1_mtx);
                 rfm23.setModeRx();

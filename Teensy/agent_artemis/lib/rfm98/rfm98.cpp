@@ -42,16 +42,16 @@ namespace Artemis
             void RFM98::reset()
             {
                 digitalWrite(RFM98_RST_PIN, LOW);
-                delay(10);
+                threads.delay(10);
                 digitalWrite(RFM98_RST_PIN, HIGH);
-                delay(10);
+                threads.delay(10);
             }
 
-            void RFM98::send(const unsigned char *msg, size_t length)
+            void RFM98::send(const uint8_t *msg, size_t length)
             {
                 Threads::Scope lock(spi1_mtx);
                 rfm98.setModeTx();
-                rfm98.send((uint8_t *)msg, length);
+                rfm98.send(msg, length);
                 rfm98.waitPacketSent();
                 rfm98.sleep();
                 rfm98.setModeIdle();
@@ -66,8 +66,7 @@ namespace Artemis
             bool RFM98::recv(PacketComm *packet)
             {
                 int32_t iretn = 0;
-                packet->wrapped.resize(0);
-                uint8_t bytes_received = sizeof(packet->wrapped);
+                uint8_t bytes_received = 0;
 
                 Threads::Scope lock(spi1_mtx);
                 rfm98.setModeRx();
