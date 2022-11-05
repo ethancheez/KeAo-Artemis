@@ -1,7 +1,10 @@
 #include <artemis_channels.h>
 
-Artemis::Teensy::Radio::RFM23 rfm23(RFM23_CS_PIN, RFM23_INT_PIN, hardware_spi1);
-PacketComm packet;
+namespace
+{
+    Artemis::Teensy::Radio::RFM23 rfm23(RFM23_CS_PIN, RFM23_INT_PIN, hardware_spi1);
+    PacketComm packet;
+}
 
 void Artemis::Teensy::Channels::rfm23_channel()
 {

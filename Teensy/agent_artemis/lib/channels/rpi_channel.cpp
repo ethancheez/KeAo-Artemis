@@ -3,9 +3,12 @@
 void receiveData(int byte_count);
 void sendData();
 
-PacketComm packet;
-size_t send_index = 0;
-bool ready = false;
+namespace
+{
+    PacketComm packet;
+    size_t send_index = 0;
+    bool ready = false;
+}
 
 void Artemis::Teensy::Channels::rpi_channel()
 {
