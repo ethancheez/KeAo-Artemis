@@ -88,6 +88,8 @@ void loop()
       case ARTEMIS_RADIOS::ASTRODEV:
         PushQueue(&packet, astrodev_queue, astrodev_queue_mtx);
         break;
+      default:
+        break;
       }
     }
     else if (packet.header.dest == NODES::RPI_NODE_ID)
@@ -120,7 +122,7 @@ void loop()
         packet.header.radio = ARTEMIS_RADIOS::RFM23;
         packet.header.type = PacketComm::TypeId::DataPong;
         packet.data.resize(0);
-        const char *data = "Pong";
+        data = "Pong";
         for (size_t i = 0; i < strlen(data); i++)
         {
           packet.data.push_back(data[i]);

@@ -19,7 +19,6 @@ queue<PacketComm> pdu_queue;
 queue<PacketComm> rpi_queue;
 
 // Other Mutex
-Threads::Mutex spi_mtx;
 Threads::Mutex spi1_mtx;
 Threads::Mutex i2c1_mtx;
 

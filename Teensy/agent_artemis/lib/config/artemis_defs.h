@@ -101,7 +101,6 @@ extern queue<PacketComm> pdu_queue;
 extern queue<PacketComm> rpi_queue;
 
 // Other Mutex
-extern Threads::Mutex spi_mtx;
 extern Threads::Mutex spi1_mtx;
 extern Threads::Mutex i2c1_mtx;
 
