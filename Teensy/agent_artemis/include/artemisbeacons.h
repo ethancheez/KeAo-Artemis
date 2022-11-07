@@ -1,3 +1,6 @@
+#ifndef _ARTEMIS_BEACONS_H
+#define _ARTEMIS_BEACONS_H
+
 #include <cstdint>
 #include <artemis_defs.h>
 
@@ -32,3 +35,5 @@ struct __attribute__((packed)) imubeacon
     float gyrox = 0, gyroy = 0, gyroz = 0;
     float imutemp = 0;
 };
+
+#endif // _ARTEMIS_BEACONS_H

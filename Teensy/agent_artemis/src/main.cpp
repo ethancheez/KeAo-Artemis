@@ -117,9 +117,9 @@ void loop()
         PushQueue(&packet, pdu_queue, pdu_queue_mtx);
         break;
       case PacketComm::TypeId::CommandPing:
-        packet.header.orig = NODES::TEENSY_NODE_ID;
-        packet.header.dest = NODES::GROUND_NODE_ID;
-        packet.header.radio = ARTEMIS_RADIOS::RFM23;
+        uint8_t temp_node = packet.header.orig;
+        packet.header.orig = packet.header.dest;
+        packet.header.dest = temp_node;
         packet.header.type = PacketComm::TypeId::DataPong;
         packet.data.resize(0);
         data = "Pong";
@@ -127,7 +127,12 @@ void loop()
         {
           packet.data.push_back(data[i]);
         }
-        PushQueue(&packet, rfm23_queue, rfm23_queue_mtx);
+        if (packet.header.radio == ARTEMIS_RADIOS::RFM23)
+          PushQueue(&packet, rfm23_queue, rfm23_queue_mtx);
+        else if (packet.header.radio == ARTEMIS_RADIOS::RFM98)
+          PushQueue(&packet, rfm98_queue, rfm98_queue_mtx);
+        else if (packet.header.radio == ARTEMIS_RADIOS::ASTRODEV)
+          PushQueue(&packet, astrodev_queue, astrodev_queue_mtx);
         break;
       default:
         break;
