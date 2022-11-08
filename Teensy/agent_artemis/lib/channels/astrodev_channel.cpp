@@ -62,8 +62,9 @@ void Artemis::Teensy::Channels::astrodev_channel()
                 Serial.print((char)packet.data[i]);
             }
             Serial.println("]");
+            PushQueue(&packet, main_queue, main_queue_mtx);
         }
-        delay(10);
+        threads.delay(10);
     }
 }
 
@@ -199,13 +200,13 @@ bool astrodev_send()
                 return false;
             }
             // Wait until transfer buffer is not full
-            delay(100);
+            threads.delay(100);
             // Let recv_loop handle getting the response back and clearing buffer_full flag
             iretn = astrodev.Ping(false);
             if (!astrodev.buffer_full.load())
             {
                 Serial.println("buffer full flag cleared");
-                delay(10);
+                threads.delay(10);
                 // Return to start of loop to attempt transmit
                 continue;
             }
