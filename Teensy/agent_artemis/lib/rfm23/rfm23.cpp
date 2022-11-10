@@ -17,12 +17,11 @@ namespace Artemis
                 pinMode(RFM23_RX_ON, OUTPUT);
                 pinMode(RFM23_TX_ON, OUTPUT);
 
-                unsigned long timeoutStart = millis();
+                elapsedMillis timeout;
                 while (!rfm23.init())
                 {
-                    if (millis() - timeoutStart > 10000)
+                    if (timeout > 10000)
                     {
-
                         Serial.println("[RFM23] INIT FAILED");
                         return false;
                     }
@@ -31,10 +30,10 @@ namespace Artemis
                 rfm23.setTxPower(RFM23_TX_POWER); // 20 is the max
 
                 rfm23.sleep();
-                timeoutStart = millis();
+                timeout = 0;
                 while (!rfm23.setModemConfig(RH_RF22::FSK_Rb_512Fd2_5))
                 {
-                    if (millis() - timeoutStart > 10000)
+                    if (timeout > 10000)
                     {
                         Serial.println("[RFM23] SET FSK MODULATION FAILED");
                         return false;

@@ -20,10 +20,10 @@ namespace Artemis
 
                 reset();
 
-                unsigned long timeoutStart = millis();
+                elapsedMillis timeout;
                 while (!rfm98.init())
                 {
-                    if (millis() - timeoutStart > 10000)
+                    if (timeout > 10000)
                     {
                         Serial.println("[RFM98] INIT FAILED");
                         return false;

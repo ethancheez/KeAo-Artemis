@@ -12,7 +12,7 @@ void Artemis::Teensy::Channels::pdu_channel()
 {
     // Enable burn wire
     pdu.PDU_SWITCH(Artemis::Teensy::PDU::BURN, true);
-    delay(30000);
+    threads.delay(30000);
     pdu.PDU_SWITCH(Artemis::Teensy::PDU::BURN, false);
 
     // Enable Lithium-3 Payload on VBATT
