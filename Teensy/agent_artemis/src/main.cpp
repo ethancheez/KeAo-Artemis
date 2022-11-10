@@ -37,6 +37,8 @@ namespace
 
   elapsedMillis sensortimer;
   elapsedMillis uptime;
+
+  const char* data;
 }
 
 void setup()
@@ -55,27 +57,14 @@ void setup()
 
   // Threads
   thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rpi_channel), "rpi channel"});
 }
 
 void loop()
 {
-  packet.header.orig = NODES::GROUND_NODE_ID;
-  packet.header.dest = NODES::TEENSY_NODE_ID;
-  packet.header.radio = ARTEMIS_RADIOS::RFM23;
-  packet.header.type = PacketComm::TypeId::CommandPing;
-  packet.data.resize(0);
-  const char *data = "Ping";
-  for (size_t i = 0; i < strlen(data); i++)
-  {
-    packet.data.push_back(data[i]);
-  }
-  PushQueue(&packet, main_queue, main_queue_mtx);
-  threads.delay(1000);
-
   if (PullQueue(&packet, main_queue, main_queue_mtx))
   {
     if (packet.header.dest == NODES::GROUND_NODE_ID)
@@ -114,9 +103,12 @@ void loop()
       case PacketComm::TypeId::CommandEpsSwitchNumber:
       case PacketComm::TypeId::CommandEpsSwitchStatus:
       case PacketComm::TypeId::CommandEpsWatchdog:
+      {
         PushQueue(&packet, pdu_queue, pdu_queue_mtx);
         break;
+      }
       case PacketComm::TypeId::CommandPing:
+      {
         uint8_t temp_node = packet.header.orig;
         packet.header.orig = packet.header.dest;
         packet.header.dest = temp_node;
@@ -134,6 +126,7 @@ void loop()
         else if (packet.header.radio == ARTEMIS_RADIOS::ASTRODEV)
           PushQueue(&packet, astrodev_queue, astrodev_queue_mtx);
         break;
+      }
       default:
         break;
       }
