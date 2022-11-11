@@ -52,22 +52,24 @@ namespace Artemis
                 rfm23.reset();
             }
 
-            void RFM23::send(const uint8_t *msg, size_t length)
+            void RFM23::send(PacketComm &packet)
             {
                 digitalWrite(RFM23_RX_ON, HIGH);
                 digitalWrite(RFM23_TX_ON, LOW);
 
+                packet.Wrap();
+
                 Threads::Scope lock(spi1_mtx);
                 rfm23.setModeTx();
-                rfm23.send(msg, length);
+                rfm23.send(packet.wrapped.data(), packet.wrapped.size());
                 rfm23.waitPacketSent();
 
                 rfm23.sleep();
                 rfm23.setModeIdle();
                 Serial.print("[RFM23] SENDING: [");
-                for (size_t i = 0; i < length; i++)
+                for (size_t i = 0; i < packet.wrapped.size(); i++)
                 {
-                    Serial.print(msg[i]);
+                    Serial.print(packet.wrapped[i]);
                 }
                 Serial.println("]");
             }
