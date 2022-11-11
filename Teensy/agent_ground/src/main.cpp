@@ -15,8 +15,6 @@ void setup()
 {
   Serial.begin(115200);
   usb.begin();
-  pinMode(RPI_ENABLE, OUTPUT);
-  digitalWrite(RPI_ENABLE, HIGH);
   delay(3000);
 
   threads.setSliceMillis(10);

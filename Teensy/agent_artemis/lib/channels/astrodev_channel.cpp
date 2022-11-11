@@ -35,7 +35,7 @@ void Artemis::Teensy::Channels::astrodev_channel()
 
     while (true)
     {
-        if (PullQueue(&packet, astrodev_queue, astrodev_queue_mtx))
+        if (PullQueue(packet, astrodev_queue, astrodev_queue_mtx))
         {
             switch (packet.header.type)
             {
@@ -62,7 +62,7 @@ void Artemis::Teensy::Channels::astrodev_channel()
                 Serial.print((char)packet.data[i]);
             }
             Serial.println("]");
-            PushQueue(&packet, main_queue, main_queue_mtx);
+            PushQueue(packet, main_queue, main_queue_mtx);
         }
         threads.delay(10);
     }

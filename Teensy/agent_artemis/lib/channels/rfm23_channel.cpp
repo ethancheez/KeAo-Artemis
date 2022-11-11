@@ -20,7 +20,7 @@ void Artemis::Teensy::Channels::rfm23_channel()
 
     while (true)
     {
-        if (PullQueue(&packet, rfm23_queue, rfm23_queue_mtx))
+        if (PullQueue(packet, rfm23_queue, rfm23_queue_mtx))
         {
             switch (packet.header.type)
             {
@@ -48,7 +48,7 @@ void Artemis::Teensy::Channels::rfm23_channel()
                 Serial.print((char)packet.data[i]);
             }
             Serial.println("]");
-            PushQueue(&packet, main_queue, main_queue_mtx);
+            PushQueue(packet, main_queue, main_queue_mtx);
         }
         threads.delay(10);
     }

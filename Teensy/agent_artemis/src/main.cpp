@@ -65,17 +65,17 @@ void setup()
 
 void loop()
 {
-  if (PullQueue(&packet, main_queue, main_queue_mtx))
+  if (PullQueue(packet, main_queue, main_queue_mtx))
   {
     if (packet.header.dest == NODES::GROUND_NODE_ID)
     {
       switch (packet.header.radio)
       {
       case ARTEMIS_RADIOS::RFM23:
-        PushQueue(&packet, rfm23_queue, rfm23_queue_mtx);
+        PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
         break;
       case ARTEMIS_RADIOS::ASTRODEV:
-        PushQueue(&packet, astrodev_queue, astrodev_queue_mtx);
+        PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
         break;
       default:
         break;
@@ -83,11 +83,11 @@ void loop()
     }
     else if (packet.header.dest == NODES::RPI_NODE_ID)
     {
-      PushQueue(&packet, rpi_queue, rpi_queue_mtx);
+      PushQueue(packet, rpi_queue, rpi_queue_mtx);
     }
     else if (packet.header.dest == NODES::PLEIADES_NODE_ID)
     {
-      PushQueue(&packet, rfm98_queue, rfm98_queue_mtx);
+      PushQueue(packet, rfm98_queue, rfm98_queue_mtx);
     }
     else if (packet.header.dest == NODES::TEENSY_NODE_ID)
     {
@@ -104,7 +104,7 @@ void loop()
       case PacketComm::TypeId::CommandEpsSwitchStatus:
       case PacketComm::TypeId::CommandEpsWatchdog:
       {
-        PushQueue(&packet, pdu_queue, pdu_queue_mtx);
+        PushQueue(packet, pdu_queue, pdu_queue_mtx);
         break;
       }
       case PacketComm::TypeId::CommandPing:
@@ -120,11 +120,11 @@ void loop()
           packet.data.push_back(data[i]);
         }
         if (packet.header.radio == ARTEMIS_RADIOS::RFM23)
-          PushQueue(&packet, rfm23_queue, rfm23_queue_mtx);
+          PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
         else if (packet.header.radio == ARTEMIS_RADIOS::RFM98)
-          PushQueue(&packet, rfm98_queue, rfm98_queue_mtx);
+          PushQueue(packet, rfm98_queue, rfm98_queue_mtx);
         else if (packet.header.radio == ARTEMIS_RADIOS::ASTRODEV)
-          PushQueue(&packet, astrodev_queue, astrodev_queue_mtx);
+          PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
         break;
       }
       default:
@@ -212,7 +212,7 @@ void read_temperature(void) // future make this its own library
   packet.header.type = PacketComm::TypeId::DataBeacon;
   packet.data.resize(sizeof(beacon));
   memcpy(packet.data.data(), &beacon, sizeof(beacon));
-  PushQueue(&packet, rfm23_queue, rfm23_queue_mtx);
+  PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
 }
 
 void read_current(void)
@@ -231,7 +231,7 @@ void read_current(void)
   packet.header.type = PacketComm::TypeId::DataBeacon;
   packet.data.resize(sizeof(beacon));
   memcpy(packet.data.data(), &beacon, sizeof(beacon));
-  PushQueue(&packet, rfm23_queue, rfm23_queue_mtx);
+  PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
 }
 
 void read_imu(void)
@@ -262,5 +262,5 @@ void read_imu(void)
   packet.header.type = PacketComm::TypeId::DataBeacon;
   packet.data.resize(sizeof(beacon));
   memcpy(packet.data.data(), &beacon, sizeof(beacon));
-  PushQueue(&packet, rfm23_queue, rfm23_queue_mtx);
+  PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
 }
