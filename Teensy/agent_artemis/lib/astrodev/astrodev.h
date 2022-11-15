@@ -1,9 +1,9 @@
-#ifndef _ASTRODEVLIB_H
-#define _ASTRODEVLIB_H
+#ifndef ASTRODEV_H
+#define ASTRODEV_H
 
-#include <support/configCosmos.h>
-#include <support/packetcomm.h>
-#include <support/cosmos-errno.h>
+#include "support/configCosmos.h"
+#include "support/packetcomm.h"
+#include "support/cosmos-errno.h"
 #include <Arduino.h>
 #include <TeensyThreads.h>
 #include <atomic>
@@ -20,7 +20,7 @@ namespace Artemis
                 static constexpr uint8_t SYNC0 = 'H';
                 static constexpr uint8_t SYNC1 = 'e';
                 static constexpr uint8_t COMMAND = 0x10;
-                static constexpr uint8_t RESPONSE = 0x10;
+                static constexpr uint8_t RESPONSE = 0x20;
                 static constexpr uint8_t MTU = 254;
                 static constexpr uint16_t PACKETCOMM_DATA_SIZE = MTU - (COSMOS_SIZEOF(PacketComm::Header) + 2);
 
@@ -28,8 +28,6 @@ namespace Artemis
                 std::map<uint8_t, uint16_t> RF_INDEX = {{1200, 0}, {9600, 1}, {19200, 2}, {38400, 3}, {57600, 4}, {115200, 5}};
                 std::map<uint8_t, uint16_t> UART_BAUD = {{0, 1200}, {1, 9600}, {2, 19200}, {3, 38400}, {4, 57600}, {5, 115200}};
                 std::map<uint8_t, uint16_t> UART_INDEX = {{9600, 0}, {19200, 1}, {38400, 2}, {57600, 3}, {115200, 4}};
-
-                Astrodev();
 
                 enum class Command
                 {
@@ -234,7 +232,9 @@ namespace Artemis
                 // int32_t PacketOut(PacketComm &p);
                 // int32_t PacketOutSize();
                 // int32_t Clear(queue<PacketComm> &queue, mutex &mtx);
-                int32_t Init(HardwareSerial *serial, uint32_t speed = 38400);
+                Astrodev();
+                Astrodev(HardwareSerial *hw_serial);
+                int32_t Init(HardwareSerial *hw_serial, uint32_t baud_rate = 38400);
                 // void Join();
                 // int32_t Packetize(PacketComm& packet);
                 // int32_t UnPacketize(PacketComm& packet);
@@ -254,6 +254,9 @@ namespace Artemis
                 int32_t Receive(frame &message);
                 uint16_t CalcCS(uint8_t *data, uint16_t size);
 
+                // For debugging purposes
+                void setSerial(HardwareSerial *new_serial);
+
             private:
                 HardwareSerial *serial;
                 bool running = true;
@@ -271,4 +274,4 @@ namespace Artemis
     }
 }
 
-#endif // _ASTRODEVLIB_H
+#endif // ASTRODEV_H
