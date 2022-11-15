@@ -37,7 +37,7 @@ namespace Artemis
                 RFM98(uint8_t slaveSelectPin = RFM98_CS_PIN, uint8_t interruptPin = RFM98_INT_PIN, RHGenericSPI &spi = hardware_spi1);
                 void reset();
                 bool init();
-                void send(const uint8_t *input, size_t length);
+                void send(PacketComm &packet);
                 bool recv(PacketComm *packet);
             };
         }

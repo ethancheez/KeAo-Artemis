@@ -24,7 +24,7 @@ struct __attribute__((packed)) currentbeacon
 {
     TypeId type = TypeId::current;
     uint32_t deci = 0;
-    float busvoltage[ARTEMIS_CURRENT_SENSOR_COUNT], current[ARTEMIS_CURRENT_SENSOR_COUNT], power[ARTEMIS_CURRENT_SENSOR_COUNT];
+    float busvoltage[ARTEMIS_CURRENT_SENSOR_COUNT], current[ARTEMIS_CURRENT_SENSOR_COUNT];
 };
 struct __attribute__((packed)) imubeacon
 {

@@ -54,7 +54,7 @@ namespace Artemis
 
             void RFM23::send(PacketComm &packet)
             {
-                digitalWrite(RFM23_RX_ON, HIGH);
+                digitalWrite(RFM23_RX_ON, LOW);
                 digitalWrite(RFM23_TX_ON, LOW);
 
                 packet.Wrap();

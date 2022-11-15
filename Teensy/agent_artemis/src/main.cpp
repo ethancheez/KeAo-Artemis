@@ -223,7 +223,6 @@ void read_current(void)
   {
     beacon.busvoltage[i] = (p[i]->getBusVoltage_V());
     beacon.current[i] = (p[i]->getCurrent_mA());
-    beacon.power[i] = (p[i]->getPower_mW());
   }
   packet.header.orig = NODES::TEENSY_NODE_ID;
   packet.header.dest = NODES::GROUND_NODE_ID;

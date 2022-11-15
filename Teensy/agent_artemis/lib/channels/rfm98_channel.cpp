@@ -31,9 +31,7 @@ void Artemis::Teensy::Channels::rfm98_channel()
             case PacketComm::TypeId::DataRadioResponse:
             case PacketComm::TypeId::DataAdcsResponse:
             case PacketComm::TypeId::DataResponse:
-                packet.Wrap();
-                rfm98.send(packet.wrapped.data(), packet.wrapped.size());
-                packet.wrapped.resize(0);
+                rfm98.send(packet);
                 break;
             default:
                 break;
