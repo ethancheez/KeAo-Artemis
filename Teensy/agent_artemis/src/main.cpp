@@ -136,9 +136,9 @@ void loop()
   if (sensortimer > 5000)
   {
     sensortimer -= 5000;
-    // read_temperature();
-    // read_current();
-    // read_imu();
+    read_temperature();
+    read_current();
+    read_imu();
   }
   threads.delay(10);
 }

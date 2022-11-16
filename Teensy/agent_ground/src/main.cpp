@@ -33,8 +33,8 @@ void loop()
   packet.header.radio = ARTEMIS_RADIOS::RFM23;
   packet.header.type = PacketComm::TypeId::CommandPing;
   packet.data.resize(0);
-  const char *data = "Ping";
-  for (size_t i = 0; i < strlen(data); i++)
+  const uint8_t *data = "Ping";
+  for (size_t i = 0; i < sizeof(data); i++)
   {
     packet.data.push_back(data[i]);
   }

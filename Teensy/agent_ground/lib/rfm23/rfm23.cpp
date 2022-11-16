@@ -26,8 +26,6 @@ namespace Artemis
                         Serial.println("[RFM23] INIT FAILED");
                         return false;
                     }
-                    SPI1.end();
-                    SPI1.begin();
                 }
                 Serial.println("[RFM23] INIT SUCCESS");
                 rfm23.setFrequency(RFM23_FREQ);   // frequency default is 434MHz
@@ -47,7 +45,7 @@ namespace Artemis
                 rfm23.sleep();
 
                 Serial.println("[RFM23] SETUP COMPLETE");
-                rfm23.setModeIdle();
+                // rfm23.setModeIdle();
                 return true;
             }
 
@@ -59,11 +57,18 @@ namespace Artemis
 
             void RFM23::send(PacketComm &packet)
             {
-                digitalWrite(RFM23_RX_ON, LOW);
+                digitalWrite(RFM23_RX_ON, HIGH);
                 digitalWrite(RFM23_TX_ON, LOW);
 
                 packet.wrapped.resize(0);
                 packet.Wrap();
+
+                Threads::Scope lock(spi1_mtx);
+                // rfm23.setModeTx();
+                rfm23.send(packet.wrapped.data(), packet.wrapped.size());
+                rfm23.waitPacketSent();
+
+                threads.delay(1000);
 
                 Serial.print("[RFM23] SENDING: [");
                 for (size_t i = 0; i < packet.wrapped.size(); i++)
@@ -72,13 +77,8 @@ namespace Artemis
                 }
                 Serial.println("]");
 
-                Threads::Scope lock(spi1_mtx);
-                rfm23.setModeTx();
-                rfm23.send(packet.wrapped.data(), packet.wrapped.size());
-                rfm23.waitPacketSent();
-
                 rfm23.sleep();
-                rfm23.setModeIdle();
+                // rfm23.setModeIdle();
             }
 
             bool RFM23::recv(PacketComm *packet)
@@ -91,7 +91,7 @@ namespace Artemis
                 uint8_t bytes_recieved = 0;
 
                 Threads::Scope lock(spi1_mtx);
-                rfm23.setModeRx();
+                // rfm23.setModeRx();
                 if (rfm23.waitAvailableTimeout(1000))
                 {
                     packet->wrapped.resize(RH_RF22_MAX_MESSAGE_LEN);
@@ -99,7 +99,7 @@ namespace Artemis
                     {
                         packet->wrapped.resize(bytes_recieved);
                         iretn = packet->Unwrap();
-                        rfm23.setModeIdle();
+                        // rfm23.setModeIdle();
 
                         if (iretn < 0)
                         {
@@ -110,7 +110,7 @@ namespace Artemis
                         return true;
                     }
                 }
-                rfm23.setModeIdle();
+                // rfm23.setModeIdle();
                 return false;
             }
         }
