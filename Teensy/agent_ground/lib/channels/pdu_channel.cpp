@@ -23,7 +23,7 @@ void Artemis::Teensy::Channels::pdu_channel()
 
     while (true)
     {
-        if (PullQueue(&packet, pdu_queue, pdu_queue_mtx))
+        if (PullQueue(packet, pdu_queue, pdu_queue_mtx))
         {
         }
     }

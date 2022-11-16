@@ -46,7 +46,7 @@ void setup()
   Serial.begin(115200);
   usb.begin();
   pinMode(RPI_ENABLE, OUTPUT);
-  digitalWrite(RPI_ENABLE, HIGH);
+  // digitalWrite(RPI_ENABLE, HIGH);
   delay(3000);
 
   setup_magnetometer();
@@ -56,10 +56,10 @@ void setup()
   threads.setSliceMillis(10);
 
   // Threads
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
-  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rpi_channel), "rpi channel"});
 }
 
@@ -136,9 +136,9 @@ void loop()
   if (sensortimer > 5000)
   {
     sensortimer -= 5000;
-    read_temperature();
-    read_current();
-    read_imu();
+    // read_temperature();
+    // read_current();
+    // read_imu();
   }
   threads.delay(10);
 }

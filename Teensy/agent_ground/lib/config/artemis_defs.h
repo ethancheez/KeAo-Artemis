@@ -10,6 +10,8 @@
 #define ARTEMIS_TEMP_SENSOR_COUNT 7
 #define AREF_VOLTAGE 3.3
 
+#define MAXQUEUESIZE 50
+
 // Nodes
 enum NODES : uint8_t
 {
@@ -106,7 +108,7 @@ extern Threads::Mutex i2c1_mtx;
 
 // Utility Functions
 int kill_thread(char *thread_name);
-int32_t PushQueue(PacketComm *packet, queue<PacketComm> &queue, Threads::Mutex &mtx);
-int32_t PullQueue(PacketComm *packet, queue<PacketComm> &queue, Threads::Mutex &mtx);
+int32_t PushQueue(PacketComm &packet, queue<PacketComm> &queue, Threads::Mutex &mtx);
+int32_t PullQueue(PacketComm &packet, queue<PacketComm> &queue, Threads::Mutex &mtx);
 
 #endif // _ARTEMIS_DEFS_H

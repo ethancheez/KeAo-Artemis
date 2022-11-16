@@ -20,19 +20,12 @@ void Artemis::Teensy::Channels::rfm23_channel()
 
     while (true)
     {
-        if (PullQueue(&packet, rfm23_queue, rfm23_queue_mtx))
+        if (PullQueue(packet, rfm23_queue, rfm23_queue_mtx))
         {
             switch (packet.header.type)
             {
-            case PacketComm::TypeId::DataBeacon:
-            case PacketComm::TypeId::DataPong:
-            case PacketComm::TypeId::DataEpsResponse:
-            case PacketComm::TypeId::DataRadioResponse:
-            case PacketComm::TypeId::DataAdcsResponse:
-            case PacketComm::TypeId::DataResponse:
-                packet.Wrap();
-                rfm23.send(packet.wrapped.data(), packet.wrapped.size());
-                packet.wrapped.resize(0);
+            case PacketComm::TypeId::CommandPing:
+                rfm23.send(packet);
                 break;
             default:
                 break;
@@ -48,7 +41,7 @@ void Artemis::Teensy::Channels::rfm23_channel()
                 Serial.print((char)packet.data[i]);
             }
             Serial.println("]");
-            PushQueue(&packet, main_queue, main_queue_mtx);
+            PushQueue(packet, main_queue, main_queue_mtx);
         }
         threads.delay(10);
     }

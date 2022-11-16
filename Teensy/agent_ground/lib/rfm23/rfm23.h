@@ -1,10 +1,13 @@
 #ifndef _RFM23_H
 #define _RFM23_H
 
-#include <SPI.h>
+// #include <SPI.h>
 #include <RH_RF22.h>
 #include <RHHardwareSPI1.h>
 #include <artemis_defs.h>
+
+#undef RH_RF22_MAX_MESSAGE_LEN
+#define RH_RF22_MAX_MESSAGE_LEN 64
 
 /* RFM23 FREQUENCY CONFIG */
 #define RFM23_FREQ 433.0
@@ -38,7 +41,7 @@ namespace Artemis
                 RFM23(uint8_t slaveSelectPin = RFM23_CS_PIN, uint8_t interruptPin = RFM23_INT_PIN, RHGenericSPI &spi = hardware_spi1);
                 void reset();
                 bool init();
-                void send(const uint8_t *input, size_t length);
+                void send(PacketComm &packet);
                 bool recv(PacketComm *packet);
             };
         }

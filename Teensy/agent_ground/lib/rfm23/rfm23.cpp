@@ -18,6 +18,7 @@ namespace Artemis
                 pinMode(RFM23_TX_ON, OUTPUT);
 
                 elapsedMillis timeout;
+                Serial.println("[RFM23] Initializing...");
                 while (!rfm23.init())
                 {
                     if (timeout > 10000)
@@ -25,7 +26,10 @@ namespace Artemis
                         Serial.println("[RFM23] INIT FAILED");
                         return false;
                     }
+                    SPI1.end();
+                    SPI1.begin();
                 }
+                Serial.println("[RFM23] INIT SUCCESS");
                 rfm23.setFrequency(RFM23_FREQ);   // frequency default is 434MHz
                 rfm23.setTxPower(RFM23_TX_POWER); // 20 is the max
 
@@ -39,9 +43,10 @@ namespace Artemis
                         return false;
                     }
                 }
+                Serial.println("[RFM23] SET FSK SUCCESS");
                 rfm23.sleep();
 
-                Serial.println("[RFM23] INIT SUCCESS");
+                Serial.println("[RFM23] SETUP COMPLETE");
                 rfm23.setModeIdle();
                 return true;
             }
@@ -52,24 +57,28 @@ namespace Artemis
                 rfm23.reset();
             }
 
-            void RFM23::send(const uint8_t *msg, size_t length)
+            void RFM23::send(PacketComm &packet)
             {
-                digitalWrite(RFM23_RX_ON, HIGH);
+                digitalWrite(RFM23_RX_ON, LOW);
                 digitalWrite(RFM23_TX_ON, LOW);
+
+                packet.wrapped.resize(0);
+                packet.Wrap();
+
+                Serial.print("[RFM23] SENDING: [");
+                for (size_t i = 0; i < packet.wrapped.size(); i++)
+                {
+                    Serial.print(packet.wrapped[i], HEX);
+                }
+                Serial.println("]");
 
                 Threads::Scope lock(spi1_mtx);
                 rfm23.setModeTx();
-                rfm23.send(msg, length);
+                rfm23.send(packet.wrapped.data(), packet.wrapped.size());
                 rfm23.waitPacketSent();
 
                 rfm23.sleep();
                 rfm23.setModeIdle();
-                Serial.print("[RFM23] SENDING: [");
-                for (size_t i = 0; i < length; i++)
-                {
-                    Serial.print(msg[i]);
-                }
-                Serial.println("]");
             }
 
             bool RFM23::recv(PacketComm *packet)
@@ -83,7 +92,7 @@ namespace Artemis
 
                 Threads::Scope lock(spi1_mtx);
                 rfm23.setModeRx();
-                if (rfm23.waitAvailableTimeout(100))
+                if (rfm23.waitAvailableTimeout(1000))
                 {
                     packet->wrapped.resize(RH_RF22_MAX_MESSAGE_LEN);
                     if (rfm23.recv(packet->wrapped.data(), &bytes_recieved))
@@ -94,6 +103,7 @@ namespace Artemis
 
                         if (iretn < 0)
                         {
+                            Serial.println("unwrap fail");
                             return false;
                         }
 

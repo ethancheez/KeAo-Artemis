@@ -20,7 +20,7 @@ void Artemis::Teensy::Channels::rpi_channel()
 
     while (true)
     {
-        if (!ready && PullQueue(&packet, rpi_queue, rpi_queue_mtx))
+        if (!ready && PullQueue(packet, rpi_queue, rpi_queue_mtx))
         {
             packet.Wrap();
             ready = true;

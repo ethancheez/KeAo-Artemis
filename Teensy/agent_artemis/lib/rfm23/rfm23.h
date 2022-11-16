@@ -1,7 +1,7 @@
 #ifndef _RFM23_H
 #define _RFM23_H
 
-#include <SPI.h>
+// #include <SPI.h>
 #include <RH_RF22.h>
 #include <RHHardwareSPI1.h>
 #include <artemis_defs.h>

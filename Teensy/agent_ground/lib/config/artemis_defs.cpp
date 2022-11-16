@@ -39,19 +39,23 @@ int kill_thread(char *thread_name)
 }
 
 // Thread-safe way of pushing onto the packet queue
-int32_t PushQueue(PacketComm *packet, queue<PacketComm> &queue, Threads::Mutex &mtx)
+int32_t PushQueue(PacketComm &packet, queue<PacketComm> &queue, Threads::Mutex &mtx)
 {
     Threads::Scope lock(mtx);
-    queue.push(*packet);
+    if (queue.size() >= MAXQUEUESIZE)
+    {
+        queue.pop();
+    }
+    queue.push(packet);
     return 1;
 }
 // Thread-safe way of pulling from the packet queue
-int32_t PullQueue(PacketComm *packet, queue<PacketComm> &queue, Threads::Mutex &mtx)
+int32_t PullQueue(PacketComm &packet, queue<PacketComm> &queue, Threads::Mutex &mtx)
 {
     Threads::Scope lock(mtx);
     if (queue.size() > 0)
     {
-        *packet = queue.front();
+        packet = queue.front();
         queue.pop();
         return 1;
     }
