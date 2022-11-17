@@ -82,6 +82,8 @@ int32_t slip_decode(vector<uint8_t> &sbuf, vector<uint8_t> &rbuf);
 int32_t slip_pack(vector<uint8_t> &rbuf, vector<uint8_t> &sbuf);
 int32_t slip_encode(vector<uint8_t> &rbuf, vector<uint8_t> &sbuf);
 int32_t slip_extract(FILE *fp, vector<uint8_t> &buf);
+uint16_t slip_calc_crc(uint8_t *buf, uint16_t size);
+uint16_t slip_calc_crc(vector<uint8_t> &buf);
 
 //! @}
 

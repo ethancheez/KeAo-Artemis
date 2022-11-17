@@ -71,6 +71,7 @@ namespace Cosmos
                 CommandTransferNode = 136,
                 CommandTransferRadio = 137,
                 CommandTransferList = 138,
+                CommandExternalTask = 139,
                 CommandInternalRequest = 140,
                 CommandPing = 141,
                 CommandSetTime = 142,
@@ -79,6 +80,7 @@ namespace Cosmos
                 CommandAdcsCommunicate = 150,
                 CommandAdcsState = 151,
                 CommandAdcsSetRunMode = 152,
+                CommandAdcsGetAdcsState = 155,
                 CommandEpsCommunicate = 160,
                 CommandEpsSwitchName = 161,
                 CommandEpsSwitchNumber = 162,
@@ -91,6 +93,7 @@ namespace Cosmos
                 CommandEpsSwitchStatus = 169,
                 CommandExecLoadCommand = 170,
                 CommandExecAddCommand = 171,
+                CommandRadioCommunicate = 180,
             };
 
             map<TypeId, string> TypeString = {
@@ -118,6 +121,7 @@ namespace Cosmos
                 {TypeId::CommandSendBeacon, "SendBeacon"},
                 {TypeId::CommandClearQueue, "ClearQueue"},
                 {TypeId::CommandExternalCommand, "ExternalCommand"},
+                {TypeId::CommandExternalTask, "ExternalTask"},
                 {TypeId::CommandTestRadio, "TestRadio"},
                 {TypeId::CommandListDirectory, "ListDirectory"},
                 {TypeId::CommandTransferFile, "TransferFile"},
@@ -132,6 +136,7 @@ namespace Cosmos
                 {TypeId::CommandAdcsCommunicate, "AdcsCommunicate"},
                 {TypeId::CommandAdcsState, "AdcsState"},
                 {TypeId::CommandAdcsSetRunMode, "AdcsSetRunMode"},
+                {TypeId::CommandAdcsGetAdcsState, "AdcsGetAdcsState"},
                 {TypeId::CommandEpsCommunicate, "EpsCommunicate"},
                 {TypeId::CommandEpsSwitchName, "EpsSwitchName"},
                 {TypeId::CommandEpsSwitchNumber, "EpsSwitchNumber"},
@@ -144,6 +149,7 @@ namespace Cosmos
                 {TypeId::CommandEpsSwitchStatus, "EpsSwitchStatus"},
                 {TypeId::CommandExecLoadCommand, "ExecLoadCommand"},
                 {TypeId::CommandExecAddCommand, "ExecAddCommand"},
+                {TypeId::CommandRadioCommunicate, "RadioCommunicate"},
             };
 
             map<string, TypeId> StringType = {
@@ -173,6 +179,7 @@ namespace Cosmos
                 {"SendBeacon", TypeId::CommandSendBeacon},
                 {"ClearQueue", TypeId::CommandClearQueue},
                 {"ExternalCommand", TypeId::CommandExternalCommand},
+                {"ExternalTask", TypeId::CommandExternalTask},
                 {"TestRadio", TypeId::CommandTestRadio},
                 {"ListDirectory", TypeId::CommandListDirectory},
                 {"TransferFile", TypeId::CommandTransferFile},
@@ -197,8 +204,11 @@ namespace Cosmos
                 {"AdcsCommunicate", TypeId::CommandAdcsCommunicate},
                 {"AdcsState", TypeId::CommandAdcsState},
                 {"AdcsSetRunMode", TypeId::CommandAdcsSetRunMode},
+                {"AdcsGetAdcsState", TypeId::CommandAdcsGetAdcsState},
                 {"ExecLoadCommand", TypeId::CommandExecLoadCommand},
                 {"ExecAddCommand", TypeId::CommandExecAddCommand},
+
+                {"RadioCommunicate", TypeId::CommandRadioCommunicate},
             };
 
             struct __attribute__((packed)) CommunicateHeader

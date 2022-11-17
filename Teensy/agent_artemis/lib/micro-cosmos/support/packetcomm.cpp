@@ -1,5 +1,4 @@
 #include "packetcomm.h"
-
 namespace Cosmos
 {
     namespace Support
@@ -25,11 +24,10 @@ namespace Cosmos
                 return GENERAL_ERROR_BAD_SIZE;
             }
             memcpy(&header, &wrapped[0], COSMOS_SIZEOF(Header));
-            if (wrapped.size() < uint32_t(header.data_size + COSMOS_SIZEOF(Header) + 2))
+            if (wrapped.size() != uint32_t(header.data_size + COSMOS_SIZEOF(Header) + 2))
             {
                 return GENERAL_ERROR_BAD_SIZE;
             }
-            wrapped.resize(header.data_size + COSMOS_SIZEOF(Header) + 2);
             if (checkcrc)
             {
                 uint16_t crcin = uint16from(&wrapped[header.data_size + COSMOS_SIZEOF(Header)], ByteOrder::LITTLEENDIAN);

@@ -39,7 +39,7 @@ namespace
   elapsedMillis sensortimer;
   elapsedMillis uptime;
 
-  const char* data;
+  const char *data;
 }
 
 void setup()
@@ -228,8 +228,8 @@ void read_current(int begin, int end)
 
   for (int i = begin; i < end; i++)
   {
-    beacon->busvoltage[i - begin] = (p[i]->getBusVoltage_V());
-    beacon->current[i - begin] = (p[i]->getCurrent_mA());
+    beacon->busvoltage[i - begin] = p[i]->getBusVoltage_V();
+    beacon->current[i - begin] = p[i]->getCurrent_mA();
   }
   packet.header.orig = NODES::TEENSY_NODE_ID;
   packet.header.dest = NODES::GROUND_NODE_ID;

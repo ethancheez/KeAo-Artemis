@@ -324,4 +324,47 @@ int32_t slip_extract(FILE *fp, vector<uint8_t> &rbuf)
     return (rbuf.size());
 }
 
+//! Calculate CRC-16-CCITT
+/*! Calculate 16-bit CCITT CRC for the indicated buffer and number of bytes.
+ * The initial shift register value is 0xffff, and the calculation
+ * starts with the LSB, so the Polynomial is 0x8408.
+    \param buf bytes to calculate on
+    \param size number of bytes
+    \return calculated CRC
+*/
+uint16_t slip_calc_crc(uint8_t *buf, uint16_t size)
+{
+    uint16_t crc = 0xffff;
+    uint8_t ch;
+    int i, j;
+
+    for (i = 0; i < size; ++i)
+    {
+        ch = buf[i];
+        for (j = 0; j < 8; j++)
+        {
+            crc = (crc >> 1) ^ (((ch ^ crc) & 0x01) ? 0x8408 : 0);
+            ch >>= 1;
+        }
+    }
+    return (crc);
+}
+
+uint16_t slip_calc_crc(vector<uint8_t> &buf)
+{
+    uint16_t crc = 0xffff;
+    uint8_t ch;
+
+    for (size_t i = 0; i < buf.size() - 2; ++i)
+    {
+        ch = buf[i];
+        for (size_t j = 0; j < 8; ++j)
+        {
+            crc = (crc >> 1) ^ (((ch ^ crc) & 0x01) ? 0x8408 : 0);
+            ch >>= 1;
+        }
+    }
+    return (crc);
+}
+
 //! @}
