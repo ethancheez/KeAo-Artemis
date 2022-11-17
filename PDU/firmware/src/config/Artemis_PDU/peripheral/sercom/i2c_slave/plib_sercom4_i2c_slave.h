@@ -1,19 +1,21 @@
 /*******************************************************************************
- System Interrupts File
+  Serial Communication Interface Inter-Integrated Circuit (SERCOM I2C) Library
+  Instance Header File
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    interrupt.h
+    plib_sercom4_i2c_slave.h
 
   Summary:
-    Interrupt vectors mapping
+    SERCOM I2C Slave PLIB Header file
 
   Description:
-    This file contains declarations of device vectors used by Harmony 3
- *******************************************************************************/
-
+    This file defines the interface to the SERCOM I2C peripheral library. This
+    library provides access to and control of the associated peripheral
+    instance.
+*******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
@@ -36,32 +38,45 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- *******************************************************************************/
+*******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef INTERRUPTS_H
-#define INTERRUPTS_H
+#ifndef PLIB_SERCOM4_I2C_SLAVE_H
+#define PLIB_SERCOM4_I2C_SLAVE_H
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-#include <stdint.h>
+/* This section lists the other files that are included in this file.
+*/
+
+#include "plib_sercom_i2c_slave_common.h"
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus // Provide C++ Compatibility
+
+    extern "C" {
+
+#endif
+// DOM-IGNORE-END
+
+void SERCOM4_I2C_Initialize(void);
+SERCOM_I2C_SLAVE_INTFLAG SERCOM4_I2C_InterruptFlagsGet(void);
+void SERCOM4_I2C_InterruptFlagsClear(SERCOM_I2C_SLAVE_INTFLAG intFlags);
+uint8_t SERCOM4_I2C_ReadByte(void);
+void SERCOM4_I2C_WriteByte(uint8_t wrByte);
+SERCOM_I2C_SLAVE_ERROR SERCOM4_I2C_ErrorGet(void);
+SERCOM_I2C_SLAVE_TRANSFER_DIR SERCOM4_I2C_TransferDirGet(void);
+SERCOM_I2C_SLAVE_ACK_STATUS SERCOM4_I2C_LastByteAckStatusGet(void);
+void SERCOM4_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND command);
 
 
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+}
+#endif
+// DOM-IGNORE-END
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Handler Routines
-// *****************************************************************************
-// *****************************************************************************
-
-void Reset_Handler (void);
-void NonMaskableInt_Handler (void);
-void HardFault_Handler (void);
-void SERCOM2_SPI_InterruptHandler (void);
-
-
-
-#endif // INTERRUPTS_H
+#endif /* PLIB_SERCOM4_I2C_SLAVE_H */

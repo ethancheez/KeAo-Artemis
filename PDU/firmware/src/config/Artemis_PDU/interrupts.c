@@ -138,6 +138,10 @@ extern void SERCOM3_0_Handler          ( void ) __attribute__((weak, alias("Dumm
 extern void SERCOM3_1_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void SERCOM3_2_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void SERCOM3_OTHER_Handler      ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void SERCOM4_0_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void SERCOM4_1_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void SERCOM4_2_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void SERCOM4_OTHER_Handler      ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void SERCOM5_0_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void SERCOM5_1_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void SERCOM5_2_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -289,10 +293,10 @@ const H3DeviceVectors exception_table=
     .pfnSERCOM3_1_Handler          = SERCOM3_1_Handler,
     .pfnSERCOM3_2_Handler          = SERCOM3_2_Handler,
     .pfnSERCOM3_OTHER_Handler      = SERCOM3_OTHER_Handler,
-    .pfnSERCOM4_0_Handler          = SERCOM4_I2C_InterruptHandler,
-    .pfnSERCOM4_1_Handler          = SERCOM4_I2C_InterruptHandler,
-    .pfnSERCOM4_2_Handler          = SERCOM4_I2C_InterruptHandler,
-    .pfnSERCOM4_OTHER_Handler      = SERCOM4_I2C_InterruptHandler,
+    .pfnSERCOM4_0_Handler          = SERCOM4_0_Handler,
+    .pfnSERCOM4_1_Handler          = SERCOM4_1_Handler,
+    .pfnSERCOM4_2_Handler          = SERCOM4_2_Handler,
+    .pfnSERCOM4_OTHER_Handler      = SERCOM4_OTHER_Handler,
     .pfnSERCOM5_0_Handler          = SERCOM5_0_Handler,
     .pfnSERCOM5_1_Handler          = SERCOM5_1_Handler,
     .pfnSERCOM5_2_Handler          = SERCOM5_2_Handler,

@@ -106,77 +106,77 @@ section                    address  length [bytes]      (dec)  Description
 -------                 ----------  -------------------------  -----------
 .vectors                         0          0x260         608   
 .text                        0x260           0x20          32  App's exec code 
-.dinit                       0x280          0x320         800   
-.text.SERCOM4_I2C_Inter      0x5a0          0x1cc         460   
-.text.malloc                 0x76c          0x1b0         432   
-.text.SERCOM2_SPI_Inter      0x91c          0x170         368   
-.text.CLOCK_Initialize       0xa8c          0x118         280   
-.text.free                   0xba4           0xf8         248   
-.text.PORT_Initialize        0xc9c           0xa4         164   
-.text.Reset_Handler          0xd40           0x90         144   
-.text.__write_buffered       0xdd0           0x8a         138   
-.text.EVSYS_Initialize       0xe5a            0x2           2   
-.text.__pic32c_data_ini      0xe5c           0x88         136   
-.text.main                   0xee4           0x84         132   
-.text.NVIC_Initialize        0xf68           0x78         120   
-.text.__stdio_write_buf      0xfe0           0x76         118   
-.text.Dummy_Handler         0x1056            0x2           2   
-.text.disableGPIOs          0x1058           0x68         104   
-.text.SERCOM4_I2C_Initi     0x10c0           0x64         100   
-.text.__stdio_close_rw      0x1124           0x64         100   
-.text.__stdio_read          0x1188           0x60          96   
-.text.__libc_start_init     0x11e8           0x5c          92   
-.rodata                     0x1244           0x5c          92  Read-only const 
-.text.SERCOM3_USART_Rea     0x12a0           0x58          88   
-.text.unbin                 0x12f8           0x58          88   
-.text.SERCOM4_I2C_Initi     0x1350           0x4c          76   
-.text.setvbuf               0x139c           0x4c          76   
-.text.SERCOM3_USART_Wri     0x13e8           0x48          72   
-.text.SYS_Initialize        0x1430           0x48          72   
-.text                       0x1478           0x40          64  App's exec code 
-.text.adjust_size           0x14b8           0x40          64   
-.text.write                 0x14f8           0x40          64   
-.text.SERCOM2_SPI_Initi     0x1538           0x3c          60   
-.text.bin_index             0x1574           0x38          56   
-.text.EIC_Initialize        0x15ac           0x34          52   
-.text.SERCOM3_USART_Ini     0x15e0           0x34          52   
-.text.SERCOM3_USART_Err     0x1614           0x30          48   
-.text.alloc_rev             0x1644           0x30          48   
-.text.trim                  0x1674           0x2e          46   
-.text.__readv               0x16a2           0x2c          44   
-.text.alloc_fwd             0x16ce           0x2c          44   
-.text.__writev              0x16fa           0x2c          44   
-.text.NonMaskableInt_Ha     0x1726            0x2           2   
-.text._sbrk                 0x1728           0x2c          44   
-.text.__towrite_rw          0x1754           0x28          40   
-.text.lock_bin              0x177c           0x20          32   
-.text.SERCOM3_USART_Err     0x179c           0x1c          28   
-.text._mon_putc             0x17b8           0x1c          28   
-.text.__towrite             0x17d4           0x18          24   
-.text.__syscall_ret         0x17ec           0x18          24   
-.text.memcpy                0x1804           0x16          22   
-.text.__expand_heap         0x181a           0x16          22   
-.text.__init_stdout         0x1830           0x14          20   
-.text.NVMCTRL_Initializ     0x1844           0x10          16   
-.text.SERCOM3_USART_Rec     0x1854           0x10          16   
-.text.setbuf                0x1864           0x10          16   
-.text.__init_stdio          0x1874           0x10          16   
-.text.__get_stdout          0x1884            0x8           8   
-.text.__read                0x188c            0x8           8   
-.text.close                 0x1894            0x8           8   
-.text.__dummy               0x189c            0x6           6   
-.text.__fwrite_min          0x18a2            0x6           6   
-.text.lseek                 0x18a8            0x4           4   
-.text.HardFault_Handler     0x18ac            0x2           2   
-.text.DebugMonitor_Hand     0x18ae            0x2           2   
-.text.MemoryManagement_     0x18b0            0x2           2   
-.text.BusFault_Handler      0x18b2            0x2           2   
-.text.UsageFault_Handle     0x18b4            0x2           2   
-.text.Dummy_App_Func        0x18b6            0x2           2   
-.text.__dummy               0x18b8            0x6           6   
-      Total ROM used  :      0x18be        6334  1.2% of 0x80000
+.dinit                       0x280          0x1f0         496   
+.text.malloc                 0x470          0x1b0         432   
+.text.SERCOM2_SPI_Inter      0x620          0x170         368   
+.text.CLOCK_Initialize       0x790          0x118         280   
+.text.free                   0x8a8           0xf8         248   
+.text.PORT_Initialize        0x9a0           0xdc         220   
+.text.disableGPIOs           0xa7c           0xb0         176   
+.text.Reset_Handler          0xb2c           0x90         144   
+.text.__write_buffered       0xbbc           0x8a         138   
+.text.EVSYS_Initialize       0xc46            0x2           2   
+.text.__pic32c_data_ini      0xc48           0x88         136   
+.text.__stdio_write_buf      0xcd0           0x76         118   
+.text.__stdio_close_rw       0xd46           0x64         100   
+.text.__stdio_read           0xdaa           0x60          96   
+.text.Dummy_Handler          0xe0a            0x2           2   
+.text.USART_READ             0xe0c           0x5c          92   
+.text.__libc_start_init      0xe68           0x5c          92   
+.rodata                      0xec4           0x5c          92  Read-only const 
+.text.SERCOM3_USART_Rea      0xf20           0x58          88   
+.text.unbin                  0xf78           0x58          88   
+.text.NVIC_Initialize        0xfd0           0x54          84   
+.text.setvbuf               0x1024           0x4c          76   
+.text.SERCOM3_USART_Wri     0x1070           0x48          72   
+.text.SYS_Initialize        0x10b8           0x48          72   
+.text.SERCOM4_I2C_Initi     0x1100           0x44          68   
+.text                       0x1144           0x40          64  App's exec code 
+.text.adjust_size           0x1184           0x40          64   
+.text.write                 0x11c4           0x40          64   
+.text.SERCOM2_SPI_Initi     0x1204           0x3c          60   
+.text.bin_index             0x1240           0x38          56   
+.text.EIC_Initialize        0x1278           0x34          52   
+.text.SERCOM3_USART_Ini     0x12ac           0x34          52   
+.text.SERCOM3_USART_Err     0x12e0           0x30          48   
+.text.alloc_rev             0x1310           0x30          48   
+.text.trim                  0x1340           0x2e          46   
+.text.__readv               0x136e           0x2c          44   
+.text.alloc_fwd             0x139a           0x2c          44   
+.text.__writev              0x13c6           0x2c          44   
+.text.NonMaskableInt_Ha     0x13f2            0x2           2   
+.text._sbrk                 0x13f4           0x2c          44   
+.text.__towrite_rw          0x1420           0x28          40   
+.text.lock_bin              0x1448           0x20          32   
+.text.main                  0x1468           0x1e          30   
+.text.HardFault_Handler     0x1486            0x2           2   
+.text.SERCOM3_USART_Err     0x1488           0x1c          28   
+.text._mon_putc             0x14a4           0x1c          28   
+.text.__towrite             0x14c0           0x18          24   
+.text.__syscall_ret         0x14d8           0x18          24   
+.text.memcpy                0x14f0           0x16          22   
+.text.__expand_heap         0x1506           0x16          22   
+.text.__init_stdout         0x151c           0x14          20   
+.text.NVMCTRL_Initializ     0x1530           0x10          16   
+.text.SERCOM3_USART_Tra     0x1540           0x10          16   
+.text.SERCOM3_USART_Rec     0x1550           0x10          16   
+.text.setbuf                0x1560           0x10          16   
+.text.__init_stdio          0x1570           0x10          16   
+.text.__get_stdout          0x1580            0x8           8   
+.text.__read                0x1588            0x8           8   
+.text.close                 0x1590            0x8           8   
+.text.__dummy               0x1598            0x6           6   
+.text.__fwrite_min          0x159e            0x6           6   
+.text.lseek                 0x15a4            0x4           4   
+.text.DebugMonitor_Hand     0x15a8            0x2           2   
+.text.MemoryManagement_     0x15aa            0x2           2   
+.text.BusFault_Handler      0x15ac            0x2           2   
+.text.UsageFault_Handle     0x15ae            0x2           2   
+.text.Dummy_App_Func        0x15b0            0x2           2   
+.text.__dummy               0x15b2            0x6           6   
+      Total ROM used  :      0x15b8        5560  1.1% of 0x80000
         --------------------------------------------------------------------------
-         Total Program Memory used  :      0x18be        6334  1.2% of 0x80000
+         Total Program Memory used  :      0x15b8        5560  1.1% of 0x80000
         --------------------------------------------------------------------------
 
 
@@ -185,28 +185,28 @@ section                    address  length [bytes]      (dec)  Description
 -------                 ----------  -------------------------  -----------
 .bss                    0x20000000          0x614        1556  Uninitialized data 
 .bss.receiveBuffer      0x20000614          0x100         256   
-.data.messageStart      0x20000714           0xf2         242   
-.bss.data               0x20000806            0x1           1   
-.data                   0x20000808           0xe0         224  Initialized data 
-.bss                    0x200008e8           0x50          80  Uninitialized data 
-.bss.sercom4I2CObj      0x20000938           0x2c          44   
-.bss.sercom2SPIObj      0x20000964           0x2c          44   
-.data.errorMessage      0x20000990           0x27          39   
-.bss.isLastByteTransfer 0x200009b7            0x1           1   
-.data                   0x200009b8           0x20          32  Initialized data 
-.bss                    0x200009d8           0x34          52  Uninitialized data 
-.data.newline           0x20000a0c            0x3           3   
-         Total RAM used  :       0xa0e        2574  1.3% of 0x30000
+.bss                    0x20000714            0x4           4  Uninitialized data 
+.data                   0x20000718           0xe0         224  Initialized data 
+.bss                    0x200007f8           0x50          80  Uninitialized data 
+.bss.sercom2SPIObj      0x20000848           0x2c          44   
+.data                   0x20000874           0x20          32  Initialized data 
+.bss                    0x20000894           0x24          36  Uninitialized data 
+.bss                    0x200008b8            0xc          12  Uninitialized data 
+.data.newline           0x200008c4            0x3           3   
+.bss.isLastByteTransfer 0x200008c7            0x1           1   
+.bss.rxCounter          0x200008c8            0x2           2   
+.bss.data               0x200008ca            0x1           1   
+         Total RAM used  :       0x8cb        2251  1.1% of 0x30000
         --------------------------------------------------------------------------
-            Total Data Memory used  :       0xa0e        2574  1.3% of 0x30000
+            Total Data Memory used  :       0x8cb        2251  1.1% of 0x30000
         --------------------------------------------------------------------------
 
 
 Dynamic Data-Memory Reservation
 section                    address  length [bytes]      (dec)  Description
 -------                 ----------  -------------------------  -----------
-heap                    0x20000a10          0x200         512  Reserved for heap 
-stack                   0x20000c28        0x2f3c8      193480  Reserved for stack 
+heap                    0x200008d0          0x200         512  Reserved for heap 
+stack                   0x20000ae8        0x2f508      193800  Reserved for stack 
 
         --------------------------------------------------------------------------
 
@@ -336,23 +336,25 @@ Discarded input sections
                 0x00000000       0x4a build/Artemis_PDU/production/_ext/1022696631/plib_port.o
  .text.PORT_PinGPIOConfig
                 0x00000000       0x20 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
- .text          0x00000000        0x0 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .data          0x00000000        0x0 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .bss           0x00000000        0x0 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .text.SERCOM4_I2C_TransferSetup
-                0x00000000      0x100 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .text.SERCOM4_I2C_CallbackRegister
-                0x00000000        0xc build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .text.SERCOM4_I2C_Read
-                0x00000000       0x38 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .text.SERCOM4_I2C_Write
-                0x00000000       0x34 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .text.SERCOM4_I2C_WriteRead
-                0x00000000       0x34 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .text.SERCOM4_I2C_IsBusy
-                0x00000000       0x24 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
+ .text          0x00000000        0x0 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .data          0x00000000        0x0 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .bss           0x00000000        0x0 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .text.SERCOM4_I2C_InterruptFlagsGet
+                0x00000000        0x8 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .text.SERCOM4_I2C_InterruptFlagsClear
+                0x00000000        0x8 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .text.SERCOM4_I2C_ReadByte
+                0x00000000       0x14 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .text.SERCOM4_I2C_WriteByte
+                0x00000000       0x10 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
  .text.SERCOM4_I2C_ErrorGet
-                0x00000000        0xc build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
+                0x00000000       0x10 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .text.SERCOM4_I2C_TransferDirGet
+                0x00000000        0xc build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .text.SERCOM4_I2C_LastByteAckStatusGet
+                0x00000000        0xc build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .text.SERCOM4_I2C_CommandSet
+                0x00000000       0x50 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
  .text          0x00000000        0x0 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
  .data          0x00000000        0x0 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
  .bss           0x00000000        0x0 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
@@ -381,8 +383,6 @@ Discarded input sections
                 0x00000000       0x18 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
  .text.SERCOM3_USART_TransmitterDisable
                 0x00000000       0x18 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
- .text.SERCOM3_USART_TransmitterIsReady
-                0x00000000       0x10 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
  .text.SERCOM3_USART_TransmitComplete
                 0x00000000       0x10 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
  .text.SERCOM3_USART_WriteByte
@@ -430,15 +430,11 @@ Discarded input sections
  .data          0x00000000        0x0 build/Artemis_PDU/production/_ext/1360937237/main.o
  .bss           0x00000000        0x0 build/Artemis_PDU/production/_ext/1360937237/main.o
  .text.enableGPIOs
-                0x00000000       0x68 build/Artemis_PDU/production/_ext/1360937237/main.o
- .text          0x00000000        0x0 build/Artemis_PDU/production/_ext/1360937237/temp.o
- .data          0x00000000        0x0 build/Artemis_PDU/production/_ext/1360937237/temp.o
- .bss           0x00000000        0x0 build/Artemis_PDU/production/_ext/1360937237/temp.o
- .debug_line    0x00000000        0x0 build/Artemis_PDU/production/_ext/1360937237/temp.o
- .debug_str     0x00000000        0x0 build/Artemis_PDU/production/_ext/1360937237/temp.o
- .comment       0x00000000       0x54 build/Artemis_PDU/production/_ext/1360937237/temp.o
- .ARM.attributes
-                0x00000000       0x39 build/Artemis_PDU/production/_ext/1360937237/temp.o
+                0x00000000       0xb0 build/Artemis_PDU/production/_ext/1360937237/main.o
+ .data.errorMessage
+                0x00000000       0x27 build/Artemis_PDU/production/_ext/1360937237/main.o
+ .data.messageStart
+                0x00000000       0x1e build/Artemis_PDU/production/_ext/1360937237/main.o
  .text          0x00000000        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
  .data          0x00000000        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
  .xc_stack_usage
@@ -1117,7 +1113,7 @@ LOAD build/Artemis_PDU/production/_ext/1648773452/plib_evsys.o
 LOAD build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
 LOAD build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
 LOAD build/Artemis_PDU/production/_ext/1022696631/plib_port.o
-LOAD build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
+LOAD build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
 LOAD build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
 LOAD build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
 LOAD build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
@@ -1127,7 +1123,6 @@ LOAD build/Artemis_PDU/production/_ext/974488028/exceptions.o
 LOAD build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
 LOAD build/Artemis_PDU/production/_ext/974488028/libc_syscalls.o
 LOAD build/Artemis_PDU/production/_ext/1360937237/main.o
-LOAD build/Artemis_PDU/production/_ext/1360937237/temp.o
                 0x00000001                __MPLAB_BUILD = 0x1
                 0x00080000                __rom_end = (ORIGIN (rom) + LENGTH (rom))
                 0x20030000                __ram_end = (ORIGIN (ram) + LENGTH (ram))
@@ -1251,7 +1246,7 @@ LOAD data_init
  .ARM.attributes
                 0x00000156       0x34 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
  .ARM.attributes
-                0x0000018a       0x34 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
+                0x0000018a       0x34 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
  .ARM.attributes
                 0x000001be       0x34 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
  .ARM.attributes
@@ -1338,7 +1333,7 @@ LOAD data_init
  .comment       0x00000053       0x54 build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
  .comment       0x00000053       0x54 build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
  .comment       0x00000053       0x54 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
- .comment       0x00000053       0x54 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
+ .comment       0x00000053       0x54 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
  .comment       0x00000053       0x54 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
  .comment       0x00000053       0x54 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
  .comment       0x00000053       0x54 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
@@ -1377,97 +1372,97 @@ LOAD data_init
  .comment       0x00000053       0x54 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
  .comment       0x00000053       0x54 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
 
-.debug_info     0x00000000    0x18cc5
+.debug_info     0x00000000    0x184f0
  .debug_info    0x00000000      0xbb4 build/Artemis_PDU/production/_ext/1650922938/plib_clock.o
  .debug_info    0x00000bb4      0x55c build/Artemis_PDU/production/_ext/659735671/plib_eic.o
  .debug_info    0x00001110      0x371 build/Artemis_PDU/production/_ext/1648773452/plib_evsys.o
- .debug_info    0x00001481     0x1695 build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
- .debug_info    0x00002b16      0xd77 build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
- .debug_info    0x0000388d     0x1000 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
- .debug_info    0x0000488d     0x18be build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .debug_info    0x0000614b     0x14fa build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
- .debug_info    0x00007645     0x1571 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
- .debug_info    0x00008bb6      0x4af build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
- .debug_info    0x00009065      0x52b build/Artemis_PDU/production/_ext/974488028/initialization.o
- .debug_info    0x00009590     0x177a build/Artemis_PDU/production/_ext/974488028/interrupts.o
- .debug_info    0x0000ad0a      0x49c build/Artemis_PDU/production/_ext/974488028/exceptions.o
- .debug_info    0x0000b1a6      0x958 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
- .debug_info    0x0000bafe      0x838 build/Artemis_PDU/production/_ext/1360937237/main.o
- .debug_info    0x0000c336      0x2db c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
- .debug_info    0x0000c611      0x6b3 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
- .debug_info    0x0000ccc4      0x5df c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(libc.o)
- .debug_info    0x0000d2a3      0x935 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
- .debug_info    0x0000dbd8      0x73f c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
- .debug_info    0x0000e317      0x359 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
- .debug_info    0x0000e670      0x31e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
- .debug_info    0x0000e98e      0x596 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__environ.o)
- .debug_info    0x0000ef24      0x979 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
- .debug_info    0x0000f89d      0x864 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
- .debug_info    0x00010101      0x836 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
- .debug_info    0x00010937      0x6a0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
- .debug_info    0x00010fd7     0x14aa c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
- .debug_info    0x00012481      0x682 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
- .debug_info    0x00012b03      0x879 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
- .debug_info    0x0001337c      0x855 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
- .debug_info    0x00013bd1      0x8f5 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
- .debug_info    0x000144c6      0x994 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
- .debug_info    0x00014e5a      0xa28 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
- .debug_info    0x00015882      0x8f5 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
- .debug_info    0x00016177      0x7e4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
- .debug_info    0x0001695b      0x67f c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
- .debug_info    0x00016fda      0x6a4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
- .debug_info    0x0001767e      0x57a c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__errno_location.o)
- .debug_info    0x00017bf8      0x5d1 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
- .debug_info    0x000181c9      0x2bf c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
- .debug_info    0x00018488      0x2bf c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
- .debug_info    0x00018747      0x2be c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
- .debug_info    0x00018a05      0x2c0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
+ .debug_info    0x00001481     0x1529 build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
+ .debug_info    0x000029aa      0xd77 build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
+ .debug_info    0x00003721     0x1000 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
+ .debug_info    0x00004721     0x124e build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .debug_info    0x0000596f     0x14fa build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+ .debug_info    0x00006e69     0x1571 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+ .debug_info    0x000083da      0x4af build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
+ .debug_info    0x00008889      0x52b build/Artemis_PDU/production/_ext/974488028/initialization.o
+ .debug_info    0x00008db4     0x177a build/Artemis_PDU/production/_ext/974488028/interrupts.o
+ .debug_info    0x0000a52e      0x49c build/Artemis_PDU/production/_ext/974488028/exceptions.o
+ .debug_info    0x0000a9ca      0x958 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
+ .debug_info    0x0000b322      0x83f build/Artemis_PDU/production/_ext/1360937237/main.o
+ .debug_info    0x0000bb61      0x2db c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
+ .debug_info    0x0000be3c      0x6b3 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
+ .debug_info    0x0000c4ef      0x5df c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(libc.o)
+ .debug_info    0x0000cace      0x935 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
+ .debug_info    0x0000d403      0x73f c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
+ .debug_info    0x0000db42      0x359 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
+ .debug_info    0x0000de9b      0x31e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
+ .debug_info    0x0000e1b9      0x596 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__environ.o)
+ .debug_info    0x0000e74f      0x979 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
+ .debug_info    0x0000f0c8      0x864 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
+ .debug_info    0x0000f92c      0x836 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
+ .debug_info    0x00010162      0x6a0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
+ .debug_info    0x00010802     0x14aa c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+ .debug_info    0x00011cac      0x682 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
+ .debug_info    0x0001232e      0x879 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
+ .debug_info    0x00012ba7      0x855 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
+ .debug_info    0x000133fc      0x8f5 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
+ .debug_info    0x00013cf1      0x994 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
+ .debug_info    0x00014685      0xa28 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
+ .debug_info    0x000150ad      0x8f5 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
+ .debug_info    0x000159a2      0x7e4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
+ .debug_info    0x00016186      0x67f c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
+ .debug_info    0x00016805      0x6a4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
+ .debug_info    0x00016ea9      0x57a c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__errno_location.o)
+ .debug_info    0x00017423      0x5d1 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
+ .debug_info    0x000179f4      0x2bf c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
+ .debug_info    0x00017cb3      0x2bf c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
+ .debug_info    0x00017f72      0x2be c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
+ .debug_info    0x00018230      0x2c0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
 
-.debug_abbrev   0x00000000     0x3885
+.debug_abbrev   0x00000000     0x361b
  .debug_abbrev  0x00000000      0x135 build/Artemis_PDU/production/_ext/1650922938/plib_clock.o
  .debug_abbrev  0x00000135       0xac build/Artemis_PDU/production/_ext/659735671/plib_eic.o
  .debug_abbrev  0x000001e1       0x64 build/Artemis_PDU/production/_ext/1648773452/plib_evsys.o
  .debug_abbrev  0x00000245      0x206 build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
  .debug_abbrev  0x0000044b      0x25f build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
  .debug_abbrev  0x000006aa      0x1e9 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
- .debug_abbrev  0x00000893      0x3d3 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .debug_abbrev  0x00000c66      0x2ad build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
- .debug_abbrev  0x00000f13      0x2b4 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
- .debug_abbrev  0x000011c7      0x123 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
- .debug_abbrev  0x000012ea      0x150 build/Artemis_PDU/production/_ext/974488028/initialization.o
- .debug_abbrev  0x0000143a       0xd8 build/Artemis_PDU/production/_ext/974488028/interrupts.o
- .debug_abbrev  0x00001512       0xa2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
- .debug_abbrev  0x000015b4      0x209 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
- .debug_abbrev  0x000017bd      0x168 build/Artemis_PDU/production/_ext/1360937237/main.o
- .debug_abbrev  0x00001925       0x2e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
- .debug_abbrev  0x00001953      0x126 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
- .debug_abbrev  0x00001a79       0xc7 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(libc.o)
- .debug_abbrev  0x00001b40      0x178 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
- .debug_abbrev  0x00001cb8      0x157 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
- .debug_abbrev  0x00001e0f       0xba c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
- .debug_abbrev  0x00001ec9       0x9c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
- .debug_abbrev  0x00001f65       0xc7 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__environ.o)
- .debug_abbrev  0x0000202c      0x163 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
- .debug_abbrev  0x0000218f       0xef c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
- .debug_abbrev  0x0000227e      0x158 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
- .debug_abbrev  0x000023d6      0x13e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
- .debug_abbrev  0x00002514      0x413 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
- .debug_abbrev  0x00002927      0x112 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
- .debug_abbrev  0x00002a39       0xf8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
- .debug_abbrev  0x00002b31      0x1ac c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
- .debug_abbrev  0x00002cdd      0x167 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
- .debug_abbrev  0x00002e44      0x135 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
- .debug_abbrev  0x00002f79      0x1c4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
- .debug_abbrev  0x0000313d      0x167 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
- .debug_abbrev  0x000032a4      0x134 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
- .debug_abbrev  0x000033d8      0x11e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
- .debug_abbrev  0x000034f6      0x13e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
- .debug_abbrev  0x00003634       0xba c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__errno_location.o)
- .debug_abbrev  0x000036ee       0xdf c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
- .debug_abbrev  0x000037cd       0x2e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
- .debug_abbrev  0x000037fb       0x2e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
- .debug_abbrev  0x00003829       0x2e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
- .debug_abbrev  0x00003857       0x2e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
+ .debug_abbrev  0x00000893      0x161 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .debug_abbrev  0x000009f4      0x2ad build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+ .debug_abbrev  0x00000ca1      0x2b4 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+ .debug_abbrev  0x00000f55      0x123 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
+ .debug_abbrev  0x00001078      0x150 build/Artemis_PDU/production/_ext/974488028/initialization.o
+ .debug_abbrev  0x000011c8       0xd8 build/Artemis_PDU/production/_ext/974488028/interrupts.o
+ .debug_abbrev  0x000012a0       0xa2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
+ .debug_abbrev  0x00001342      0x209 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
+ .debug_abbrev  0x0000154b      0x170 build/Artemis_PDU/production/_ext/1360937237/main.o
+ .debug_abbrev  0x000016bb       0x2e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
+ .debug_abbrev  0x000016e9      0x126 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
+ .debug_abbrev  0x0000180f       0xc7 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(libc.o)
+ .debug_abbrev  0x000018d6      0x178 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
+ .debug_abbrev  0x00001a4e      0x157 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
+ .debug_abbrev  0x00001ba5       0xba c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
+ .debug_abbrev  0x00001c5f       0x9c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
+ .debug_abbrev  0x00001cfb       0xc7 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__environ.o)
+ .debug_abbrev  0x00001dc2      0x163 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
+ .debug_abbrev  0x00001f25       0xef c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
+ .debug_abbrev  0x00002014      0x158 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
+ .debug_abbrev  0x0000216c      0x13e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
+ .debug_abbrev  0x000022aa      0x413 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+ .debug_abbrev  0x000026bd      0x112 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
+ .debug_abbrev  0x000027cf       0xf8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
+ .debug_abbrev  0x000028c7      0x1ac c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
+ .debug_abbrev  0x00002a73      0x167 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
+ .debug_abbrev  0x00002bda      0x135 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
+ .debug_abbrev  0x00002d0f      0x1c4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
+ .debug_abbrev  0x00002ed3      0x167 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
+ .debug_abbrev  0x0000303a      0x134 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
+ .debug_abbrev  0x0000316e      0x11e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
+ .debug_abbrev  0x0000328c      0x13e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
+ .debug_abbrev  0x000033ca       0xba c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__errno_location.o)
+ .debug_abbrev  0x00003484       0xdf c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
+ .debug_abbrev  0x00003563       0x2e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
+ .debug_abbrev  0x00003591       0x2e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
+ .debug_abbrev  0x000035bf       0x2e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
+ .debug_abbrev  0x000035ed       0x2e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
 
 .debug_aranges  0x00000000      0x878
  .debug_aranges
@@ -1483,23 +1478,23 @@ LOAD data_init
  .debug_aranges
                 0x00000158       0x70 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
  .debug_aranges
-                0x000001c8       0x68 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
+                0x000001c8       0x60 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
  .debug_aranges
-                0x00000230       0x60 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+                0x00000228       0x60 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
  .debug_aranges
-                0x00000290       0x98 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+                0x00000288       0x98 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
  .debug_aranges
-                0x00000328       0x28 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
+                0x00000320       0x28 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
  .debug_aranges
-                0x00000350       0x20 build/Artemis_PDU/production/_ext/974488028/initialization.o
+                0x00000348       0x20 build/Artemis_PDU/production/_ext/974488028/initialization.o
  .debug_aranges
-                0x00000370       0x20 build/Artemis_PDU/production/_ext/974488028/interrupts.o
+                0x00000368       0x20 build/Artemis_PDU/production/_ext/974488028/interrupts.o
  .debug_aranges
-                0x00000390       0x48 build/Artemis_PDU/production/_ext/974488028/exceptions.o
+                0x00000388       0x48 build/Artemis_PDU/production/_ext/974488028/exceptions.o
  .debug_aranges
-                0x000003d8       0x28 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
+                0x000003d0       0x28 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
  .debug_aranges
-                0x00000400       0x30 build/Artemis_PDU/production/_ext/1360937237/main.o
+                0x000003f8       0x38 build/Artemis_PDU/production/_ext/1360937237/main.o
  .debug_aranges
                 0x00000430       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
  .debug_aranges
@@ -1559,218 +1554,218 @@ LOAD data_init
  .debug_aranges
                 0x00000858       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
 
-.debug_ranges   0x00000000      0x7a0
+.debug_ranges   0x00000000      0x720
  .debug_ranges  0x00000000       0x10 build/Artemis_PDU/production/_ext/1650922938/plib_clock.o
  .debug_ranges  0x00000010       0x10 build/Artemis_PDU/production/_ext/659735671/plib_eic.o
  .debug_ranges  0x00000020       0x10 build/Artemis_PDU/production/_ext/1648773452/plib_evsys.o
  .debug_ranges  0x00000030       0x28 build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
  .debug_ranges  0x00000058       0xb0 build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
  .debug_ranges  0x00000108       0x60 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
- .debug_ranges  0x00000168       0xd8 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .debug_ranges  0x00000240       0x50 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
- .debug_ranges  0x00000290       0x88 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
- .debug_ranges  0x00000318       0x18 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
- .debug_ranges  0x00000330       0x10 build/Artemis_PDU/production/_ext/974488028/initialization.o
- .debug_ranges  0x00000340       0x10 build/Artemis_PDU/production/_ext/974488028/interrupts.o
- .debug_ranges  0x00000350       0x38 build/Artemis_PDU/production/_ext/974488028/exceptions.o
- .debug_ranges  0x00000388       0x18 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
- .debug_ranges  0x000003a0       0x20 build/Artemis_PDU/production/_ext/1360937237/main.o
- .debug_ranges  0x000003c0       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
- .debug_ranges  0x000003d0       0x40 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
- .debug_ranges  0x00000410       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
- .debug_ranges  0x00000428       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
- .debug_ranges  0x00000448       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
- .debug_ranges  0x00000458       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
- .debug_ranges  0x00000468       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
- .debug_ranges  0x00000478       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
- .debug_ranges  0x00000488       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
- .debug_ranges  0x000004a0       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
- .debug_ranges  0x000004b0      0x1a0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
- .debug_ranges  0x00000650       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
- .debug_ranges  0x00000660       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
- .debug_ranges  0x00000678       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
- .debug_ranges  0x00000690       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
- .debug_ranges  0x000006b0       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
- .debug_ranges  0x000006c8       0x30 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
- .debug_ranges  0x000006f8       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
- .debug_ranges  0x00000718       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
- .debug_ranges  0x00000730       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
- .debug_ranges  0x00000740       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
- .debug_ranges  0x00000750       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
- .debug_ranges  0x00000760       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
- .debug_ranges  0x00000770       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
- .debug_ranges  0x00000780       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
- .debug_ranges  0x00000790       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
+ .debug_ranges  0x00000168       0x50 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .debug_ranges  0x000001b8       0x50 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+ .debug_ranges  0x00000208       0x88 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+ .debug_ranges  0x00000290       0x18 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
+ .debug_ranges  0x000002a8       0x10 build/Artemis_PDU/production/_ext/974488028/initialization.o
+ .debug_ranges  0x000002b8       0x10 build/Artemis_PDU/production/_ext/974488028/interrupts.o
+ .debug_ranges  0x000002c8       0x38 build/Artemis_PDU/production/_ext/974488028/exceptions.o
+ .debug_ranges  0x00000300       0x18 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
+ .debug_ranges  0x00000318       0x28 build/Artemis_PDU/production/_ext/1360937237/main.o
+ .debug_ranges  0x00000340       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
+ .debug_ranges  0x00000350       0x40 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
+ .debug_ranges  0x00000390       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
+ .debug_ranges  0x000003a8       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
+ .debug_ranges  0x000003c8       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
+ .debug_ranges  0x000003d8       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
+ .debug_ranges  0x000003e8       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
+ .debug_ranges  0x000003f8       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
+ .debug_ranges  0x00000408       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
+ .debug_ranges  0x00000420       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
+ .debug_ranges  0x00000430      0x1a0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+ .debug_ranges  0x000005d0       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
+ .debug_ranges  0x000005e0       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
+ .debug_ranges  0x000005f8       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
+ .debug_ranges  0x00000610       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
+ .debug_ranges  0x00000630       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
+ .debug_ranges  0x00000648       0x30 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
+ .debug_ranges  0x00000678       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
+ .debug_ranges  0x00000698       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
+ .debug_ranges  0x000006b0       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
+ .debug_ranges  0x000006c0       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
+ .debug_ranges  0x000006d0       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
+ .debug_ranges  0x000006e0       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
+ .debug_ranges  0x000006f0       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
+ .debug_ranges  0x00000700       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
+ .debug_ranges  0x00000710       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
 
-.debug_line     0x00000000     0x72e2
+.debug_line     0x00000000     0x6e07
  .debug_line    0x00000000      0x2e7 build/Artemis_PDU/production/_ext/1650922938/plib_clock.o
  .debug_line    0x000002e7      0x15f build/Artemis_PDU/production/_ext/659735671/plib_eic.o
  .debug_line    0x00000446       0xeb build/Artemis_PDU/production/_ext/1648773452/plib_evsys.o
- .debug_line    0x00000531      0x463 build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
- .debug_line    0x00000994      0x4e0 build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
- .debug_line    0x00000e74      0x391 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
- .debug_line    0x00001205      0x7a9 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .debug_line    0x000019ae      0x700 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
- .debug_line    0x000020ae      0x62c build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
- .debug_line    0x000026da      0x1c4 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
- .debug_line    0x0000289e      0x391 build/Artemis_PDU/production/_ext/974488028/initialization.o
- .debug_line    0x00002c2f      0x137 build/Artemis_PDU/production/_ext/974488028/interrupts.o
- .debug_line    0x00002d66      0x190 build/Artemis_PDU/production/_ext/974488028/exceptions.o
- .debug_line    0x00002ef6      0x270 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
- .debug_line    0x00003166      0x255 build/Artemis_PDU/production/_ext/1360937237/main.o
- .debug_line    0x000033bb      0x110 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
- .debug_line    0x000034cb      0x24c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
- .debug_line    0x00003717      0x132 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(libc.o)
- .debug_line    0x00003849      0x1dd c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
- .debug_line    0x00003a26      0x208 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
- .debug_line    0x00003c2e      0x13b c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
- .debug_line    0x00003d69       0xf2 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
- .debug_line    0x00003e5b      0x19f c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__environ.o)
- .debug_line    0x00003ffa      0x2cc c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
- .debug_line    0x000042c6      0x202 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
- .debug_line    0x000044c8      0x2af c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
- .debug_line    0x00004777      0x250 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
- .debug_line    0x000049c7      0xad3 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
- .debug_line    0x0000549a      0x1ee c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
- .debug_line    0x00005688      0x1eb c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
- .debug_line    0x00005873      0x2b9 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
- .debug_line    0x00005b2c      0x1f3 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
- .debug_line    0x00005d1f      0x30f c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
- .debug_line    0x0000602e      0x3c4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
- .debug_line    0x000063f2      0x1f3 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
- .debug_line    0x000065e5      0x20f c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
- .debug_line    0x000067f4      0x248 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
- .debug_line    0x00006a3c      0x251 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
- .debug_line    0x00006c8d      0x1ad c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__errno_location.o)
- .debug_line    0x00006e3a      0x1e7 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
- .debug_line    0x00007021       0x9e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
- .debug_line    0x000070bf       0x9e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
- .debug_line    0x0000715d       0xb5 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
- .debug_line    0x00007212       0xd0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
+ .debug_line    0x00000531      0x373 build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
+ .debug_line    0x000008a4      0x4e0 build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
+ .debug_line    0x00000d84      0x3f9 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
+ .debug_line    0x0000117d      0x327 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .debug_line    0x000014a4      0x700 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+ .debug_line    0x00001ba4      0x62c build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+ .debug_line    0x000021d0      0x1c4 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
+ .debug_line    0x00002394      0x38f build/Artemis_PDU/production/_ext/974488028/initialization.o
+ .debug_line    0x00002723      0x137 build/Artemis_PDU/production/_ext/974488028/interrupts.o
+ .debug_line    0x0000285a      0x190 build/Artemis_PDU/production/_ext/974488028/exceptions.o
+ .debug_line    0x000029ea      0x270 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
+ .debug_line    0x00002c5a      0x286 build/Artemis_PDU/production/_ext/1360937237/main.o
+ .debug_line    0x00002ee0      0x110 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
+ .debug_line    0x00002ff0      0x24c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
+ .debug_line    0x0000323c      0x132 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(libc.o)
+ .debug_line    0x0000336e      0x1dd c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
+ .debug_line    0x0000354b      0x208 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
+ .debug_line    0x00003753      0x13b c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
+ .debug_line    0x0000388e       0xf2 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
+ .debug_line    0x00003980      0x19f c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__environ.o)
+ .debug_line    0x00003b1f      0x2cc c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
+ .debug_line    0x00003deb      0x202 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
+ .debug_line    0x00003fed      0x2af c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
+ .debug_line    0x0000429c      0x250 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
+ .debug_line    0x000044ec      0xad3 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+ .debug_line    0x00004fbf      0x1ee c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
+ .debug_line    0x000051ad      0x1eb c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
+ .debug_line    0x00005398      0x2b9 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
+ .debug_line    0x00005651      0x1f3 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
+ .debug_line    0x00005844      0x30f c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
+ .debug_line    0x00005b53      0x3c4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
+ .debug_line    0x00005f17      0x1f3 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
+ .debug_line    0x0000610a      0x20f c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
+ .debug_line    0x00006319      0x248 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
+ .debug_line    0x00006561      0x251 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
+ .debug_line    0x000067b2      0x1ad c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__errno_location.o)
+ .debug_line    0x0000695f      0x1e7 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
+ .debug_line    0x00006b46       0x9e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
+ .debug_line    0x00006be4       0x9e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
+ .debug_line    0x00006c82       0xb5 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
+ .debug_line    0x00006d37       0xd0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
 
-.debug_str      0x00000000      0x618
+.debug_str      0x00000000      0x5f4
  .debug_str     0x00000000       0x1e build/Artemis_PDU/production/_ext/1650922938/plib_clock.o
  .debug_str     0x0000001e        0x0 build/Artemis_PDU/production/_ext/659735671/plib_eic.o
  .debug_str     0x0000001e        0x0 build/Artemis_PDU/production/_ext/1648773452/plib_evsys.o
  .debug_str     0x0000001e        0xa build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
  .debug_str     0x00000028       0x1b build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
  .debug_str     0x00000043        0xb build/Artemis_PDU/production/_ext/1022696631/plib_port.o
- .debug_str     0x0000004e      0x175 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .debug_str     0x000001c3      0x149 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
- .debug_str     0x0000030c      0x123 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
- .debug_str     0x0000042f       0x27 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
- .debug_str     0x00000456       0xab build/Artemis_PDU/production/_ext/974488028/initialization.o
- .debug_str     0x00000501        0x0 build/Artemis_PDU/production/_ext/974488028/interrupts.o
- .debug_str     0x00000501        0x0 build/Artemis_PDU/production/_ext/974488028/exceptions.o
- .debug_str     0x00000501       0x2f build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
- .debug_str     0x00000530       0x6b build/Artemis_PDU/production/_ext/1360937237/main.o
- .debug_str     0x0000059b        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
- .debug_str     0x0000059b        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
- .debug_str     0x0000059b        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(libc.o)
- .debug_str     0x0000059b        0xf c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
- .debug_str     0x000005aa       0x11 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
- .debug_str     0x000005bb        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
- .debug_str     0x000005bb        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
- .debug_str     0x000005bb        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__environ.o)
- .debug_str     0x000005bb        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
- .debug_str     0x000005bb        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
- .debug_str     0x000005bb       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
- .debug_str     0x000005cb        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
- .debug_str     0x000005cb       0x13 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
- .debug_str     0x000005de        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
- .debug_str     0x000005de        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
- .debug_str     0x000005de        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
- .debug_str     0x000005de       0x11 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
- .debug_str     0x000005ef        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
- .debug_str     0x000005ef        0xa c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
- .debug_str     0x000005f9       0x11 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
- .debug_str     0x0000060a        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
- .debug_str     0x0000060a        0xe c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
- .debug_str     0x00000618        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
- .debug_str     0x00000618        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__errno_location.o)
- .debug_str     0x00000618        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
- .debug_str     0x00000618        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
- .debug_str     0x00000618        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
- .debug_str     0x00000618        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
- .debug_str     0x00000618        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
+ .debug_str     0x0000004e      0x117 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .debug_str     0x00000165      0x149 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+ .debug_str     0x000002ae      0x123 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+ .debug_str     0x000003d1       0x27 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
+ .debug_str     0x000003f8       0xab build/Artemis_PDU/production/_ext/974488028/initialization.o
+ .debug_str     0x000004a3        0x0 build/Artemis_PDU/production/_ext/974488028/interrupts.o
+ .debug_str     0x000004a3        0x0 build/Artemis_PDU/production/_ext/974488028/exceptions.o
+ .debug_str     0x000004a3       0x2f build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
+ .debug_str     0x000004d2       0xa5 build/Artemis_PDU/production/_ext/1360937237/main.o
+ .debug_str     0x00000577        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
+ .debug_str     0x00000577        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
+ .debug_str     0x00000577        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(libc.o)
+ .debug_str     0x00000577        0xf c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
+ .debug_str     0x00000586       0x11 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
+ .debug_str     0x00000597        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
+ .debug_str     0x00000597        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
+ .debug_str     0x00000597        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__environ.o)
+ .debug_str     0x00000597        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
+ .debug_str     0x00000597        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
+ .debug_str     0x00000597       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
+ .debug_str     0x000005a7        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
+ .debug_str     0x000005a7       0x13 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+ .debug_str     0x000005ba        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
+ .debug_str     0x000005ba        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
+ .debug_str     0x000005ba        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
+ .debug_str     0x000005ba       0x11 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
+ .debug_str     0x000005cb        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
+ .debug_str     0x000005cb        0xa c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
+ .debug_str     0x000005d5       0x11 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
+ .debug_str     0x000005e6        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
+ .debug_str     0x000005e6        0xe c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
+ .debug_str     0x000005f4        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
+ .debug_str     0x000005f4        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__errno_location.o)
+ .debug_str     0x000005f4        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
+ .debug_str     0x000005f4        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
+ .debug_str     0x000005f4        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
+ .debug_str     0x000005f4        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
+ .debug_str     0x000005f4        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
 
-.debug_frame    0x00000000      0xe10
+.debug_frame    0x00000000      0xe08
  .debug_frame   0x00000000       0x20 build/Artemis_PDU/production/_ext/1650922938/plib_clock.o
  .debug_frame   0x00000020       0x20 build/Artemis_PDU/production/_ext/659735671/plib_eic.o
  .debug_frame   0x00000040       0x20 build/Artemis_PDU/production/_ext/1648773452/plib_evsys.o
  .debug_frame   0x00000060       0x50 build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
  .debug_frame   0x000000b0      0x19c build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
  .debug_frame   0x0000024c       0xd8 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
- .debug_frame   0x00000324       0xd8 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .debug_frame   0x000003fc       0xdc build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
- .debug_frame   0x000004d8      0x15c build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
- .debug_frame   0x00000634       0x50 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
- .debug_frame   0x00000684       0x28 build/Artemis_PDU/production/_ext/974488028/initialization.o
- .debug_frame   0x000006ac       0x20 build/Artemis_PDU/production/_ext/974488028/interrupts.o
- .debug_frame   0x000006cc       0x70 build/Artemis_PDU/production/_ext/974488028/exceptions.o
- .debug_frame   0x0000073c       0x38 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
- .debug_frame   0x00000774       0x50 build/Artemis_PDU/production/_ext/1360937237/main.o
- .debug_frame   0x000007c4       0x38 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
- .debug_frame   0x000007fc       0x3c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
- .debug_frame   0x00000838       0x30 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
- .debug_frame   0x00000868       0x48 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
- .debug_frame   0x000008b0       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
- .debug_frame   0x000008d0       0x28 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
- .debug_frame   0x000008f8       0x30 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
- .debug_frame   0x00000928       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
- .debug_frame   0x00000948       0x3c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
- .debug_frame   0x00000984       0x30 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
- .debug_frame   0x000009b4      0x150 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
- .debug_frame   0x00000b04       0x28 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
- .debug_frame   0x00000b2c       0x38 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
- .debug_frame   0x00000b64       0x3c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
- .debug_frame   0x00000ba0       0x40 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
- .debug_frame   0x00000be0       0x64 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
- .debug_frame   0x00000c44       0x58 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
- .debug_frame   0x00000c9c       0x40 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
- .debug_frame   0x00000cdc       0x38 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
- .debug_frame   0x00000d14       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
- .debug_frame   0x00000d34       0x30 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
- .debug_frame   0x00000d64       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
- .debug_frame   0x00000d84       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
- .debug_frame   0x00000da4       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
- .debug_frame   0x00000dc4       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
- .debug_frame   0x00000de4       0x2c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
+ .debug_frame   0x00000324       0xa0 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .debug_frame   0x000003c4       0xdc build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+ .debug_frame   0x000004a0      0x15c build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+ .debug_frame   0x000005fc       0x50 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
+ .debug_frame   0x0000064c       0x28 build/Artemis_PDU/production/_ext/974488028/initialization.o
+ .debug_frame   0x00000674       0x20 build/Artemis_PDU/production/_ext/974488028/interrupts.o
+ .debug_frame   0x00000694       0x70 build/Artemis_PDU/production/_ext/974488028/exceptions.o
+ .debug_frame   0x00000704       0x38 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
+ .debug_frame   0x0000073c       0x80 build/Artemis_PDU/production/_ext/1360937237/main.o
+ .debug_frame   0x000007bc       0x38 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
+ .debug_frame   0x000007f4       0x3c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
+ .debug_frame   0x00000830       0x30 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
+ .debug_frame   0x00000860       0x48 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
+ .debug_frame   0x000008a8       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
+ .debug_frame   0x000008c8       0x28 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
+ .debug_frame   0x000008f0       0x30 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
+ .debug_frame   0x00000920       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
+ .debug_frame   0x00000940       0x3c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
+ .debug_frame   0x0000097c       0x30 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
+ .debug_frame   0x000009ac      0x150 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+ .debug_frame   0x00000afc       0x28 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
+ .debug_frame   0x00000b24       0x38 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
+ .debug_frame   0x00000b5c       0x3c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
+ .debug_frame   0x00000b98       0x40 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
+ .debug_frame   0x00000bd8       0x64 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
+ .debug_frame   0x00000c3c       0x58 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
+ .debug_frame   0x00000c94       0x40 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
+ .debug_frame   0x00000cd4       0x38 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
+ .debug_frame   0x00000d0c       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
+ .debug_frame   0x00000d2c       0x30 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
+ .debug_frame   0x00000d5c       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
+ .debug_frame   0x00000d7c       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
+ .debug_frame   0x00000d9c       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
+ .debug_frame   0x00000dbc       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
+ .debug_frame   0x00000ddc       0x2c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
 
-.debug_loc      0x00000000     0x4260
- .debug_loc     0x00000000      0x293 build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
- .debug_loc     0x00000293      0x5a2 build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
- .debug_loc     0x00000835      0x1e8 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
- .debug_loc     0x00000a1d      0xd26 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
- .debug_loc     0x00001743      0x640 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
- .debug_loc     0x00001d83      0x7d8 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
- .debug_loc     0x0000255b       0xf0 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
- .debug_loc     0x0000264b       0x45 build/Artemis_PDU/production/_ext/974488028/initialization.o
- .debug_loc     0x00002690       0x60 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
- .debug_loc     0x000026f0       0x51 build/Artemis_PDU/production/_ext/1360937237/main.o
- .debug_loc     0x00002741       0x14 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
- .debug_loc     0x00002755       0x51 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
- .debug_loc     0x000027a6       0x25 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
- .debug_loc     0x000027cb       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
- .debug_loc     0x000027eb       0x4a c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
- .debug_loc     0x00002835       0xba c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
- .debug_loc     0x000028ef      0x103 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
- .debug_loc     0x000029f2       0x25 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
- .debug_loc     0x00002a17       0xd8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
- .debug_loc     0x00002aef       0xeb c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
- .debug_loc     0x00002bda      0xccc c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
- .debug_loc     0x000038a6       0x7c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
- .debug_loc     0x00003922       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
- .debug_loc     0x00003942      0x1a8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
- .debug_loc     0x00003aea       0x25 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
- .debug_loc     0x00003b0f      0x22c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
- .debug_loc     0x00003d3b      0x2f1 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
- .debug_loc     0x0000402c       0x25 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
- .debug_loc     0x00004051       0x7c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
- .debug_loc     0x000040cd       0x6f c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
- .debug_loc     0x0000413c       0xeb c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
- .debug_loc     0x00004227       0x25 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
- .debug_loc     0x0000424c       0x14 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
+.debug_loc      0x00000000     0x3490
+ .debug_loc     0x00000000      0x183 build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
+ .debug_loc     0x00000183      0x5a2 build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
+ .debug_loc     0x00000725      0x1e8 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
+ .debug_loc     0x0000090d       0x1f build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+ .debug_loc     0x0000092c      0x640 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+ .debug_loc     0x00000f6c      0x7d8 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+ .debug_loc     0x00001744       0xf0 build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
+ .debug_loc     0x00001834       0x45 build/Artemis_PDU/production/_ext/974488028/initialization.o
+ .debug_loc     0x00001879       0x60 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
+ .debug_loc     0x000018d9       0x98 build/Artemis_PDU/production/_ext/1360937237/main.o
+ .debug_loc     0x00001971       0x14 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
+ .debug_loc     0x00001985       0x51 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
+ .debug_loc     0x000019d6       0x25 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
+ .debug_loc     0x000019fb       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
+ .debug_loc     0x00001a1b       0x4a c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
+ .debug_loc     0x00001a65       0xba c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
+ .debug_loc     0x00001b1f      0x103 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
+ .debug_loc     0x00001c22       0x25 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
+ .debug_loc     0x00001c47       0xd8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
+ .debug_loc     0x00001d1f       0xeb c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
+ .debug_loc     0x00001e0a      0xccc c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+ .debug_loc     0x00002ad6       0x7c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
+ .debug_loc     0x00002b52       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
+ .debug_loc     0x00002b72      0x1a8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
+ .debug_loc     0x00002d1a       0x25 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
+ .debug_loc     0x00002d3f      0x22c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
+ .debug_loc     0x00002f6b      0x2f1 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
+ .debug_loc     0x0000325c       0x25 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
+ .debug_loc     0x00003281       0x7c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
+ .debug_loc     0x000032fd       0x6f c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
+ .debug_loc     0x0000336c       0xeb c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
+ .debug_loc     0x00003457       0x25 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
+ .debug_loc     0x0000347c       0x14 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
 
 .note.GNU-stack
                 0x00000000        0x0
@@ -1857,8 +1852,8 @@ __xc_reference_data
                 0x000000b0        0x4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
                 0x000000b0                __stdout_needs_file
 
-.stack          0x20000c28      0x100
- .stack         0x20000c28      0x100 stack
+.stack          0x20000ae8      0x100
+ .stack         0x20000ae8      0x100 stack
 
 .bss%1          0x20000000      0x614
  .bss           0x20000000      0x408 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
@@ -1870,600 +1865,598 @@ __xc_reference_data
                 0x20000614      0x100 build/Artemis_PDU/production/_ext/1360937237/main.o
                 0x20000614                receiveBuffer
 
-.data.messageStart%4
-                0x20000714       0xf2
- .data.messageStart
-                0x20000714       0xf2 build/Artemis_PDU/production/_ext/1360937237/main.o
-                0x20000714                messageStart
+.data%4         0x20000718       0xe0
+ .data          0x20000718       0x78 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
+                0x20000718                __stdin_used
+                0x2000071c                _stdin
+ .data          0x20000790       0x68 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
 
-.data%5         0x20000808       0xe0
- .data          0x20000808       0x78 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
-                0x20000808                __stdin_used
-                0x2000080c                _stdin
- .data          0x20000880       0x68 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
+.bss%6          0x200007f8       0x50
+ .bss           0x200007f8       0x50 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(libc.o)
+                0x200007f8                __progname_full
+                0x200007f8                program_invocation_name
+                0x200007fc                program_invocation_short_name
+                0x200007fc                __progname
+                0x20000800                __sysinfo
+                0x20000804                __hwcap
+                0x20000808                __libc
 
-.bss%7          0x200008e8       0x50
- .bss           0x200008e8       0x50 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(libc.o)
-                0x200008e8                __progname_full
-                0x200008e8                program_invocation_name
-                0x200008ec                program_invocation_short_name
-                0x200008ec                __progname
-                0x200008f0                __sysinfo
-                0x200008f4                __hwcap
-                0x200008f8                __libc
-
-.bss.sercom4I2CObj%8
-                0x20000938       0x2c
- .bss.sercom4I2CObj
-                0x20000938       0x2c build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
-
-.bss.sercom2SPIObj%9
-                0x20000964       0x2c
+.bss.sercom2SPIObj%7
+                0x20000848       0x2c
  .bss.sercom2SPIObj
-                0x20000964       0x2c build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+                0x20000848       0x2c build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
 
-.data.errorMessage%10
-                0x20000990       0x27
- .data.errorMessage
-                0x20000990       0x27 build/Artemis_PDU/production/_ext/1360937237/main.o
-                0x20000990                errorMessage
+.data%8         0x20000874       0x20
+ .data          0x20000874       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
+                0x20000890                _stdout
 
-.data%11        0x200009b8       0x20
- .data          0x200009b8       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
-                0x200009d4                _stdout
+.bss%9          0x20000894       0x24
+ .bss           0x20000894       0x1c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+ .bss           0x200008b0        0x8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
+                0x200008b4                __stdout_used
 
-.bss%12         0x200009d8       0x34
- .bss           0x200009d8       0x1c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/thumb/v7e-m+fp/hard/crtbegin.o
- .bss           0x200009f4        0x8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
-                0x200009f8                __stdout_used
- .bss           0x200009fc        0x4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
- .bss           0x20000a00        0x4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__environ.o)
-                0x20000a00                __environ
-                0x20000a00                environ
-                0x20000a00                ___environ
-                0x20000a00                _environ
- .bss           0x20000a04        0x4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__errno_location.o)
-                0x20000a04                __errno_val
- .bss           0x20000a08        0x4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
+.bss%11         0x20000714        0x4
+ .bss           0x20000714        0x4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
 
-.data.newline%18
-                0x20000a0c        0x3
- .data.newline  0x20000a0c        0x3 build/Artemis_PDU/production/_ext/1360937237/main.o
-                0x20000a0c                newline
+.bss%12         0x200008b8        0xc
+ .bss           0x200008b8        0x4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__environ.o)
+                0x200008b8                __environ
+                0x200008b8                environ
+                0x200008b8                ___environ
+                0x200008b8                _environ
+ .bss           0x200008bc        0x4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__errno_location.o)
+                0x200008bc                __errno_val
+ .bss           0x200008c0        0x4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
 
-.bss.isLastByteTransferInProgress.8078%19
-                0x200009b7        0x1
- .bss.isLastByteTransferInProgress.8078
-                0x200009b7        0x1 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+.data.newline%15
+                0x200008c4        0x3
+ .data.newline  0x200008c4        0x3 build/Artemis_PDU/production/_ext/1360937237/main.o
+                0x200008c4                newline
 
-.bss.data%20    0x20000806        0x1
- .bss.data      0x20000806        0x1 build/Artemis_PDU/production/_ext/1360937237/main.o
-                0x20000806                data
+.bss.rxCounter%16
+                0x200008c8        0x2
+ .bss.rxCounter
+                0x200008c8        0x2 build/Artemis_PDU/production/_ext/1360937237/main.o
+                0x200008c8                rxCounter
+
+.bss.isLastByteTransferInProgress.8076%17
+                0x200008c7        0x1
+ .bss.isLastByteTransferInProgress.8076
+                0x200008c7        0x1 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+
+.bss.data%18    0x200008ca        0x1
+ .bss.data      0x200008ca        0x1 build/Artemis_PDU/production/_ext/1360937237/main.o
+                0x200008ca                data
 
 .eh_frame%z1    0x00000000        0x0
  .eh_frame      0x00000000        0x0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/thumb/v7e-m+fp/hard/crtbegin.o
 
-.config_00804000.__config_00804000%21
+.config_00804000.__config_00804000%19
                 0x00804000        0x4
  .config_00804000.__config_00804000
                 0x00804000        0x4 build/Artemis_PDU/production/_ext/974488028/initialization.o
                 0x00804000                __config_00804000
 
-.config_00804004.__config_00804004%22
+.config_00804004.__config_00804004%20
                 0x00804004        0x4
  .config_00804004.__config_00804004
                 0x00804004        0x4 build/Artemis_PDU/production/_ext/974488028/initialization.o
                 0x00804004                __config_00804004
 
-.config_00804008.__config_00804008%23
+.config_00804008.__config_00804008%21
                 0x00804008        0x4
  .config_00804008.__config_00804008
                 0x00804008        0x4 build/Artemis_PDU/production/_ext/974488028/initialization.o
                 0x00804008                __config_00804008
 
-.dinit%24       0x00000280      0x320
- .dinit         0x00000280      0x320 data_init
+.dinit%22       0x00000280      0x1f0
+ .dinit         0x00000280      0x1f0 data_init
 
-.text.SERCOM4_I2C_InterruptHandler%25
-                0x000005a0      0x1cc
- .text.SERCOM4_I2C_InterruptHandler
-                0x000005a0      0x1cc build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
-                0x000005a0                SERCOM4_I2C_InterruptHandler
+.text.malloc%23
+                0x00000470      0x1b0
+ .text.malloc   0x00000470      0x1b0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+                0x00000470                malloc
 
-.text.malloc%26
-                0x0000076c      0x1b0
- .text.malloc   0x0000076c      0x1b0 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
-                0x0000076c                malloc
-
-.text.SERCOM2_SPI_InterruptHandler%27
-                0x0000091c      0x170
+.text.SERCOM2_SPI_InterruptHandler%24
+                0x00000620      0x170
  .text.SERCOM2_SPI_InterruptHandler
-                0x0000091c      0x170 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
-                0x0000091c                SERCOM2_SPI_InterruptHandler
+                0x00000620      0x170 build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+                0x00000620                SERCOM2_SPI_InterruptHandler
 
-.text.CLOCK_Initialize%28
-                0x00000a8c      0x118
+.text.CLOCK_Initialize%25
+                0x00000790      0x118
  .text.CLOCK_Initialize
-                0x00000a8c      0x118 build/Artemis_PDU/production/_ext/1650922938/plib_clock.o
-                0x00000a8c                CLOCK_Initialize
+                0x00000790      0x118 build/Artemis_PDU/production/_ext/1650922938/plib_clock.o
+                0x00000790                CLOCK_Initialize
 
-.text.free%29   0x00000ba4       0xf8
- .text.free     0x00000ba4       0xf8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
-                0x00000ba4                free
+.text.free%26   0x000008a8       0xf8
+ .text.free     0x000008a8       0xf8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+                0x000008a8                free
 
-.text.PORT_Initialize%30
-                0x00000c9c       0xa4
+.text.PORT_Initialize%27
+                0x000009a0       0xdc
  .text.PORT_Initialize
-                0x00000c9c       0xa4 build/Artemis_PDU/production/_ext/1022696631/plib_port.o
-                0x00000c9c                PORT_Initialize
+                0x000009a0       0xdc build/Artemis_PDU/production/_ext/1022696631/plib_port.o
+                0x000009a0                PORT_Initialize
 
-.text.Reset_Handler%31
-                0x00000d40       0x90
- .text.Reset_Handler
-                0x00000d40       0x90 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
-                0x00000d40                Reset_Handler
-
-.text.__write_buffered%32
-                0x00000dd0       0x8a
- .text.__write_buffered
-                0x00000dd0       0x8a c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
-                0x00000dd0                __do_write
-
-.text.__pic32c_data_initialization%33
-                0x00000e5c       0x88
- .text.__pic32c_data_initialization
-                0x00000e5c       0x88 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
-                0x00000e5c                __pic32c_data_initialization
-
-.text.main%34   0x00000ee4       0x84
- .text.main     0x00000ee4       0x84 build/Artemis_PDU/production/_ext/1360937237/main.o
-                0x00000ee4                main
-
-.text.NVIC_Initialize%35
-                0x00000f68       0x78
- .text.NVIC_Initialize
-                0x00000f68       0x78 build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
-                0x00000f68                NVIC_Initialize
-
-.text.__stdio_write_buffered%36
-                0x00000fe0       0x76
- .text.__stdio_write_buffered
-                0x00000fe0       0x76 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
-                0x00000fe0                __stdio_write_buffered
-
-.text.disableGPIOs%37
-                0x00001058       0x68
+.text.disableGPIOs%28
+                0x00000a7c       0xb0
  .text.disableGPIOs
-                0x00001058       0x68 build/Artemis_PDU/production/_ext/1360937237/main.o
-                0x00001058                disableGPIOs
+                0x00000a7c       0xb0 build/Artemis_PDU/production/_ext/1360937237/main.o
+                0x00000a7c                disableGPIOs
 
-.text.SERCOM4_I2C_Initialize%38
-                0x000010c0       0x64
- .text.SERCOM4_I2C_Initialize
-                0x000010c0       0x64 build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
-                0x000010c0                SERCOM4_I2C_Initialize
+.text.Reset_Handler%29
+                0x00000b2c       0x90
+ .text.Reset_Handler
+                0x00000b2c       0x90 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
+                0x00000b2c                Reset_Handler
 
-.text.__stdio_close_rw%39
-                0x00001124       0x64
+.text.__write_buffered%30
+                0x00000bbc       0x8a
+ .text.__write_buffered
+                0x00000bbc       0x8a c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
+                0x00000bbc                __do_write
+
+.text.__pic32c_data_initialization%31
+                0x00000c48       0x88
+ .text.__pic32c_data_initialization
+                0x00000c48       0x88 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(data_init.o)
+                0x00000c48                __pic32c_data_initialization
+
+.text.__stdio_write_buffered%32
+                0x00000cd0       0x76
+ .text.__stdio_write_buffered
+                0x00000cd0       0x76 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_write.o)
+                0x00000cd0                __stdio_write_buffered
+
+.text.__stdio_close_rw%33
+                0x00000d46       0x64
  .text.__stdio_close_rw
-                0x00001124       0x64 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
-                0x00001124                __stdio_close_rw
+                0x00000d46       0x64 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_close.o)
+                0x00000d46                __stdio_close_rw
 
-.text.__stdio_read%40
-                0x00001188       0x60
+.text.__stdio_read%34
+                0x00000daa       0x60
  .text.__stdio_read
-                0x00001188       0x60 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
-                0x00001188                __stdio_read
+                0x00000daa       0x60 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdio_read.o)
+                0x00000daa                __stdio_read
 
-.text.__libc_start_init%41
-                0x000011e8       0x5c
+.text.USART_READ%35
+                0x00000e0c       0x5c
+ .text.USART_READ
+                0x00000e0c       0x5c build/Artemis_PDU/production/_ext/1360937237/main.o
+                0x00000e0c                USART_READ
+
+.text.__libc_start_init%36
+                0x00000e68       0x5c
  .text.__libc_start_init
-                0x000011e8       0x5c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
-                0x000011e8                __libc_init_array
+                0x00000e68       0x5c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
+                0x00000e68                __libc_init_array
 
-.rodata%42      0x00001244       0x5c
- .rodata        0x00001244       0x5c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+.rodata%37      0x00000ec4       0x5c
+ .rodata        0x00000ec4       0x5c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
 
-.text.SERCOM3_USART_Read%43
-                0x000012a0       0x58
+.text.SERCOM3_USART_Read%38
+                0x00000f20       0x58
  .text.SERCOM3_USART_Read
-                0x000012a0       0x58 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
-                0x000012a0                SERCOM3_USART_Read
+                0x00000f20       0x58 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+                0x00000f20                SERCOM3_USART_Read
 
-.text.unbin%44  0x000012f8       0x58
- .text.unbin    0x000012f8       0x58 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+.text.unbin%39  0x00000f78       0x58
+ .text.unbin    0x00000f78       0x58 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
 
-.text.SERCOM4_I2C_InitiateTransfer%45
-                0x00001350       0x4c
- .text.SERCOM4_I2C_InitiateTransfer
-                0x00001350       0x4c build/Artemis_PDU/production/_ext/305419891/plib_sercom4_i2c_master.o
+.text.NVIC_Initialize%40
+                0x00000fd0       0x54
+ .text.NVIC_Initialize
+                0x00000fd0       0x54 build/Artemis_PDU/production/_ext/1022749782/plib_nvic.o
+                0x00000fd0                NVIC_Initialize
 
-.text.setvbuf%46
-                0x0000139c       0x4c
- .text.setvbuf  0x0000139c       0x4c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
-                0x0000139c                setvbuf
+.text.setvbuf%41
+                0x00001024       0x4c
+ .text.setvbuf  0x00001024       0x4c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setvbuf.o)
+                0x00001024                setvbuf
 
-.text.SERCOM3_USART_Write%47
-                0x000013e8       0x48
+.text.SERCOM3_USART_Write%42
+                0x00001070       0x48
  .text.SERCOM3_USART_Write
-                0x000013e8       0x48 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
-                0x000013e8                SERCOM3_USART_Write
+                0x00001070       0x48 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+                0x00001070                SERCOM3_USART_Write
 
-.text.SYS_Initialize%48
-                0x00001430       0x48
+.text.SYS_Initialize%43
+                0x000010b8       0x48
  .text.SYS_Initialize
-                0x00001430       0x48 build/Artemis_PDU/production/_ext/974488028/initialization.o
-                0x00001430                SYS_Initialize
+                0x000010b8       0x48 build/Artemis_PDU/production/_ext/974488028/initialization.o
+                0x000010b8                SYS_Initialize
 
-.text%49        0x00001478       0x40
- .text          0x00001478       0x40 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+.text.SERCOM4_I2C_Initialize%44
+                0x00001100       0x44
+ .text.SERCOM4_I2C_Initialize
+                0x00001100       0x44 build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o
+                0x00001100                SERCOM4_I2C_Initialize
 
-.text.adjust_size%50
-                0x000014b8       0x40
+.text%45        0x00001144       0x40
+ .text          0x00001144       0x40 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/thumb/v7e-m+fp/hard/crtbegin.o
+
+.text.adjust_size%46
+                0x00001184       0x40
  .text.adjust_size
-                0x000014b8       0x40 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+                0x00001184       0x40 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
 
-.text.write%51  0x000014f8       0x40
- .text.write    0x000014f8       0x40 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
-                0x000014f8                write
+.text.write%47  0x000011c4       0x40
+ .text.write    0x000011c4       0x40 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(write.o)
+                0x000011c4                write
 
-.text.SERCOM2_SPI_Initialize%52
-                0x00001538       0x3c
+.text.SERCOM2_SPI_Initialize%48
+                0x00001204       0x3c
  .text.SERCOM2_SPI_Initialize
-                0x00001538       0x3c build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
-                0x00001538                SERCOM2_SPI_Initialize
+                0x00001204       0x3c build/Artemis_PDU/production/_ext/796654533/plib_sercom2_spi_master.o
+                0x00001204                SERCOM2_SPI_Initialize
 
-.text.bin_index%53
-                0x00001574       0x38
+.text.bin_index%49
+                0x00001240       0x38
  .text.bin_index
-                0x00001574       0x38 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+                0x00001240       0x38 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
 
-.text.EIC_Initialize%54
-                0x000015ac       0x34
+.text.EIC_Initialize%50
+                0x00001278       0x34
  .text.EIC_Initialize
-                0x000015ac       0x34 build/Artemis_PDU/production/_ext/659735671/plib_eic.o
-                0x000015ac                EIC_Initialize
+                0x00001278       0x34 build/Artemis_PDU/production/_ext/659735671/plib_eic.o
+                0x00001278                EIC_Initialize
 
-.text.SERCOM3_USART_Initialize%55
-                0x000015e0       0x34
+.text.SERCOM3_USART_Initialize%51
+                0x000012ac       0x34
  .text.SERCOM3_USART_Initialize
-                0x000015e0       0x34 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
-                0x000015e0                SERCOM3_USART_Initialize
+                0x000012ac       0x34 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+                0x000012ac                SERCOM3_USART_Initialize
 
-.text.SERCOM3_USART_ErrorClear%56
-                0x00001614       0x30
+.text.SERCOM3_USART_ErrorClear%52
+                0x000012e0       0x30
  .text.SERCOM3_USART_ErrorClear
-                0x00001614       0x30 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+                0x000012e0       0x30 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
 
-.text.alloc_rev%57
-                0x00001644       0x30
+.text.alloc_rev%53
+                0x00001310       0x30
  .text.alloc_rev
-                0x00001644       0x30 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+                0x00001310       0x30 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
 
-.text.trim%58   0x00001674       0x2e
- .text.trim     0x00001674       0x2e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+.text.trim%54   0x00001340       0x2e
+ .text.trim     0x00001340       0x2e c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
 
-.text.__readv%59
-                0x000016a2       0x2c
- .text.__readv  0x000016a2       0x2c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
-                0x000016a2                readv
+.text.__readv%55
+                0x0000136e       0x2c
+ .text.__readv  0x0000136e       0x2c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(readv.o)
+                0x0000136e                readv
 
-.text.alloc_fwd%60
-                0x000016ce       0x2c
+.text.alloc_fwd%56
+                0x0000139a       0x2c
  .text.alloc_fwd
-                0x000016ce       0x2c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+                0x0000139a       0x2c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
 
-.text.__writev%61
-                0x000016fa       0x2c
+.text.__writev%57
+                0x000013c6       0x2c
  .text.__writev
-                0x000016fa       0x2c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
-                0x000016fa                writev
+                0x000013c6       0x2c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(writev.o)
+                0x000013c6                writev
 
-.text._sbrk%62  0x00001728       0x2c
- .text._sbrk    0x00001728       0x2c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
-                0x00001728                _sbrk
+.text._sbrk%58  0x000013f4       0x2c
+ .text._sbrk    0x000013f4       0x2c c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(sbrk.o)
+                0x000013f4                _sbrk
 
-.text.__towrite_rw%63
-                0x00001754       0x28
+.text.__towrite_rw%59
+                0x00001420       0x28
  .text.__towrite_rw
-                0x00001754       0x28 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
-                0x00001754                __towrite_rw
-                0x00001754                __towrite_rw_needed
+                0x00001420       0x28 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite_rw.o)
+                0x00001420                __towrite_rw
+                0x00001420                __towrite_rw_needed
 
-.text.lock_bin%64
-                0x0000177c       0x20
+.text.lock_bin%60
+                0x00001448       0x20
  .text.lock_bin
-                0x0000177c       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
+                0x00001448       0x20 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(malloc.o)
 
-.text.SERCOM3_USART_ErrorGet%65
-                0x0000179c       0x1c
+.text.main%61   0x00001468       0x1e
+ .text.main     0x00001468       0x1e build/Artemis_PDU/production/_ext/1360937237/main.o
+                0x00001468                main
+
+.text.SERCOM3_USART_ErrorGet%62
+                0x00001488       0x1c
  .text.SERCOM3_USART_ErrorGet
-                0x0000179c       0x1c build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
-                0x0000179c                SERCOM3_USART_ErrorGet
+                0x00001488       0x1c build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+                0x00001488                SERCOM3_USART_ErrorGet
 
-.text._mon_putc%66
-                0x000017b8       0x1c
+.text._mon_putc%63
+                0x000014a4       0x1c
  .text._mon_putc
-                0x000017b8       0x1c build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
-                0x000017b8                _mon_putc
+                0x000014a4       0x1c build/Artemis_PDU/production/_ext/1186129630/xc32_monitor.o
+                0x000014a4                _mon_putc
 
-.text.__towrite%67
-                0x000017d4       0x18
+.text.__towrite%64
+                0x000014c0       0x18
  .text.__towrite
-                0x000017d4       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
-                0x000017d4                __towrite
+                0x000014c0       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__towrite.o)
+                0x000014c0                __towrite
 
-.text.__syscall_ret%68
-                0x000017ec       0x18
+.text.__syscall_ret%65
+                0x000014d8       0x18
  .text.__syscall_ret
-                0x000017ec       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
-                0x000017ec                __syscall_ret
+                0x000014d8       0x18 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(syscall_ret.o)
+                0x000014d8                __syscall_ret
 
-.text.memcpy%69
-                0x00001804       0x16
- .text.memcpy   0x00001804       0x16 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
-                0x00001804                memcpy
+.text.memcpy%66
+                0x000014f0       0x16
+ .text.memcpy   0x000014f0       0x16 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(memcpy.o)
+                0x000014f0                memcpy
 
-.text.__expand_heap%70
-                0x0000181a       0x16
+.text.__expand_heap%67
+                0x00001506       0x16
  .text.__expand_heap
-                0x0000181a       0x16 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
-                0x0000181a                __expand_heap
+                0x00001506       0x16 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(expand_heap.o)
+                0x00001506                __expand_heap
 
-.text.__init_stdout%71
-                0x00001830       0x14
+.text.__init_stdout%68
+                0x0000151c       0x14
  .text.__init_stdout
-                0x00001830       0x14 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
-                0x00001830                __init_stdout
+                0x0000151c       0x14 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdout.o)
+                0x0000151c                __init_stdout
 
-.text.NVMCTRL_Initialize%72
-                0x00001844       0x10
+.text.NVMCTRL_Initialize%69
+                0x00001530       0x10
  .text.NVMCTRL_Initialize
-                0x00001844       0x10 build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
-                0x00001844                NVMCTRL_Initialize
+                0x00001530       0x10 build/Artemis_PDU/production/_ext/236948536/plib_nvmctrl.o
+                0x00001530                NVMCTRL_Initialize
 
-.text.SERCOM3_USART_ReceiverIsReady%73
-                0x00001854       0x10
+.text.SERCOM3_USART_TransmitterIsReady%70
+                0x00001540       0x10
+ .text.SERCOM3_USART_TransmitterIsReady
+                0x00001540       0x10 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+                0x00001540                SERCOM3_USART_TransmitterIsReady
+
+.text.SERCOM3_USART_ReceiverIsReady%71
+                0x00001550       0x10
  .text.SERCOM3_USART_ReceiverIsReady
-                0x00001854       0x10 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
-                0x00001854                SERCOM3_USART_ReceiverIsReady
+                0x00001550       0x10 build/Artemis_PDU/production/_ext/1679430495/plib_sercom3_usart.o
+                0x00001550                SERCOM3_USART_ReceiverIsReady
 
-.text.setbuf%74
-                0x00001864       0x10
- .text.setbuf   0x00001864       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
-                0x00001864                setbuf
+.text.setbuf%72
+                0x00001560       0x10
+ .text.setbuf   0x00001560       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(setbuf.o)
+                0x00001560                setbuf
 
-.text.__init_stdio%75
-                0x00001874       0x10
+.text.__init_stdio%73
+                0x00001570       0x10
  .text.__init_stdio
-                0x00001874       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
-                0x00001874                __init_stdio_needed
-                0x00001874                __init_stdio
+                0x00001570       0x10 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
+                0x00001570                __init_stdio_needed
+                0x00001570                __init_stdio
 
-.text.__get_stdout%76
-                0x00001884        0x8
+.text.__get_stdout%74
+                0x00001580        0x8
  .text.__get_stdout
-                0x00001884        0x8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
-                0x00001884                __get_stdout
-                0x00001884                __init_stdout_needed
+                0x00001580        0x8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stdout.o)
+                0x00001580                __get_stdout
+                0x00001580                __init_stdout_needed
 
-.text.__read%77
-                0x0000188c        0x8
- .text.__read   0x0000188c        0x8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
-                0x0000188c                read
-                0x0000188c                __read
+.text.__read%75
+                0x00001588        0x8
+ .text.__read   0x00001588        0x8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(read.o)
+                0x00001588                read
+                0x00001588                __read
 
-.text.close%78  0x00001894        0x8
- .text.close    0x00001894        0x8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
-                0x00001894                close
+.text.close%76  0x00001590        0x8
+ .text.close    0x00001590        0x8 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(close.o)
+                0x00001590                close
 
-.text.__dummy%79
-                0x0000189c        0x6
- .text.__dummy  0x0000189c        0x6 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
-                0x0000189c                __stdio_seek_rw
+.text.__dummy%77
+                0x00001598        0x6
+ .text.__dummy  0x00001598        0x6 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(stdin.o)
+                0x00001598                __stdio_seek_rw
 
-.text.__fwrite_min%80
-                0x000018a2        0x6
+.text.__fwrite_min%78
+                0x0000159e        0x6
  .text.__fwrite_min
-                0x000018a2        0x6 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
-                0x000018a2                __stdio_write_unbuffered
-                0x000018a2                __stdio_write
+                0x0000159e        0x6 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__out.o)
+                0x0000159e                __stdio_write_unbuffered
+                0x0000159e                __stdio_write
 
-.text.lseek%81  0x000018a8        0x4
- .text.lseek    0x000018a8        0x4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
-                0x000018a8                lseek
+.text.lseek%79  0x000015a4        0x4
+ .text.lseek    0x000015a4        0x4 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libpic32c.a(lseek.o)
+                0x000015a4                lseek
 
-.text.EVSYS_Initialize%82
-                0x00000e5a        0x2
+.text.EVSYS_Initialize%80
+                0x00000c46        0x2
  .text.EVSYS_Initialize
-                0x00000e5a        0x2 build/Artemis_PDU/production/_ext/1648773452/plib_evsys.o
-                0x00000e5a                EVSYS_Initialize
+                0x00000c46        0x2 build/Artemis_PDU/production/_ext/1648773452/plib_evsys.o
+                0x00000c46                EVSYS_Initialize
 
-.text.Dummy_Handler%83
-                0x00001056        0x2
+.text.Dummy_Handler%81
+                0x00000e0a        0x2
  .text.Dummy_Handler
-                0x00001056        0x2 build/Artemis_PDU/production/_ext/974488028/interrupts.o
-                0x00001056                EIC_EXTINT_9_Handler
-                0x00001056                TCC0_MC5_Handler
-                0x00001056                SVCall_Handler
-                0x00001056                SERCOM0_2_Handler
-                0x00001056                USB_SOF_HSOF_Handler
-                0x00001056                TCC4_OTHER_Handler
-                0x00001056                TCC2_MC2_Handler
-                0x00001056                EVSYS_0_Handler
-                0x00001056                TRNG_Handler
-                0x00001056                TC2_Handler
-                0x00001056                USB_TRCPT0_Handler
-                0x00001056                DAC_OTHER_Handler
-                0x00001056                AC_Handler
-                0x00001056                DAC_EMPTY_0_Handler
-                0x00001056                DMAC_OTHER_Handler
-                0x00001056                EIC_EXTINT_5_Handler
-                0x00001056                SERCOM3_1_Handler
-                0x00001056                SysTick_Handler
-                0x00001056                SERCOM3_2_Handler
-                0x00001056                EIC_EXTINT_6_Handler
-                0x00001056                PendSV_Handler
-                0x00001056                TC7_Handler
-                0x00001056                TCC4_MC0_Handler
-                0x00001056                EVSYS_3_Handler
-                0x00001056                QSPI_Handler
-                0x00001056                TCC2_MC0_Handler
-                0x00001056                PDEC_OTHER_Handler
-                0x00001056                TCC3_MC0_Handler
-                0x00001056                PDEC_MC1_Handler
-                0x00001056                TCC2_MC1_Handler
-                0x00001056                OSCCTRL_XOSC1_Handler
-                0x00001056                PDEC_MC0_Handler
-                0x00001056                EIC_EXTINT_4_Handler
-                0x00001056                EIC_EXTINT_7_Handler
-                0x00001056                SERCOM0_OTHER_Handler
-                0x00001056                EVSYS_OTHER_Handler
-                0x00001056                SERCOM0_0_Handler
-                0x00001056                RTC_Handler
-                0x00001056                TCC1_MC0_Handler
-                0x00001056                SERCOM1_OTHER_Handler
-                0x00001056                TCC2_OTHER_Handler
-                0x00001056                EIC_EXTINT_11_Handler
-                0x00001056                SUPC_BODDET_Handler
-                0x00001056                EIC_EXTINT_14_Handler
-                0x00001056                OSC32KCTRL_Handler
-                0x00001056                SERCOM6_2_Handler
-                0x00001056                EVSYS_1_Handler
-                0x00001056                TC6_Handler
-                0x00001056                TCC4_MC1_Handler
-                0x00001056                DMAC_0_Handler
-                0x00001056                SUPC_OTHER_Handler
-                0x00001056                WDT_Handler
-                0x00001056                CAN0_Handler
-                0x00001056                EIC_EXTINT_15_Handler
-                0x00001056                SERCOM6_0_Handler
-                0x00001056                EIC_EXTINT_1_Handler
-                0x00001056                TCC3_MC1_Handler
-                0x00001056                SERCOM5_0_Handler
-                0x00001056                TC4_Handler
-                0x00001056                TC1_Handler
-                0x00001056                TCC1_MC1_Handler
-                0x00001056                EIC_EXTINT_0_Handler
-                0x00001056                TCC1_OTHER_Handler
-                0x00001056                PAC_Handler
-                0x00001056                TC3_Handler
-                0x00001056                Dummy_Handler
-                0x00001056                DAC_RESRDY_0_Handler
-                0x00001056                SERCOM5_1_Handler
-                0x00001056                DMAC_2_Handler
-                0x00001056                TCC0_MC4_Handler
-                0x00001056                USB_TRCPT1_Handler
-                0x00001056                SERCOM0_1_Handler
-                0x00001056                TCC0_MC3_Handler
-                0x00001056                EIC_EXTINT_12_Handler
-                0x00001056                OSCCTRL_DPLL0_Handler
-                0x00001056                SERCOM6_OTHER_Handler
-                0x00001056                SERCOM7_1_Handler
-                0x00001056                SERCOM5_OTHER_Handler
-                0x00001056                PM_Handler
-                0x00001056                OSCCTRL_DFLL_Handler
-                0x00001056                SERCOM7_0_Handler
-                0x00001056                DAC_RESRDY_1_Handler
-                0x00001056                DMAC_1_Handler
-                0x00001056                USB_OTHER_Handler
-                0x00001056                SERCOM7_2_Handler
-                0x00001056                CAN1_Handler
-                0x00001056                TCC0_OTHER_Handler
-                0x00001056                EIC_EXTINT_10_Handler
-                0x00001056                TCC1_MC3_Handler
-                0x00001056                OSCCTRL_XOSC0_Handler
-                0x00001056                SERCOM6_1_Handler
-                0x00001056                TCC0_MC0_Handler
-                0x00001056                EIC_EXTINT_2_Handler
-                0x00001056                SDHC0_Handler
-                0x00001056                SERCOM1_1_Handler
-                0x00001056                I2S_Handler
-                0x00001056                PCC_Handler
-                0x00001056                TCC3_OTHER_Handler
-                0x00001056                EIC_EXTINT_13_Handler
-                0x00001056                SERCOM1_0_Handler
-                0x00001056                PUKCC_Handler
-                0x00001056                SERCOM1_2_Handler
-                0x00001056                SERCOM3_0_Handler
-                0x00001056                TCC1_MC2_Handler
-                0x00001056                ADC1_RESRDY_Handler
-                0x00001056                NVMCTRL_1_Handler
-                0x00001056                SERCOM5_2_Handler
-                0x00001056                DAC_EMPTY_1_Handler
-                0x00001056                ADC1_OTHER_Handler
-                0x00001056                OSCCTRL_DPLL1_Handler
-                0x00001056                EIC_EXTINT_3_Handler
-                0x00001056                SERCOM3_OTHER_Handler
-                0x00001056                EIC_EXTINT_8_Handler
-                0x00001056                NVMCTRL_0_Handler
-                0x00001056                ADC0_RESRDY_Handler
-                0x00001056                ADC0_OTHER_Handler
-                0x00001056                MCLK_Handler
-                0x00001056                SERCOM7_OTHER_Handler
-                0x00001056                EVSYS_2_Handler
-                0x00001056                FREQM_Handler
-                0x00001056                TC0_Handler
-                0x00001056                TCC0_MC1_Handler
-                0x00001056                DMAC_3_Handler
-                0x00001056                RAMECC_Handler
-                0x00001056                TC5_Handler
-                0x00001056                AES_Handler
-                0x00001056                ICM_Handler
-                0x00001056                TCC0_MC2_Handler
+                0x00000e0a        0x2 build/Artemis_PDU/production/_ext/974488028/interrupts.o
+                0x00000e0a                EIC_EXTINT_9_Handler
+                0x00000e0a                TCC0_MC5_Handler
+                0x00000e0a                SVCall_Handler
+                0x00000e0a                SERCOM0_2_Handler
+                0x00000e0a                USB_SOF_HSOF_Handler
+                0x00000e0a                TCC4_OTHER_Handler
+                0x00000e0a                TCC2_MC2_Handler
+                0x00000e0a                EVSYS_0_Handler
+                0x00000e0a                TRNG_Handler
+                0x00000e0a                TC2_Handler
+                0x00000e0a                USB_TRCPT0_Handler
+                0x00000e0a                DAC_OTHER_Handler
+                0x00000e0a                AC_Handler
+                0x00000e0a                DAC_EMPTY_0_Handler
+                0x00000e0a                DMAC_OTHER_Handler
+                0x00000e0a                EIC_EXTINT_5_Handler
+                0x00000e0a                SERCOM3_1_Handler
+                0x00000e0a                SysTick_Handler
+                0x00000e0a                SERCOM4_OTHER_Handler
+                0x00000e0a                SERCOM3_2_Handler
+                0x00000e0a                EIC_EXTINT_6_Handler
+                0x00000e0a                PendSV_Handler
+                0x00000e0a                TC7_Handler
+                0x00000e0a                TCC4_MC0_Handler
+                0x00000e0a                EVSYS_3_Handler
+                0x00000e0a                QSPI_Handler
+                0x00000e0a                TCC2_MC0_Handler
+                0x00000e0a                PDEC_OTHER_Handler
+                0x00000e0a                TCC3_MC0_Handler
+                0x00000e0a                PDEC_MC1_Handler
+                0x00000e0a                TCC2_MC1_Handler
+                0x00000e0a                OSCCTRL_XOSC1_Handler
+                0x00000e0a                PDEC_MC0_Handler
+                0x00000e0a                EIC_EXTINT_4_Handler
+                0x00000e0a                EIC_EXTINT_7_Handler
+                0x00000e0a                SERCOM0_OTHER_Handler
+                0x00000e0a                EVSYS_OTHER_Handler
+                0x00000e0a                SERCOM0_0_Handler
+                0x00000e0a                RTC_Handler
+                0x00000e0a                SERCOM4_0_Handler
+                0x00000e0a                TCC1_MC0_Handler
+                0x00000e0a                SERCOM1_OTHER_Handler
+                0x00000e0a                TCC2_OTHER_Handler
+                0x00000e0a                EIC_EXTINT_11_Handler
+                0x00000e0a                SUPC_BODDET_Handler
+                0x00000e0a                EIC_EXTINT_14_Handler
+                0x00000e0a                OSC32KCTRL_Handler
+                0x00000e0a                SERCOM6_2_Handler
+                0x00000e0a                EVSYS_1_Handler
+                0x00000e0a                TC6_Handler
+                0x00000e0a                TCC4_MC1_Handler
+                0x00000e0a                DMAC_0_Handler
+                0x00000e0a                SUPC_OTHER_Handler
+                0x00000e0a                WDT_Handler
+                0x00000e0a                CAN0_Handler
+                0x00000e0a                EIC_EXTINT_15_Handler
+                0x00000e0a                SERCOM6_0_Handler
+                0x00000e0a                EIC_EXTINT_1_Handler
+                0x00000e0a                TCC3_MC1_Handler
+                0x00000e0a                SERCOM5_0_Handler
+                0x00000e0a                TC4_Handler
+                0x00000e0a                TC1_Handler
+                0x00000e0a                TCC1_MC1_Handler
+                0x00000e0a                EIC_EXTINT_0_Handler
+                0x00000e0a                TCC1_OTHER_Handler
+                0x00000e0a                PAC_Handler
+                0x00000e0a                SERCOM4_1_Handler
+                0x00000e0a                TC3_Handler
+                0x00000e0a                Dummy_Handler
+                0x00000e0a                DAC_RESRDY_0_Handler
+                0x00000e0a                SERCOM5_1_Handler
+                0x00000e0a                DMAC_2_Handler
+                0x00000e0a                TCC0_MC4_Handler
+                0x00000e0a                USB_TRCPT1_Handler
+                0x00000e0a                SERCOM0_1_Handler
+                0x00000e0a                TCC0_MC3_Handler
+                0x00000e0a                EIC_EXTINT_12_Handler
+                0x00000e0a                OSCCTRL_DPLL0_Handler
+                0x00000e0a                SERCOM6_OTHER_Handler
+                0x00000e0a                SERCOM7_1_Handler
+                0x00000e0a                SERCOM5_OTHER_Handler
+                0x00000e0a                PM_Handler
+                0x00000e0a                OSCCTRL_DFLL_Handler
+                0x00000e0a                SERCOM7_0_Handler
+                0x00000e0a                DAC_RESRDY_1_Handler
+                0x00000e0a                DMAC_1_Handler
+                0x00000e0a                USB_OTHER_Handler
+                0x00000e0a                SERCOM7_2_Handler
+                0x00000e0a                CAN1_Handler
+                0x00000e0a                TCC0_OTHER_Handler
+                0x00000e0a                EIC_EXTINT_10_Handler
+                0x00000e0a                TCC1_MC3_Handler
+                0x00000e0a                OSCCTRL_XOSC0_Handler
+                0x00000e0a                SERCOM6_1_Handler
+                0x00000e0a                TCC0_MC0_Handler
+                0x00000e0a                EIC_EXTINT_2_Handler
+                0x00000e0a                SDHC0_Handler
+                0x00000e0a                SERCOM1_1_Handler
+                0x00000e0a                I2S_Handler
+                0x00000e0a                PCC_Handler
+                0x00000e0a                TCC3_OTHER_Handler
+                0x00000e0a                EIC_EXTINT_13_Handler
+                0x00000e0a                SERCOM1_0_Handler
+                0x00000e0a                PUKCC_Handler
+                0x00000e0a                SERCOM1_2_Handler
+                0x00000e0a                SERCOM3_0_Handler
+                0x00000e0a                SERCOM4_2_Handler
+                0x00000e0a                TCC1_MC2_Handler
+                0x00000e0a                ADC1_RESRDY_Handler
+                0x00000e0a                NVMCTRL_1_Handler
+                0x00000e0a                SERCOM5_2_Handler
+                0x00000e0a                DAC_EMPTY_1_Handler
+                0x00000e0a                ADC1_OTHER_Handler
+                0x00000e0a                OSCCTRL_DPLL1_Handler
+                0x00000e0a                EIC_EXTINT_3_Handler
+                0x00000e0a                SERCOM3_OTHER_Handler
+                0x00000e0a                EIC_EXTINT_8_Handler
+                0x00000e0a                NVMCTRL_0_Handler
+                0x00000e0a                ADC0_RESRDY_Handler
+                0x00000e0a                ADC0_OTHER_Handler
+                0x00000e0a                MCLK_Handler
+                0x00000e0a                SERCOM7_OTHER_Handler
+                0x00000e0a                EVSYS_2_Handler
+                0x00000e0a                FREQM_Handler
+                0x00000e0a                TC0_Handler
+                0x00000e0a                TCC0_MC1_Handler
+                0x00000e0a                DMAC_3_Handler
+                0x00000e0a                RAMECC_Handler
+                0x00000e0a                TC5_Handler
+                0x00000e0a                AES_Handler
+                0x00000e0a                ICM_Handler
+                0x00000e0a                TCC0_MC2_Handler
 
-.text.NonMaskableInt_Handler%84
-                0x00001726        0x2
+.text.NonMaskableInt_Handler%82
+                0x000013f2        0x2
  .text.NonMaskableInt_Handler
-                0x00001726        0x2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
-                0x00001726                NonMaskableInt_Handler
+                0x000013f2        0x2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
+                0x000013f2                NonMaskableInt_Handler
 
-.text.HardFault_Handler%85
-                0x000018ac        0x2
+.text.HardFault_Handler%83
+                0x00001486        0x2
  .text.HardFault_Handler
-                0x000018ac        0x2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
-                0x000018ac                HardFault_Handler
+                0x00001486        0x2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
+                0x00001486                HardFault_Handler
 
-.text.DebugMonitor_Handler%86
-                0x000018ae        0x2
+.text.DebugMonitor_Handler%84
+                0x000015a8        0x2
  .text.DebugMonitor_Handler
-                0x000018ae        0x2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
-                0x000018ae                DebugMonitor_Handler
+                0x000015a8        0x2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
+                0x000015a8                DebugMonitor_Handler
 
-.text.MemoryManagement_Handler%87
-                0x000018b0        0x2
+.text.MemoryManagement_Handler%85
+                0x000015aa        0x2
  .text.MemoryManagement_Handler
-                0x000018b0        0x2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
-                0x000018b0                MemoryManagement_Handler
+                0x000015aa        0x2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
+                0x000015aa                MemoryManagement_Handler
 
-.text.BusFault_Handler%88
-                0x000018b2        0x2
+.text.BusFault_Handler%86
+                0x000015ac        0x2
  .text.BusFault_Handler
-                0x000018b2        0x2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
-                0x000018b2                BusFault_Handler
+                0x000015ac        0x2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
+                0x000015ac                BusFault_Handler
 
-.text.UsageFault_Handler%89
-                0x000018b4        0x2
+.text.UsageFault_Handler%87
+                0x000015ae        0x2
  .text.UsageFault_Handler
-                0x000018b4        0x2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
-                0x000018b4                UsageFault_Handler
+                0x000015ae        0x2 build/Artemis_PDU/production/_ext/974488028/exceptions.o
+                0x000015ae                UsageFault_Handler
 
-.text.Dummy_App_Func%90
-                0x000018b6        0x2
+.text.Dummy_App_Func%88
+                0x000015b0        0x2
  .text.Dummy_App_Func
-                0x000018b6        0x2 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
-                0x000018b6                _on_reset
-                0x000018b6                _on_bootstrap
-                0x000018b6                __xc32_on_reset
-                0x000018b6                Dummy_App_Func
-                0x000018b6                __xc32_on_bootstrap
+                0x000015b0        0x2 build/Artemis_PDU/production/_ext/974488028/startup_xc32.o
+                0x000015b0                _on_reset
+                0x000015b0                _on_bootstrap
+                0x000015b0                __xc32_on_reset
+                0x000015b0                Dummy_App_Func
+                0x000015b0                __xc32_on_bootstrap
 
-.text.__dummy%91
-                0x000018b8        0x6
- .text.__dummy  0x000018b8        0x2 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
-                0x000018b8                __init_host
- .text.__dummy  0x000018ba        0x2 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
-                0x000018ba                __init_stdin
-                0x000018ba                __init_stderr
- .text.__dummy  0x000018bc        0x2 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
-                0x000018bc                __stdio_seek
+.text.__dummy%89
+                0x000015b2        0x6
+ .text.__dummy  0x000015b2        0x2 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__libc_start_main.o)
+                0x000015b2                __init_host
+ .text.__dummy  0x000015b4        0x2 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__init_stdio.o)
+                0x000015b4                __init_stdin
+                0x000015b4                __init_stderr
+ .text.__dummy  0x000015b6        0x2 c:/program files/microchip/xc32/v4.00/bin/bin/../../lib/gcc/pic32c/8.3.1/../../../../pic32c/lib/thumb/v7e-m+fp/hard\libc-musl.a(__stderr.o)
+                0x000015b6                __stdio_seek

@@ -59,36 +59,48 @@
 // *****************************************************************************
 // *****************************************************************************
 
+// USART Definitions
+// *****************************************************************************
 #define RX_BUFFER_SIZE 256
-char messageStart[] = "**** USART read and write from COM terminal ****\r\n\
-**** Type a line of characters and press the Enter key. **** \r\n\
-**** Entered line will be echoed back. ****\r\n\
-**** Note that you won't be able to see what you are typing, but it's there. ****\r\n";
+char messageStart[] = "**** USART Initialized ****\r\n";
 char newline[] = "\r\n";
 char errorMessage[] = "\r\n**** USART error has occurred ****\r\n";
 char receiveBuffer[RX_BUFFER_SIZE] = {};
 char data = 0;
+uint16_t rxCounter = 0;
+// *****************************************************************************
 
+void USART_READ(void);
 void enableGPIOs(void);
 void disableGPIOs(void);
 
 int main ( void )
 {
-    uint16_t rxCounter=0;
-    
     SYS_Initialize(NULL);
     //SERCOM2_SPI_Initialize();
+    SERCOM3_USART_Initialize();
+    //SERCOM4_I2C_Initialize();
     
     // GPIO
     //enableGPIOs();
     disableGPIOs();
        
-    SERCOM3_USART_Write(&newline[0],sizeof(newline));
-    SERCOM3_USART_Write(&messageStart[0], sizeof(messageStart));
+    while(!(SERCOM3_USART_TransmitterIsReady()));
+    //while(SERCOM3_USART_ErrorGet() == USART_ERROR_NONE);
+    //SERCOM3_USART_Write(&newline[0],sizeof(newline));
+    //SERCOM3_USART_Write(&messageStart[0], sizeof(messageStart));
     
     while ( true )
     {
-        /* Check if there is a received character */
+        USART_READ();
+        //I2C_READ();
+    }
+    
+    return EXIT_FAILURE;
+}
+
+void USART_READ(void) {
+    /* Check if there is a received character */
         if(SERCOM3_USART_ReceiverIsReady() == true)
         {
             if(SERCOM3_USART_ErrorGet() == USART_ERROR_NONE)
@@ -109,12 +121,9 @@ int main ( void )
             }
             else
             {
-                SERCOM3_USART_Write(&errorMessage[0],sizeof(errorMessage));
+                //SERCOM3_USART_Write(&errorMessage[0],sizeof(errorMessage));
             }
         }
-    }
-    
-    return EXIT_FAILURE;
 }
 
 void enableGPIOs(void) {
@@ -131,6 +140,19 @@ void enableGPIOs(void) {
     SD_CS_Set();
     WDT_WDI_Set();
     BURN1_EN_Set();
+    IN1_Set();
+    IN2_Set();
+    IN3_Set();
+    IN4_Set();
+    IN5_Set();
+    IN6_Set();
+    IN7_Set();
+    IN8_Set();
+    TRQ1_Set();
+    TRQ2_Set();
+    FAULT1_Set();
+    SLEEP1_Set();
+    SLEEP2_Set();
 }
 
 void disableGPIOs(void) {
@@ -147,6 +169,19 @@ void disableGPIOs(void) {
     SD_CS_Clear();
     WDT_WDI_Clear();
     BURN1_EN_Set();
+    IN1_Clear();
+    IN2_Clear();
+    IN3_Clear();
+    IN4_Clear();
+    IN5_Clear();
+    IN6_Clear();
+    IN7_Clear();
+    IN8_Clear();
+    TRQ1_Clear();
+    TRQ2_Clear();
+    FAULT1_Clear();
+    SLEEP1_Clear();
+    SLEEP2_Clear();
 }
 
 /*******************************************************************************

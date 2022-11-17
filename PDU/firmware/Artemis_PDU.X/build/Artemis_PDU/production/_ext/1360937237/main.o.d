@@ -119,8 +119,8 @@ build/Artemis_PDU/production/_ext/1360937237/main.o: ../src/main.c \
  ../src/config/Artemis_PDU/peripheral/clock/plib_clock.h \
  ../src/config/Artemis_PDU/peripheral/nvic/plib_nvic.h \
  ../src/config/Artemis_PDU/peripheral/cmcc/plib_cmcc.h \
- ../src/config/Artemis_PDU/peripheral/sercom/i2c_master/plib_sercom4_i2c_master.h \
- ../src/config/Artemis_PDU/peripheral/sercom/i2c_master/plib_sercom_i2c_master_common.h \
+ ../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom4_i2c_slave.h \
+ ../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom_i2c_slave_common.h \
  ../src/config/Artemis_PDU/peripheral/eic/plib_eic.h
 
 ../src/config/Artemis_PDU/definitions.h:
@@ -363,8 +363,8 @@ build/Artemis_PDU/production/_ext/1360937237/main.o: ../src/main.c \
 
 ../src/config/Artemis_PDU/peripheral/cmcc/plib_cmcc.h:
 
-../src/config/Artemis_PDU/peripheral/sercom/i2c_master/plib_sercom4_i2c_master.h:
+../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom4_i2c_slave.h:
 
-../src/config/Artemis_PDU/peripheral/sercom/i2c_master/plib_sercom_i2c_master_common.h:
+../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom_i2c_slave_common.h:
 
 ../src/config/Artemis_PDU/peripheral/eic/plib_eic.h:

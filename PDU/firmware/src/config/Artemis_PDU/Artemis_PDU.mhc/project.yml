@@ -13,13 +13,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 31EDDBCF443C9FEF93388D0276664FB1
-- generatedChecksum: A9E4AD02187E16E9BF766D1CA8686E49
+- generatedChecksum: E66EC681D1386F0CB9FF2505B575BB4A
   logicalPath: config/Artemis_PDU
   name: interrupts.c
   physicalPath: ''
   security: NON_SECURE
   type: SOURCE
-  userChecksum: A9E4AD02187E16E9BF766D1CA8686E49
+  userChecksum: E66EC681D1386F0CB9FF2505B575BB4A
 - generatedChecksum: 6513F2461B8F476B68CA73906086047F
   logicalPath: config/Artemis_PDU
   name: libc_syscalls.c
@@ -34,13 +34,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: null
-- generatedChecksum: 6B2D5E708C83D183A2BB48D3EA265EC5
+- generatedChecksum: 227F0FE470F8955E30E34B95F51758CA
   logicalPath: config/Artemis_PDU/peripheral/clock
   name: plib_clock.c
   physicalPath: peripheral/clock
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 6B2D5E708C83D183A2BB48D3EA265EC5
+  userChecksum: 227F0FE470F8955E30E34B95F51758CA
 - generatedChecksum: D903E8D9DCBC4107D0AA841E07F653BA
   logicalPath: config/Artemis_PDU/peripheral/cmcc
   name: plib_cmcc.c
@@ -62,13 +62,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: C3ECDED3D6301DB0DE622293ED615D21
-- generatedChecksum: 2986AEC1A024E19F8EEA01E02C787DA7
+- generatedChecksum: E2BF34B465DB94F32EC82E333A689536
   logicalPath: config/Artemis_PDU/peripheral/nvic
   name: plib_nvic.c
   physicalPath: peripheral/nvic
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 2986AEC1A024E19F8EEA01E02C787DA7
+  userChecksum: E2BF34B465DB94F32EC82E333A689536
 - generatedChecksum: 903E0413B53BA9E8980C740E65F59966
   logicalPath: config/Artemis_PDU/peripheral/nvmctrl
   name: plib_nvmctrl.c
@@ -76,13 +76,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 903E0413B53BA9E8980C740E65F59966
-- generatedChecksum: 7B0B290DE60FC9AD936371FD72A6570C
+- generatedChecksum: CAA598CBCCE91B01E122D7BC2314841A
   logicalPath: config/Artemis_PDU/peripheral/port
   name: plib_port.c
   physicalPath: peripheral/port
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 7B0B290DE60FC9AD936371FD72A6570C
+  userChecksum: CAA598CBCCE91B01E122D7BC2314841A
 - generatedChecksum: 6733F1C4073EB6517AF3361B6D05EA0A
   logicalPath: config/Artemis_PDU/peripheral/sercom/spi_master
   name: plib_sercom2_spi_master.c
@@ -97,13 +97,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 4D153FFD36A395C1CA9CCBE1E9863D62
-- generatedChecksum: F3C69BB6C9FE4AEABAE8F94B148E2CC3
-  logicalPath: config/Artemis_PDU/peripheral/sercom/i2c_master
-  name: plib_sercom4_i2c_master.c
-  physicalPath: peripheral/sercom/i2c_master
+- generatedChecksum: A6DF889025EEDE2EC79ACBCA8909ED47
+  logicalPath: config/Artemis_PDU/peripheral/sercom/i2c_slave
+  name: plib_sercom4_i2c_slave.c
+  physicalPath: peripheral/sercom/i2c_slave
   security: NON_SECURE
   type: SOURCE
-  userChecksum: F3C69BB6C9FE4AEABAE8F94B148E2CC3
+  userChecksum: A6DF889025EEDE2EC79ACBCA8909ED47
 - generatedChecksum: F90BC31146188C748D0CEBFE196F2CAA
   logicalPath: config/Artemis_PDU
   name: startup_xc32.c
@@ -293,13 +293,13 @@ files:
   security: NON_SECURE
   type: HEADER
   userChecksum: 65513601965E1BADD5659DCE674BE9AD
-- generatedChecksum: BE6926FC01E840450B4F5B75B89CD8D9
+- generatedChecksum: F241F0980BF8E97650511FAB52231EDB
   logicalPath: config/Artemis_PDU
   name: definitions.h
   physicalPath: ''
   security: NON_SECURE
   type: HEADER
-  userChecksum: BE6926FC01E840450B4F5B75B89CD8D9
+  userChecksum: F241F0980BF8E97650511FAB52231EDB
 - generatedChecksum: 234662E441425A3052D0A79A2ED1FB82
   logicalPath: config/Artemis_PDU
   name: device.h
@@ -461,13 +461,13 @@ files:
   security: NON_SECURE
   type: HEADER
   userChecksum: 9F6D5CCAC9260D85E0A03B1996D5F2EC
-- generatedChecksum: E026B0735EE350F2CE38964C97121B8C
+- generatedChecksum: 715293D5B7617CA522C44A922311A0B0
   logicalPath: config/Artemis_PDU
   name: interrupts.h
   physicalPath: ''
   security: NON_SECURE
   type: HEADER
-  userChecksum: E026B0735EE350F2CE38964C97121B8C
+  userChecksum: 715293D5B7617CA522C44A922311A0B0
 - generatedChecksum: F5EA4920D0FDE23EEB3E3449B88F9563
   logicalPath: packs/ATSAME51N19A_DFP/component
   name: mclk.h
@@ -615,13 +615,13 @@ files:
   security: NON_SECURE
   type: HEADER
   userChecksum: 265847151EACC813B7C7825442C21A32
-- generatedChecksum: 73C3D040CAC6B0E4AE970862C719BCB3
+- generatedChecksum: F241C65BFA6F62C6F8FA7716FEF9E49A
   logicalPath: config/Artemis_PDU/peripheral/port
   name: plib_port.h
   physicalPath: peripheral/port
   security: NON_SECURE
   type: HEADER
-  userChecksum: 73C3D040CAC6B0E4AE970862C719BCB3
+  userChecksum: F241C65BFA6F62C6F8FA7716FEF9E49A
 - generatedChecksum: 173C94D0B175FC449272DB709B1A0A1D
   logicalPath: config/Artemis_PDU/peripheral/sercom/spi_master
   name: plib_sercom2_spi_master.h
@@ -636,20 +636,20 @@ files:
   security: NON_SECURE
   type: HEADER
   userChecksum: DCC0369AFDD597FB63203FB1B7488E8B
-- generatedChecksum: 2EB20A4F0102639D472B23313F20C6AB
-  logicalPath: config/Artemis_PDU/peripheral/sercom/i2c_master
-  name: plib_sercom4_i2c_master.h
-  physicalPath: peripheral/sercom/i2c_master
+- generatedChecksum: CC1694BA29135014E3EA20DB34DD4D31
+  logicalPath: config/Artemis_PDU/peripheral/sercom/i2c_slave
+  name: plib_sercom4_i2c_slave.h
+  physicalPath: peripheral/sercom/i2c_slave
   security: NON_SECURE
   type: HEADER
-  userChecksum: 2EB20A4F0102639D472B23313F20C6AB
-- generatedChecksum: 555AC09B32F566FBFB0A0505CF73ABD6
-  logicalPath: config/Artemis_PDU/peripheral/sercom/i2c_master
-  name: plib_sercom_i2c_master_common.h
-  physicalPath: peripheral/sercom/i2c_master
+  userChecksum: CC1694BA29135014E3EA20DB34DD4D31
+- generatedChecksum: AB6B09E58B43423389C8F195639294E8
+  logicalPath: config/Artemis_PDU/peripheral/sercom/i2c_slave
+  name: plib_sercom_i2c_slave_common.h
+  physicalPath: peripheral/sercom/i2c_slave
   security: NON_SECURE
   type: HEADER
-  userChecksum: 555AC09B32F566FBFB0A0505CF73ABD6
+  userChecksum: AB6B09E58B43423389C8F195639294E8
 - generatedChecksum: BED7AF34A8D633C6994B780C19D7157F
   logicalPath: config/Artemis_PDU/peripheral/sercom/spi_master
   name: plib_sercom_spi_master_common.h

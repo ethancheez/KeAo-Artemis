@@ -1,10 +1,8 @@
-build/Artemis_PDU/production/_ext/974488028/interrupts.o: \
- ../src/config/Artemis_PDU/interrupts.c \
- ../src/config/Artemis_PDU/device_vectors.h \
+build/Artemis_PDU/production/_ext/835284660/plib_sercom4_i2c_slave.o: \
+ ../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom4_i2c_slave.c \
  ../src/config/Artemis_PDU/interrupts.h \
- ../src/config/Artemis_PDU/definitions.h \
- ../src/config/Artemis_PDU/peripheral/sercom/usart/plib_sercom3_usart.h \
- ../src/config/Artemis_PDU/peripheral/sercom/usart/plib_sercom_usart_common.h \
+ ../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom4_i2c_slave.h \
+ ../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom_i2c_slave_common.h \
  ../src/config/Artemis_PDU/device.h \
  ../src/packs/ATSAME51N19A_DFP/same51n19a.h \
  ../src/packs/CMSIS/CMSIS/Core/Include/core_cm4.h \
@@ -113,28 +111,13 @@ build/Artemis_PDU/production/_ext/974488028/interrupts.o: \
  ../src/config/Artemis_PDU/device_cache.h \
  ../src/config/Artemis_PDU/device.h \
  ../src/config/Artemis_PDU/toolchain_specifics.h \
- ../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h \
- ../src/config/Artemis_PDU/peripheral/nvmctrl/plib_nvmctrl.h \
- ../src/config/Artemis_PDU/peripheral/sercom/spi_master/plib_sercom2_spi_master.h \
- ../src/config/Artemis_PDU/peripheral/sercom/spi_master/plib_sercom_spi_master_common.h \
- ../src/config/Artemis_PDU/peripheral/evsys/plib_evsys.h \
- ../src/config/Artemis_PDU/peripheral/port/plib_port.h \
- ../src/config/Artemis_PDU/peripheral/clock/plib_clock.h \
- ../src/config/Artemis_PDU/peripheral/nvic/plib_nvic.h \
- ../src/config/Artemis_PDU/peripheral/cmcc/plib_cmcc.h \
- ../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom4_i2c_slave.h \
- ../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom_i2c_slave_common.h \
- ../src/config/Artemis_PDU/peripheral/eic/plib_eic.h
-
-../src/config/Artemis_PDU/device_vectors.h:
+ ../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h
 
 ../src/config/Artemis_PDU/interrupts.h:
 
-../src/config/Artemis_PDU/definitions.h:
+../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom4_i2c_slave.h:
 
-../src/config/Artemis_PDU/peripheral/sercom/usart/plib_sercom3_usart.h:
-
-../src/config/Artemis_PDU/peripheral/sercom/usart/plib_sercom_usart_common.h:
+../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom_i2c_slave_common.h:
 
 ../src/config/Artemis_PDU/device.h:
 
@@ -353,25 +336,3 @@ build/Artemis_PDU/production/_ext/974488028/interrupts.o: \
 ../src/config/Artemis_PDU/toolchain_specifics.h:
 
 ../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h:
-
-../src/config/Artemis_PDU/peripheral/nvmctrl/plib_nvmctrl.h:
-
-../src/config/Artemis_PDU/peripheral/sercom/spi_master/plib_sercom2_spi_master.h:
-
-../src/config/Artemis_PDU/peripheral/sercom/spi_master/plib_sercom_spi_master_common.h:
-
-../src/config/Artemis_PDU/peripheral/evsys/plib_evsys.h:
-
-../src/config/Artemis_PDU/peripheral/port/plib_port.h:
-
-../src/config/Artemis_PDU/peripheral/clock/plib_clock.h:
-
-../src/config/Artemis_PDU/peripheral/nvic/plib_nvic.h:
-
-../src/config/Artemis_PDU/peripheral/cmcc/plib_cmcc.h:
-
-../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom4_i2c_slave.h:
-
-../src/config/Artemis_PDU/peripheral/sercom/i2c_slave/plib_sercom_i2c_slave_common.h:
-
-../src/config/Artemis_PDU/peripheral/eic/plib_eic.h:
