@@ -30,7 +30,7 @@ namespace Artemis
                 rfm23.setFrequency(RFM23_FREQ);   // frequency default is 434MHz
                 rfm23.setTxPower(RFM23_TX_POWER); // 20 is the max
 
-                /* RFM23 modulation     schemes and data rates
+                /* RFM23 modulation schemes and data rates
                  * <FSK_Rb125Fd125>     highest FSK data rate (125kbs)
                  * <FSK_Rb2Fd5>         lowe FSK data rate (2kbs)
                  * <GFSK_Rb125Fd125>    highest GFSK rate GFSK (125kbs)

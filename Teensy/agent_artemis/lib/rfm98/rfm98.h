@@ -7,7 +7,7 @@
 #include <artemis_defs.h>
 
 /* RFM98 FREQUENCY CONFIG */
-#define RFM98_FREQ 434.0
+#define RFM98_FREQ 433.0
 
 /* RFM98 PIN CONFIG */
 #define RFM98_CS_PIN T_CS1
@@ -38,10 +38,10 @@ namespace Artemis
                 void reset();
                 bool init();
                 void send(PacketComm &packet);
-                bool recv(PacketComm *packet);
+                bool recv(PacketComm &packet);
             };
         }
     }
 }
 
-#endif  // _RFM98_H
+#endif // _RFM98_H

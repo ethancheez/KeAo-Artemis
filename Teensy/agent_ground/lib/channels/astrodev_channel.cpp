@@ -23,7 +23,7 @@ namespace
 void Artemis::Teensy::Channels::astrodev_channel()
 {
     int32_t iretn = 0;
-    iretn = astrodev_init(&Serial8, ASTRODEV_BAUD);
+    iretn = astrodev_init(&Serial8, ASTRODEV_BAUD); // Set to Serial5 for HyTi setup
     if (iretn < 0)
     {
         Serial.println("Error initializing Astrodev radio. Exiting...");

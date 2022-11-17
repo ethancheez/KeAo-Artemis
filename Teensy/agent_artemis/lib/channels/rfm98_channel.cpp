@@ -23,15 +23,18 @@ void Artemis::Teensy::Channels::rfm98_channel()
             case PacketComm::TypeId::DataRadioResponse:
             case PacketComm::TypeId::DataAdcsResponse:
             case PacketComm::TypeId::DataResponse:
+            {
                 rfm98.send(packet);
+                threads.delay(500);
                 break;
+            }
             default:
                 break;
             }
         }
 
         packet.data.resize(0);
-        if (rfm98.recv(&packet))
+        if (rfm98.recv(packet))
         {
             Serial.print("[RFM98] RECEIVED: [");
             for (size_t i = 0; i < packet.data.size(); i++)
@@ -39,7 +42,6 @@ void Artemis::Teensy::Channels::rfm98_channel()
                 Serial.print((char)packet.data[i]);
             }
             Serial.println("]");
-            PushQueue(packet, main_queue, main_queue_mtx);
         }
         threads.delay(10);
     }

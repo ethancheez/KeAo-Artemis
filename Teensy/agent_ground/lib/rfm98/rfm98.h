@@ -7,7 +7,7 @@
 #include <artemis_defs.h>
 
 /* RFM98 FREQUENCY CONFIG */
-#define RFM98_FREQ 434.0
+#define RFM98_FREQ 433.0
 
 /* RFM98 PIN CONFIG */
 #define RFM98_CS_PIN T_CS1
@@ -37,11 +37,11 @@ namespace Artemis
                 RFM98(uint8_t slaveSelectPin = RFM98_CS_PIN, uint8_t interruptPin = RFM98_INT_PIN, RHGenericSPI &spi = hardware_spi1);
                 void reset();
                 bool init();
-                void send(const uint8_t *input, size_t length);
-                bool recv(PacketComm *packet);
+                void send(PacketComm &packet);
+                bool recv(PacketComm &packet);
             };
         }
     }
 }
 
-#endif  // _RFM98_H
+#endif // _RFM98_H

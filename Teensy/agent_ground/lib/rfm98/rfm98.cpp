@@ -47,36 +47,41 @@ namespace Artemis
                 threads.delay(10);
             }
 
-            void RFM98::send(const uint8_t *msg, size_t length)
+            void RFM98::send(PacketComm &packet)
             {
+                packet.Wrap();
+
                 Threads::Scope lock(spi1_mtx);
                 rfm98.setModeTx();
-                rfm98.send(msg, length);
+                rfm98.send(packet.wrapped.data(), packet.wrapped.size());
                 rfm98.waitPacketSent();
                 rfm98.sleep();
                 rfm98.setModeIdle();
                 Serial.print("[RFM98] SENDING: [");
-                for (size_t i = 0; i < length; i++)
+                for (size_t i = 0; i < packet.wrapped.size(); i++)
                 {
-                    Serial.print(msg[i]);
+                    Serial.print(packet.wrapped[i]);
                 }
                 Serial.println("]");
             }
 
-            bool RFM98::recv(PacketComm *packet)
+            bool RFM98::recv(PacketComm &packet)
             {
                 int32_t iretn = 0;
-                uint8_t bytes_received = 0;
 
                 Threads::Scope lock(spi1_mtx);
                 rfm98.setModeRx();
-                if (rfm98.waitAvailableTimeout(100))
+                int wait_time = 5000 - rfm98_queue.size() * 1000;
+                if (wait_time < 100)
+                    wait_time = 100;
+                if (rfm98.waitAvailableTimeout(wait_time))
                 {
-                    packet->wrapped.resize(RH_RF95_MAX_MESSAGE_LEN);
-                    if (rfm98.recv(packet->wrapped.data(), &bytes_received))
+                    packet.wrapped.resize(RH_RF95_MAX_MESSAGE_LEN);
+                    uint8_t bytes_received = packet.wrapped.size();
+                    if (rfm98.recv(packet.wrapped.data(), &bytes_received))
                     {
-                        packet->wrapped.resize(bytes_received);
-                        packet->Unwrap();
+                        packet.wrapped.resize(bytes_received);
+                        packet.Unwrap();
                         rfm98.sleep();
                         rfm98.setModeIdle();
 

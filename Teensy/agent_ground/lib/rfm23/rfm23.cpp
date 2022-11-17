@@ -17,35 +17,41 @@ namespace Artemis
                 pinMode(RFM23_RX_ON, OUTPUT);
                 pinMode(RFM23_TX_ON, OUTPUT);
 
-                elapsedMillis timeout;
-                Serial.println("[RFM23] Initializing...");
+                unsigned long timeoutStart = millis();
                 while (!rfm23.init())
                 {
-                    if (timeout > 10000)
+                    if (millis() - timeoutStart > 10000)
                     {
+
                         Serial.println("[RFM23] INIT FAILED");
                         return false;
                     }
                 }
-                Serial.println("[RFM23] INIT SUCCESS");
                 rfm23.setFrequency(RFM23_FREQ);   // frequency default is 434MHz
                 rfm23.setTxPower(RFM23_TX_POWER); // 20 is the max
 
+                /* RFM23 modulation schemes and data rates
+                 * <FSK_Rb125Fd125>     highest FSK data rate (125kbs)
+                 * <FSK_Rb2Fd5>         lowe FSK data rate (2kbs)
+                 * <GFSK_Rb125Fd125>    highest GFSK rate GFSK (125kbs)
+                 * <GFSK_Rb2Fd5>        lowest GFSK data rate (2kbs)
+                 * <FSK_Rb_512Fd2_5>    original FSK test modulation (0.512kbs)
+                 */
+
                 rfm23.sleep();
-                timeout = 0;
-                while (!rfm23.setModemConfig(RH_RF22::FSK_Rb_512Fd2_5))
+                timeoutStart = millis();
+                while (!rfm23.setModemConfig(RH_RF22::GFSK_Rb125Fd125))
                 {
-                    if (timeout > 10000)
+                    if (millis() - timeoutStart > 10000)
                     {
                         Serial.println("[RFM23] SET FSK MODULATION FAILED");
                         return false;
                     }
                 }
-                Serial.println("[RFM23] SET FSK SUCCESS");
                 rfm23.sleep();
 
-                Serial.println("[RFM23] SETUP COMPLETE");
-                // rfm23.setModeIdle();
+                Serial.println("[RFM23] INIT SUCCESS");
+                rfm23.setModeIdle();
                 return true;
             }
 
@@ -57,60 +63,56 @@ namespace Artemis
 
             void RFM23::send(PacketComm &packet)
             {
-                digitalWrite(RFM23_RX_ON, HIGH);
+                digitalWrite(RFM23_RX_ON, LOW);
                 digitalWrite(RFM23_TX_ON, LOW);
 
                 packet.wrapped.resize(0);
                 packet.Wrap();
 
                 Threads::Scope lock(spi1_mtx);
-                // rfm23.setModeTx();
+                rfm23.setModeTx();
                 rfm23.send(packet.wrapped.data(), packet.wrapped.size());
                 rfm23.waitPacketSent();
 
-                threads.delay(1000);
-
+                rfm23.sleep();
+                rfm23.setModeIdle();
                 Serial.print("[RFM23] SENDING: [");
                 for (size_t i = 0; i < packet.wrapped.size(); i++)
                 {
                     Serial.print(packet.wrapped[i], HEX);
                 }
                 Serial.println("]");
-
-                rfm23.sleep();
-                // rfm23.setModeIdle();
             }
 
-            bool RFM23::recv(PacketComm *packet)
+            bool RFM23::recv(PacketComm &packet)
             {
                 int32_t iretn = 0;
 
                 digitalWrite(RFM23_RX_ON, LOW);
                 digitalWrite(RFM23_TX_ON, HIGH);
-                
-                uint8_t bytes_recieved = 0;
 
                 Threads::Scope lock(spi1_mtx);
-                // rfm23.setModeRx();
-                if (rfm23.waitAvailableTimeout(1000))
+                rfm23.setModeRx();
+                int wait_time = 5000 - rfm23_queue.size() * 1000;
+                if (wait_time < 100)
+                    wait_time = 100;
+                if (rfm23.waitAvailableTimeout(wait_time))
                 {
-                    packet->wrapped.resize(RH_RF22_MAX_MESSAGE_LEN);
-                    if (rfm23.recv(packet->wrapped.data(), &bytes_recieved))
+                    packet.wrapped.resize(RH_RF22_MAX_MESSAGE_LEN);
+                    uint8_t bytes_recieved = packet.wrapped.size();
+                    if (rfm23.recv(packet.wrapped.data(), &bytes_recieved))
                     {
-                        packet->wrapped.resize(bytes_recieved);
-                        iretn = packet->Unwrap();
-                        // rfm23.setModeIdle();
+                        packet.wrapped.resize(bytes_recieved);
+                        iretn = packet.Unwrap();
+                        rfm23.setModeIdle();
 
                         if (iretn < 0)
-                        {
-                            Serial.println("unwrap fail");
                             return false;
-                        }
 
                         return true;
                     }
                 }
-                // rfm23.setModeIdle();
+                rfm23.setModeIdle();
                 return false;
             }
         }

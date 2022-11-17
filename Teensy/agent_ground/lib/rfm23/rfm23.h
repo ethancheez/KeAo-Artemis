@@ -42,7 +42,7 @@ namespace Artemis
                 void reset();
                 bool init();
                 void send(PacketComm &packet);
-                bool recv(PacketComm *packet);
+                bool recv(PacketComm &packet);
             };
         }
     }
