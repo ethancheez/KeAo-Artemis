@@ -8,15 +8,8 @@ namespace
 
 void Artemis::Teensy::Channels::rfm23_channel()
 {
-    int retries = 20;
     while (!rfm23.init())
-    {
-        retries--;
-        if (retries == 0)
-        {
-            kill_thread((char *)"rfm23 thread");
-        }
-    }
+        ;
 
     while (true)
     {
@@ -30,23 +23,24 @@ void Artemis::Teensy::Channels::rfm23_channel()
             case PacketComm::TypeId::DataRadioResponse:
             case PacketComm::TypeId::DataAdcsResponse:
             case PacketComm::TypeId::DataResponse:
+            {
                 rfm23.send(packet);
+                threads.delay(500);
                 break;
+            }
             default:
                 break;
             }
         }
 
-        packet.data.resize(0);
-        if (rfm23.recv(&packet))
+        if (rfm23.recv(packet))
         {
             Serial.print("[RFM23] RECEIVED: [");
             for (size_t i = 0; i < packet.data.size(); i++)
             {
-                Serial.print((char)packet.data[i]);
+                Serial.print(packet.data[i], HEX);
             }
             Serial.println("]");
-            PushQueue(packet, main_queue, main_queue_mtx);
         }
         threads.delay(10);
     }

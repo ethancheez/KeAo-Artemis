@@ -8,16 +8,8 @@ namespace
 
 void Artemis::Teensy::Channels::rfm98_channel()
 {
-    int retries = 20;
     while (!rfm98.init())
-    {
-        retries--;
-        if (retries == 0)
-        {
-            kill_thread((char *)"rfm98 thread");
-        }
-        
-    }
+        ;
 
     while (true)
     {

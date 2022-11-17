@@ -11,8 +11,9 @@ bool setup_imu(void);
 void setup_current(void);
 void setup_temperature(void);
 void read_temperature(void);
-void read_current(void);
+void read_current(int begin, int end);
 void read_imu(void);
+void read_mag(void);
 
 namespace
 {
@@ -137,8 +138,10 @@ void loop()
   {
     sensortimer -= 5000;
     read_temperature();
-    read_current();
+    read_current(0, 2);
+    read_current(2, ARTEMIS_CURRENT_SENSOR_COUNT);
     read_imu();
+    read_mag();
   }
   threads.delay(10);
 }
@@ -215,15 +218,47 @@ void read_temperature(void) // future make this its own library
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
 }
 
-void read_current(void)
+void read_current(int begin, int end)
+
 {
-  currentbeacon beacon;
-  beacon.deci = uptime;
-  for (int i = 0; i < ARTEMIS_CURRENT_SENSOR_COUNT; i++)
+  size_t beaconsize = sizeof(currentbeacon) + 2 * (end - begin) * sizeof(float);
+  currentbeacon *beacon = (currentbeacon *)malloc(beaconsize);
+  beacon->deci = uptime;
+  beacon->sensorcount = end - begin;
+
+  for (int i = begin; i < end; i++)
   {
-    beacon.busvoltage[i] = (p[i]->getBusVoltage_V());
-    beacon.current[i] = (p[i]->getCurrent_mA());
+    beacon->busvoltage[i - begin] = (p[i]->getBusVoltage_V());
+    beacon->current[i - begin] = (p[i]->getCurrent_mA());
   }
+  packet.header.orig = NODES::TEENSY_NODE_ID;
+  packet.header.dest = NODES::GROUND_NODE_ID;
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
+  packet.header.type = PacketComm::TypeId::DataBeacon;
+  packet.data.resize(beaconsize);
+  memcpy(packet.data.data(), beacon, beaconsize);
+  PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+  free(beacon);
+}
+
+void read_imu(void)
+{
+  imubeacon beacon;
+  beacon.deci = uptime;
+
+  sensors_event_t accel;
+  sensors_event_t gyro;
+  sensors_event_t temp;
+  imu.getEvent(&accel, &gyro, &temp);
+
+  beacon.accelx = (accel.acceleration.x);
+  beacon.accely = (accel.acceleration.y);
+  beacon.accelz = (accel.acceleration.z);
+  beacon.gyrox = (gyro.gyro.x);
+  beacon.gyroy = (gyro.gyro.y);
+  beacon.gyroz = (gyro.gyro.z);
+  beacon.imutemp = (temp.temperature);
+
   packet.header.orig = NODES::TEENSY_NODE_ID;
   packet.header.dest = NODES::GROUND_NODE_ID;
   packet.header.radio = ARTEMIS_RADIOS::RFM23;
@@ -233,27 +268,16 @@ void read_current(void)
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
 }
 
-void read_imu(void)
+void read_mag(void)
 {
-  imubeacon beacon;
+  magbeacon beacon;
   beacon.deci = uptime;
 
   sensors_event_t event;
-  sensors_event_t accel;
-  sensors_event_t gyro;
-  sensors_event_t temp;
-  imu.getEvent(&accel, &gyro, &temp);
   magnetometer.getEvent(&event);
   beacon.magx = (event.magnetic.x);
   beacon.magy = (event.magnetic.y);
   beacon.magz = (event.magnetic.z);
-  beacon.accelx = (accel.acceleration.x);
-  beacon.accely = (accel.acceleration.y);
-  beacon.accelz = (accel.acceleration.z);
-  beacon.gyrox = (gyro.gyro.x);
-  beacon.gyroy = (gyro.gyro.y);
-  beacon.gyroz = (gyro.gyro.z);
-  beacon.imutemp = (temp.temperature);
 
   packet.header.orig = NODES::TEENSY_NODE_ID;
   packet.header.dest = NODES::GROUND_NODE_ID;
