@@ -3,7 +3,7 @@
 #include <map>
 #include <string.h>
 #include <artemis_channels.h>
-#include <support/configCosmos.h>
+#include <support/configCosmosKernel.h>
 #include "artemisbeacons.h"
 
 void handle_cmd();

@@ -3,7 +3,7 @@
 
 #include <TeensyThreads.h>
 #include <support/packetcomm.h>
-#include <support/configCosmos.h>
+#include <support/configCosmosKernel.h>
 
 // Sensor Defs
 #define ARTEMIS_CURRENT_SENSOR_COUNT 5

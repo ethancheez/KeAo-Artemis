@@ -1,7 +1,7 @@
 #ifndef ASTRODEV_H
 #define ASTRODEV_H
 
-#include "support/configCosmos.h"
+#include "support/configCosmosKernel.h"
 #include "support/packetcomm.h"
 #include "support/cosmos-errno.h"
 #include <Arduino.h>

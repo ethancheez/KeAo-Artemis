@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <vector>
 #include <artemis_channels.h>
-#include <support/configCosmos.h>
+#include <support/configCosmosKernel.h>
 #include <USBHost_t36.h>
 #include "artemisbeacons.h"
 

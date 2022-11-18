@@ -2,9 +2,9 @@
 
 //! Calculate CRC-16
 /*! Calculate 16-bit CRC for the indicated type, buffer and number of bytes.
- */
+*/
 
-// CRC16::CRC16(uint16_t polynomial, uint16_t initial, uint16_t xorout, bool lsbfirst)
+//CRC16::CRC16(uint16_t polynomial, uint16_t initial, uint16_t xorout, bool lsbfirst)
 CRC16::CRC16()
 {
     types[string("ccitt-false")] = {false, 0x1021, 0xffff, 0x0000, 0x29b1};
@@ -37,7 +37,7 @@ uint16_t CRC16::set(uint16_t polynomial, uint16_t initialcrc, uint16_t xorout, b
     this->xorout = xorout;
     this->polynomial = polynomial;
 
-    // Compute the remainder of each possible dividend.
+// Compute the remainder of each possible dividend.
     for (int32_t dividend = 0; dividend < 256; ++dividend)
     {
         uint8_t byte = dividend;
@@ -46,16 +46,16 @@ uint16_t CRC16::set(uint16_t polynomial, uint16_t initialcrc, uint16_t xorout, b
     return 0;
 }
 
-// uint16_t CRC16::calc(uint8_t *buf, uint16_t size)
+//uint16_t CRC16::calc(uint8_t *buf, uint16_t size)
 //{
-//     vector<uint8_t> vbuf(buf, buf+(size));
-//     return calc(vbuf);
-// }
+//    vector<uint8_t> vbuf(buf, buf+(size));
+//    return calc(vbuf);
+//}
 
 uint16_t CRC16::calc(string message, uint16_t size)
 {
-    //    vector<uint8_t> vmessage(&message[0], &message[size]);
-    //    return calc(vmessage);
+//    vector<uint8_t> vmessage(&message[0], &message[size]);
+//    return calc(vmessage);
     if (size <= message.length())
     {
         return calc((uint8_t *)message.c_str(), size);
@@ -68,15 +68,15 @@ uint16_t CRC16::calc(string message, uint16_t size)
 
 uint16_t CRC16::calc(string message)
 {
-    //    vector<uint8_t> vmessage(&message[0], &message[message.size()]);
-    //    return calc(vmessage);
+//    vector<uint8_t> vmessage(&message[0], &message[message.size()]);
+//    return calc(vmessage);
     return calc((uint8_t *)message.c_str(), message.length());
 }
 
 uint16_t CRC16::calc(vector<uint8_t> message, uint16_t size)
 {
-    //    vector<uint8_t> vmessage(&message[0], &message[size]);
-    //    return calc(vmessage);
+//    vector<uint8_t> vmessage(&message[0], &message[size]);
+//    return calc(vmessage);
     if (size <= message.size())
     {
         return calc(message.data(), size);
@@ -161,13 +161,13 @@ uint16_t CRC16::calc_file(string file_path)
 
 uint16_t calc_crc16ccitt_lsb(string buf, uint16_t crc, uint16_t skip)
 {
-    vector<uint8_t> vbuf(buf.begin(), buf.end() - skip);
+    vector<uint8_t> vbuf(buf.begin(), buf.end()-skip);
     return calc_crc16ccitt_lsb(vbuf, crc);
 }
 
-uint16_t calc_crc16ccitt_lsb(uint8_t *buf, uint16_t size, uint16_t crc)
+uint16_t calc_crc16ccitt_lsb(uint8_t* buf, uint16_t size, uint16_t crc)
 {
-    vector<uint8_t> vbuf(buf, buf + (size));
+    vector<uint8_t> vbuf(buf, buf+(size));
     return calc_crc16ccitt_lsb(vbuf, crc);
 }
 
@@ -175,21 +175,22 @@ uint16_t calc_crc16ccitt_lsb(vector<uint8_t> &buf, uint16_t crc, uint16_t skip)
 {
     uint8_t ch;
 
-    for (uint16_t i = 0; i < buf.size() - skip; i++)
+    for (uint16_t i=0; i<buf.size()-skip; i++)
     {
         ch = buf[i];
-        for (uint16_t j = 0; j < 8; j++)
+        for (uint16_t j=0; j<8; j++)
         {
-            crc = (crc >> 1) ^ (((ch ^ crc) & 0x01) ? CRC16CCITTLSB : 0);
+            crc = (crc >> 1) ^ (((ch^crc)&0x01)?CRC16CCITTLSB:0);
             ch >>= 1;
+
         }
     }
     return (crc);
 }
 
-uint16_t calc_crc16_lsb(uint8_t *buf, uint16_t size, uint16_t poly, uint16_t crc, uint16_t xorout)
+uint16_t calc_crc16_lsb(uint8_t* buf, uint16_t size, uint16_t poly, uint16_t crc, uint16_t xorout)
 {
-    vector<uint8_t> vbuf(buf, buf + (size));
+    vector<uint8_t> vbuf(buf, buf+(size));
     return calc_crc16_lsb(vbuf, poly, crc, xorout);
 }
 
@@ -197,13 +198,14 @@ uint16_t calc_crc16_lsb(vector<uint8_t> &buf, uint16_t poly, uint16_t crc, uint1
 {
     uint8_t ch;
 
-    for (uint16_t i = 0; i < buf.size() - skip; i++)
+    for (uint16_t i=0; i<buf.size()-skip; i++)
     {
         ch = buf[i];
-        for (uint16_t j = 0; j < 8; j++)
+        for (uint16_t j=0; j<8; j++)
         {
-            crc = (crc >> 1) ^ (((ch ^ crc) & 0x01) ? poly : 0);
+            crc = (crc >> 1) ^ (((ch^crc)&0x01)?poly:0);
             ch >>= 1;
+
         }
     }
     return (crc ^ xorout);
@@ -211,13 +213,13 @@ uint16_t calc_crc16_lsb(vector<uint8_t> &buf, uint16_t poly, uint16_t crc, uint1
 
 uint16_t calc_crc16ccitt_msb(string buf, uint16_t crc, uint16_t skip)
 {
-    vector<uint8_t> vbuf(buf.begin(), buf.end() - skip);
+    vector<uint8_t> vbuf(buf.begin(), buf.end()-skip);
     return calc_crc16ccitt_msb(vbuf, crc);
 }
 
-uint16_t calc_crc16ccitt_msb(uint8_t *buf, uint16_t size, uint16_t crc)
+uint16_t calc_crc16ccitt_msb(uint8_t* buf, uint16_t size, uint16_t crc)
 {
-    vector<uint8_t> vbuf(buf, buf + (size));
+    vector<uint8_t> vbuf(buf, buf+(size));
     return calc_crc16ccitt_msb(vbuf, crc);
 }
 
@@ -228,22 +230,23 @@ uint16_t calc_crc16ccitt_msb(vector<uint8_t> &buf, uint16_t crc, uint16_t skip)
 
     //        crc = 0;
 
-    for (uint16_t i = 0; i < buf.size() - skip; i++)
+    for (uint16_t i=0; i<buf.size()-skip; i++)
     {
         ch = buf[i];
-        for (uint16_t j = 0; j < 8; j++)
+        for (uint16_t j=0; j<8; j++)
         {
 
-            crc = (crc << 1) ^ (((ch & 0x80) ^ ((crc & 0x8000) >> 8)) ? CRC16CCITTMSB : 0);
+            crc = (crc << 1) ^ (((ch&0x80)^((crc&0x8000)>>8))?CRC16CCITTMSB:0);
             ch <<= 1;
+
         }
     }
     return (crc);
 }
 
-uint16_t calc_crc16_msb(uint8_t *buf, uint16_t size, uint16_t poly, uint16_t crc, uint16_t xorout)
+uint16_t calc_crc16_msb(uint8_t* buf, uint16_t size, uint16_t poly, uint16_t crc, uint16_t xorout)
 {
-    vector<uint8_t> vbuf(buf, buf + (size));
+    vector<uint8_t> vbuf(buf, buf+(size));
     return calc_crc16_msb(vbuf, poly, crc, xorout);
 }
 
@@ -251,14 +254,15 @@ uint16_t calc_crc16_msb(vector<uint8_t> &buf, uint16_t poly, uint16_t crc, uint1
 {
     uint8_t ch;
 
-    for (uint16_t i = 0; i < buf.size() - skip; i++)
+    for (uint16_t i=0; i<buf.size()-skip; i++)
     {
         ch = buf[i];
-        for (uint16_t j = 0; j < 8; j++)
+        for (uint16_t j=0; j<8; j++)
         {
 
-            crc = (crc << 1) ^ (((ch & 0x80) ^ ((crc & 0x8000) >> 8)) ? poly : 0);
+            crc = (crc << 1) ^ (((ch&0x80)^((crc&0x8000)>>8))?poly:0);
             ch <<= 1;
+
         }
     }
     return (crc ^ xorout);
@@ -277,19 +281,19 @@ uint16_t calc_crc16ccitt(uint8_t *buf, int size, bool lsb)
     {
         crc = CRC16CCITTMSBINIT;
     }
-    for (uint16_t i = 0; i < size; i++)
+    for (uint16_t i=0; i<size; i++)
     {
         ch = buf[i];
-        for (uint16_t j = 0; j < 8; j++)
+        for (uint16_t j=0; j<8; j++)
         {
             if (lsb)
             {
-                crc = (crc >> 1) ^ (((ch ^ crc) & 0x01) ? CRC16CCITTLSB : 0);
+                crc = (crc >> 1) ^ (((ch^crc)&0x01)?CRC16CCITTLSB:0);
                 ch >>= 1;
             }
             else
             {
-                crc = (crc << 1) ^ (((ch & 0x80) ^ ((crc & 0x8000) >> 8)) ? CRC16CCITTMSB : 0);
+                crc = (crc << 1) ^ (((ch&0x80)^((crc&0x8000)>>8))?CRC16CCITTMSB:0);
                 ch <<= 1;
             }
         }
@@ -297,9 +301,9 @@ uint16_t calc_crc16ccitt(uint8_t *buf, int size, bool lsb)
     return (crc);
 }
 
-uint16_t calc_crc16(uint8_t *buf, uint16_t size, uint16_t poly, uint16_t crc, uint16_t xorout, bool lsbfirst)
+uint16_t calc_crc16(uint8_t* buf, uint16_t size, uint16_t poly, uint16_t crc, uint16_t xorout, bool lsbfirst)
 {
-    vector<uint8_t> vbuf(buf, buf + (size));
+    vector<uint8_t> vbuf(buf, buf+(size));
     return calc_crc16(vbuf, poly, crc, xorout, lsbfirst);
 }
 
@@ -307,29 +311,30 @@ uint16_t calc_crc16(vector<uint8_t> buf, uint16_t poly, uint16_t crc, uint16_t x
 {
     if (lsbfirst)
     {
-        uint8_t lowbyte = poly & 0xff;
+        uint8_t lowbyte = poly&0xff;
         lowbyte = uint8to(&lowbyte, ByteOrder::BIGENDIAN);
-        uint8_t highbyte = poly >> 8;
+        uint8_t highbyte = poly>>8;
         highbyte = uint8to(&highbyte, ByteOrder::BIGENDIAN);
         poly = 256L * lowbyte + highbyte;
     }
 
-    for (uint16_t i = 0; i < buf.size(); i++)
+    for (uint16_t i=0; i<buf.size(); i++)
     {
         uint ch = buf[i];
-        for (uint16_t j = 0; j < 8; j++)
+        for (uint16_t j=0; j<8; j++)
         {
             if (lsbfirst)
             {
-                crc = (crc >> 1) ^ (((ch ^ crc) & 0x01) ? poly : 0);
+                crc = (crc >> 1) ^ (((ch^crc)&0x01)?poly:0);
                 ch >>= 1;
             }
             else
             {
-                crc = (crc << 1) ^ (((ch & 0x80) ^ ((crc & 0x8000) >> 8)) ? poly : 0);
+                crc = (crc << 1) ^ (((ch&0x80)^((crc&0x8000)>>8))?poly:0);
                 ch <<= 1;
             }
         }
     }
     return (crc ^ xorout);
 }
+
