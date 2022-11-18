@@ -55,6 +55,9 @@ void handle_cmd()
     packet.data.resize(0);
     packet.wrapped.resize(0);
 
+    // Set origin
+    packet.header.orig = NODES::GROUND_NODE_ID;
+
     // Get destination
     if (NodeType.find(args[0]) != NodeType.end())
     {
