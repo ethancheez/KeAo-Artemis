@@ -2,6 +2,20 @@
 
 vector<struct thread_struct> thread_list;
 
+std::map<string, NODES> NodeType = {
+    {"ground", NODES::GROUND_NODE_ID},
+    {"artemis_teensy", NODES::TEENSY_NODE_ID},
+    {"artemis_rpi", NODES::RPI_NODE_ID},
+    {"pleiades", NODES::PLEIADES_NODE_ID},
+};
+
+std::map<string, ARTEMIS_RADIOS> RadioType = {
+    {"none", ARTEMIS_RADIOS::NONE},
+    {"rfm23", ARTEMIS_RADIOS::RFM23},
+    {"rfm98", ARTEMIS_RADIOS::RFM98},
+    {"astrodev", ARTEMIS_RADIOS::ASTRODEV},
+};
+
 // Mutex for Command Queues
 Threads::Mutex main_queue_mtx;
 Threads::Mutex astrodev_queue_mtx;

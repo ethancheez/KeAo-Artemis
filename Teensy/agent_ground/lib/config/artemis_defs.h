@@ -21,6 +21,8 @@ enum NODES : uint8_t
   PLEIADES_NODE_ID = 4,
 };
 
+extern std::map<string, NODES> NodeType;
+
 // Structs
 struct thread_struct
 {
@@ -82,6 +84,8 @@ enum ARTEMIS_RADIOS : uint8_t
   RFM98,
   ASTRODEV,
 };
+
+extern std::map<string, ARTEMIS_RADIOS> RadioType;
 
 // Max threads = 16
 extern vector<struct thread_struct> thread_list;
