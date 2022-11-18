@@ -5,11 +5,6 @@
 #include <support/packetcomm.h>
 #include <support/configCosmosKernel.h>
 
-// Sensor Defs
-#define ARTEMIS_CURRENT_SENSOR_COUNT 5
-#define ARTEMIS_TEMP_SENSOR_COUNT 7
-#define AREF_VOLTAGE 3.3
-
 #define MAXQUEUESIZE 50
 
 // Nodes
@@ -95,20 +90,15 @@ extern Threads::Mutex main_queue_mtx;
 extern Threads::Mutex astrodev_queue_mtx;
 extern Threads::Mutex rfm23_queue_mtx;
 extern Threads::Mutex rfm98_queue_mtx;
-extern Threads::Mutex pdu_queue_mtx;
-extern Threads::Mutex rpi_queue_mtx;
 
 // Command Queues
 extern queue<PacketComm> main_queue;
 extern queue<PacketComm> astrodev_queue;
 extern queue<PacketComm> rfm23_queue;
 extern queue<PacketComm> rfm98_queue;
-extern queue<PacketComm> pdu_queue;
-extern queue<PacketComm> rpi_queue;
 
 // Other Mutex
 extern Threads::Mutex spi1_mtx;
-extern Threads::Mutex i2c1_mtx;
 
 // Utility Functions
 int kill_thread(char *thread_name);

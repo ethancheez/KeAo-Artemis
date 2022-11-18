@@ -13,7 +13,6 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_LSM6DSOX.h>
 #include <Adafruit_INA219.h>
-#include <pdu.h>
 #include <support/packetcomm.h>
 
 namespace Artemis
@@ -25,8 +24,6 @@ namespace Artemis
             void rfm23_channel();
             void rfm98_channel();
             void astrodev_channel();
-            void pdu_channel();
-            void rpi_channel();
         }
     }
 }
