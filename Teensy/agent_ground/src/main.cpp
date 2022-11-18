@@ -59,7 +59,7 @@ void handle_cmd()
     // Get destination
     if (NodeType.find(args[0]) != NodeType.end())
     {
-      packet.header.dest = (uint8_t)NodeType.find(args[0])->second;
+      packet.header.dest = NodeType.find(args[0])->second;
     }
     else
     {
@@ -81,7 +81,7 @@ void handle_cmd()
     radio_in = radio_in.toLowerCase();
     if (RadioType.find(radio_in.c_str()) != RadioType.end())
     {
-      packet.header.radio = (uint8_t)RadioType.find(radio_in.c_str())->second;
+      packet.header.radio = RadioType.find(radio_in.c_str())->second;
     }
     else
     {
@@ -149,5 +149,7 @@ void handle_cmd()
       memset(buf, 0, sizeof(buf));
       return;
     }
+
+    Serial.println("Command sent to radio. Waiting to send...");
   }
 }
