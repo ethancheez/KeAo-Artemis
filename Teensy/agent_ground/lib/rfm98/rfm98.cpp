@@ -52,7 +52,6 @@ namespace Artemis
                 packet.Wrap();
 
                 Threads::Scope lock(spi1_mtx);
-                rfm98.setModeTx();
                 rfm98.send(packet.wrapped.data(), packet.wrapped.size());
                 rfm98.waitPacketSent();
                 rfm98.sleep();
@@ -70,7 +69,6 @@ namespace Artemis
                 int32_t iretn = 0;
 
                 Threads::Scope lock(spi1_mtx);
-                rfm98.setModeRx();
                 int wait_time = 5000 - rfm98_queue.size() * 1000;
                 if (wait_time < 100)
                     wait_time = 100;

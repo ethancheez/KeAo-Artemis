@@ -36,52 +36,53 @@ namespace Artemis
 
         void PDU::PDU_SWITCH(PDU_CMD _cmd, bool _enable)
         {
-            const char *state = _enable ? "ENABLE" : "DISABLE";
-            char *cmd = (char *)malloc(sizeof(char));
-            cmd[0] = '\0';
+            std::string state = _enable ? "ENABLE" : "DISABLE";
+            std::string cmd;
 
             switch (_cmd)
             {
-            case SW_3V3_1:
-                strcat(cmd, "CMD: SW_3V3_1 ");
+            case PDU_CMD::SW_3V3_1:
+                cmd = "CMD: SW_3V3_1 ";
                 break;
-            case SW_3V3_2:
-                strcat(cmd, "CMD: SW_3V3_2 ");
+            case PDU_CMD::SW_3V3_2:
+                cmd = "CMD: SW_3V3_2 ";
                 break;
-            case SW_5V_1:
-                strcat(cmd, "CMD: SW_5V_1 ");
+            case PDU_CMD::SW_5V_1:
+                cmd = "CMD: SW_5V_1 ";
                 break;
-            case SW_5V_2:
-                strcat(cmd, "CMD: SW_5V_2 ");
+            case PDU_CMD::SW_5V_2:
+                cmd = "CMD: SW_5V_2 ";
                 break;
-            case SW_5V_3:
-                strcat(cmd, "CMD: SW_5V_3 ");
+            case PDU_CMD::SW_5V_3:
+                cmd = "CMD: SW_5V_3 ";
                 break;
-            case SW_5V_4:
-                strcat(cmd, "CMD: SW_5V_4 ");
+            case PDU_CMD::SW_5V_4:
+                cmd = "CMD: SW_5V_4 ";
                 break;
-            case SW_12V:
-                strcat(cmd, "CMD: SW_12V ");
+            case PDU_CMD::SW_12V:
+                cmd = "CMD: SW_12V ";
                 break;
-            case VBATT:
-                strcat(cmd, "CMD: VBATT ");
+            case PDU_CMD::VBATT:
+                cmd = "CMD: VBATT ";
                 break;
-            case WDT:
-                strcat(cmd, "CMD: WDT ");
+            case PDU_CMD::WDT:
+                cmd = "CMD: WDT ";
                 break;
-            case HBRIDGE1:
-                strcat(cmd, "CMD: HBRIDGE1 ");
+            case PDU_CMD::HBRIDGE1:
+                cmd = "CMD: HBRIDGE1 ";
                 break;
-            case HBRIDGE2:
-                strcat(cmd, "CMD: HBRIDGE2 ");
+            case PDU_CMD::HBRIDGE2:
+                cmd = "CMD: HBRIDGE2 ";
                 break;
-            case BURN:
-                strcat(cmd, "CMD: BURN ");
+            case PDU_CMD::BURN:
+                cmd = "CMD: BURN ";
+            default:
+                break;
             }
-            PDU::PDU_SEND(strcat(cmd, state));
+            PDU_SEND((cmd + state).c_str());
 
             unsigned long timeoutStart = millis();
-            while (!PDU::PDU_RECV())
+            while (!PDU_RECV())
             {
                 if (millis() - timeoutStart > 5000)
                 {
@@ -89,8 +90,6 @@ namespace Artemis
                     break;
                 }
             }
-
-            free(cmd);
         }
     }
 }

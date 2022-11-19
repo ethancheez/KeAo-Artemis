@@ -70,7 +70,6 @@ namespace Artemis
                 packet.Wrap();
 
                 Threads::Scope lock(spi1_mtx);
-                rfm23.setModeTx();
                 rfm23.send(packet.wrapped.data(), packet.wrapped.size());
                 rfm23.waitPacketSent();
 
@@ -92,7 +91,6 @@ namespace Artemis
                 digitalWrite(RFM23_TX_ON, HIGH);
 
                 Threads::Scope lock(spi1_mtx);
-                rfm23.setModeRx();
                 int wait_time = 5000 - rfm23_queue.size() * 1000;
                 if (wait_time < 100)
                     wait_time = 100;

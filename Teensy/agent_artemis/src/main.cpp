@@ -94,20 +94,7 @@ void loop()
     {
       switch (packet.header.type)
       {
-      case PacketComm::TypeId::CommandEpsCommunicate:
-      case PacketComm::TypeId::CommandEpsMinimumPower:
-      case PacketComm::TypeId::CommandEpsReset:
-      case PacketComm::TypeId::CommandEpsSetTime:
-      case PacketComm::TypeId::CommandEpsState:
-      case PacketComm::TypeId::CommandEpsSwitchName:
-      case PacketComm::TypeId::CommandEpsSwitchNames:
-      case PacketComm::TypeId::CommandEpsSwitchNumber:
-      case PacketComm::TypeId::CommandEpsSwitchStatus:
-      case PacketComm::TypeId::CommandEpsWatchdog:
-      {
-        PushQueue(packet, pdu_queue, pdu_queue_mtx);
-        break;
-      }
+        // Ping Packet
       case PacketComm::TypeId::CommandPing:
       {
         uint8_t temp_node = packet.header.orig;
@@ -128,6 +115,33 @@ void loop()
           PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
         break;
       }
+        // Enable or Disable Switches
+      case PacketComm::TypeId::CommandEpsSwitchName:
+      {
+        Artemis::Teensy::PDU::PDU_CMD switchid = (Artemis::Teensy::PDU::PDU_CMD)packet.data[0];
+        switch (switchid)
+        {
+        case Artemis::Teensy::PDU::PDU_CMD::RPI:
+        {
+          digitalWrite(RPI_ENABLE, packet.data[1]);
+          break;
+        }
+        default:
+          PushQueue(packet, pdu_queue, pdu_queue_mtx);
+          break;
+        }
+        break;
+      }
+      case PacketComm::TypeId::CommandEpsCommunicate:
+      case PacketComm::TypeId::CommandEpsMinimumPower:
+      case PacketComm::TypeId::CommandEpsReset:
+      case PacketComm::TypeId::CommandEpsSetTime:
+      case PacketComm::TypeId::CommandEpsState:
+      case PacketComm::TypeId::CommandEpsSwitchNames:
+      case PacketComm::TypeId::CommandEpsSwitchNumber:
+      case PacketComm::TypeId::CommandEpsSwitchStatus:
+      case PacketComm::TypeId::CommandEpsWatchdog:
+        break;
       default:
         break;
       }

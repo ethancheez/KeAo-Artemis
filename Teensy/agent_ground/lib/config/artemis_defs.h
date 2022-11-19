@@ -82,6 +82,25 @@ enum ARTEMIS_RADIOS : uint8_t
 
 extern std::map<string, ARTEMIS_RADIOS> RadioType;
 
+enum PDU_CMD : uint8_t
+{
+  SW_3V3_1,
+  SW_3V3_2,
+  SW_5V_1,
+  SW_5V_2,
+  SW_5V_3,
+  SW_5V_4,
+  SW_12V,
+  VBATT,
+  WDT,
+  HBRIDGE1,
+  HBRIDGE2,
+  BURN,
+  RPI,
+};
+
+extern std::map<string, PDU_CMD> PDUType;
+
 // Max threads = 16
 extern vector<struct thread_struct> thread_list;
 
