@@ -25,7 +25,6 @@ struct __attribute__((packed)) currentbeacon1
     float busvoltage[ARTEMIS_CURRENT_BEACON_1_COUNT];
     float current[ARTEMIS_CURRENT_BEACON_1_COUNT];
 };
-
 struct __attribute__((packed)) currentbeacon2
 {
     TypeId type = TypeId::current2;
@@ -33,14 +32,12 @@ struct __attribute__((packed)) currentbeacon2
     float busvoltage[ARTEMIS_CURRENT_SENSOR_COUNT - ARTEMIS_CURRENT_BEACON_1_COUNT];
     float current[ARTEMIS_CURRENT_SENSOR_COUNT - ARTEMIS_CURRENT_BEACON_1_COUNT];
 };
-
 struct __attribute__((packed)) magbeacon
 {
     TypeId type = TypeId::mag;
     uint32_t deci = 0;
     float magx = 0, magy = 0, magz = 0;
 };
-
 struct __attribute__((packed)) imubeacon
 {
     TypeId type = TypeId::imu;

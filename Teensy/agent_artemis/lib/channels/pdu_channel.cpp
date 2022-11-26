@@ -9,38 +9,46 @@ namespace
 void Artemis::Teensy::Channels::pdu_channel()
 {
     // Enable burn wire
-    pdu.PDU_SWITCH(Artemis::Teensy::PDU::PDU_CMD::BURN, true);
+    pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::BURN, true);
     threads.delay(10000);
-    pdu.PDU_SWITCH(Artemis::Teensy::PDU::PDU_CMD::BURN, false);
+    pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::BURN, false);
 
     while (true)
     {
         if (PullQueue(packet, pdu_queue, pdu_queue_mtx))
         {
-            Artemis::Teensy::PDU::PDU_CMD switchid = (Artemis::Teensy::PDU::PDU_CMD)packet.data[0];
             switch (packet.header.type)
             {
+            case PacketComm::TypeId::CommandEpsCommunicate:
+            {
+                PDU::pdu_packet pdu_packet;
+                pdu_packet.type = PDU::PDU_Type::CommandPing;
+
+                pdu.send(pdu_packet);
+
+                unsigned long timeoutStart = millis();
+                while (!pdu.recv())
+                {
+                    if (millis() - timeoutStart > 5000)
+                    {
+                        Serial.println("FAIL TO SEND CMD TO PDU");
+                        break;
+                    }
+                }
+
+                break;
+            }
             case PacketComm::TypeId::CommandEpsSwitchName:
             {
-                switch (switchid)
-                {
-                case Artemis::Teensy::PDU::PDU_CMD::SW_3V3_1:
-                case Artemis::Teensy::PDU::PDU_CMD::SW_3V3_2:
-                case Artemis::Teensy::PDU::PDU_CMD::SW_5V_1:
-                case Artemis::Teensy::PDU::PDU_CMD::SW_5V_2:
-                case Artemis::Teensy::PDU::PDU_CMD::SW_5V_3:
-                case Artemis::Teensy::PDU::PDU_CMD::SW_5V_4:
-                case Artemis::Teensy::PDU::PDU_CMD::SW_12V:
-                case Artemis::Teensy::PDU::PDU_CMD::VBATT:
-                case Artemis::Teensy::PDU::PDU_CMD::WDT:
-                case Artemis::Teensy::PDU::PDU_CMD::HBRIDGE1:
-                case Artemis::Teensy::PDU::PDU_CMD::HBRIDGE2:
-                case Artemis::Teensy::PDU::PDU_CMD::BURN:
-                    pdu.PDU_SWITCH(switchid, packet.data[1]);
-                    break;
-                default:
-                    break;
-                }
+                Artemis::Teensy::PDU::PDU_SW switchid = (Artemis::Teensy::PDU::PDU_SW)packet.data[0];
+                pdu.set_switch(switchid, packet.data[1]);
+                break;
+            }
+            case PacketComm::TypeId::CommandEpsSwitchStatus:
+            {
+                Artemis::Teensy::PDU::PDU_SW switchid = (Artemis::Teensy::PDU::PDU_SW)packet.data[0];
+                pdu.get_switch(switchid);
+                break;
             }
             default:
                 break;

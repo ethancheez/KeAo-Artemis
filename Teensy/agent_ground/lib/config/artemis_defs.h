@@ -4,8 +4,18 @@
 #include <TeensyThreads.h>
 #include <support/packetcomm.h>
 #include <support/configCosmosKernel.h>
+#include <ArduinoJson.h>
 
 #define MAXQUEUESIZE 50
+
+// Sensor Defs
+#define ARTEMIS_CURRENT_BEACON_1_COUNT 2
+#define ARTEMIS_CURRENT_SENSOR_COUNT 5
+#define ARTEMIS_TEMP_SENSOR_COUNT 7
+#define AREF_VOLTAGE 3.3
+
+extern const char *current_sen_names[ARTEMIS_CURRENT_SENSOR_COUNT];
+extern const char *temp_sen_names[ARTEMIS_TEMP_SENSOR_COUNT];
 
 // Nodes
 enum NODES : uint8_t
@@ -82,8 +92,10 @@ enum ARTEMIS_RADIOS : uint8_t
 
 extern std::map<string, ARTEMIS_RADIOS> RadioType;
 
-enum PDU_CMD : uint8_t
+enum PDU_SW : uint8_t
 {
+  None,
+  All,
   SW_3V3_1,
   SW_3V3_2,
   SW_5V_1,
@@ -96,10 +108,12 @@ enum PDU_CMD : uint8_t
   HBRIDGE1,
   HBRIDGE2,
   BURN,
+  BURN1,
+  BURN2,
   RPI,
 };
 
-extern std::map<string, PDU_CMD> PDUType;
+extern std::map<string, PDU_SW> PDU_SW_Type;
 
 // Max threads = 16
 extern vector<struct thread_struct> thread_list;
