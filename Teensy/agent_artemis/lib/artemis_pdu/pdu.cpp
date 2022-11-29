@@ -13,12 +13,15 @@ namespace Artemis
         void PDU::send(pdu_packet packet)
         {
             char *cmd = (char *)malloc(sizeof(packet));
-            memcpy(&cmd, &packet, sizeof(packet));
+            memcpy(cmd, &packet, sizeof(packet));
 
             Serial1.print(cmd);
             Serial1.print('\n');
             Serial.print("SENDING TO PDU: [");
-            Serial.print(cmd);
+            for (size_t i = 0; i < sizeof(packet); i++)
+            {
+                Serial.print(cmd[i], HEX);
+            }
             Serial.println(']');
 
             free(cmd);

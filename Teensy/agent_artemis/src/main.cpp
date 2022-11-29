@@ -69,7 +69,17 @@ void loop()
   {
     if (packet.header.dest == NODES::GROUND_NODE_ID)
     {
-      PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+      switch (packet.header.radio)
+      {
+      case ARTEMIS_RADIOS::RFM23:
+        PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+        break;
+      case ARTEMIS_RADIOS::ASTRODEV:
+        PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
+        break;
+      default:
+        break;
+      }
     }
     else if (packet.header.dest == NODES::RPI_NODE_ID)
     {
@@ -81,9 +91,8 @@ void loop()
       {
       case PacketComm::TypeId::CommandPing:
       {
+        packet.header.dest = packet.header.orig;
         packet.header.orig = NODES::TEENSY_NODE_ID;
-        packet.header.dest = NODES::GROUND_NODE_ID;
-        packet.header.radio = ARTEMIS_RADIOS::RFM23;
         packet.header.type = PacketComm::TypeId::DataPong;
         packet.data.resize(0);
         const char *data = "Pong";
@@ -91,7 +100,17 @@ void loop()
         {
           packet.data.push_back(data[i]);
         }
-        PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+        switch (packet.header.radio)
+        {
+        case ARTEMIS_RADIOS::RFM23:
+          PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+          break;
+        case ARTEMIS_RADIOS::ASTRODEV:
+          PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
+          break;
+        default:
+          break;
+        }
         break;
       }
       case PacketComm::TypeId::CommandEpsSwitchName:
@@ -122,9 +141,9 @@ void loop()
       }
     }
   }
-  if (sensortimer > 60000 * 10)
+  if (sensortimer > 60000)
   {
-    sensortimer -= 60000 * 10;
+    sensortimer -= 60000;
     read_temperature();
     read_current();
     read_imu();
@@ -198,11 +217,13 @@ void read_temperature(void) // future make this its own library
   }
   packet.header.orig = NODES::TEENSY_NODE_ID;
   packet.header.dest = NODES::GROUND_NODE_ID;
-  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   packet.header.type = PacketComm::TypeId::DataBeacon;
   packet.data.resize(sizeof(beacon));
   memcpy(packet.data.data(), &beacon, sizeof(beacon));
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+  packet.header.radio = ARTEMIS_RADIOS::ASTRODEV;
+  PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 }
 
 void read_current()
@@ -210,7 +231,6 @@ void read_current()
   currentbeacon1 beacon1;
   packet.header.orig = NODES::TEENSY_NODE_ID;
   packet.header.dest = NODES::GROUND_NODE_ID;
-  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   packet.header.type = PacketComm::TypeId::DataBeacon;
 
   beacon1.deci = uptime;
@@ -222,7 +242,10 @@ void read_current()
   }
   packet.data.resize(sizeof(beacon1));
   memcpy(packet.data.data(), &beacon1, sizeof(beacon1));
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+  packet.header.radio = ARTEMIS_RADIOS::ASTRODEV;
+  PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 
   currentbeacon2 beacon2;
 
@@ -235,7 +258,10 @@ void read_current()
   }
   packet.data.resize(sizeof(beacon2));
   memcpy(packet.data.data(), &beacon2, sizeof(beacon2));
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+  packet.header.radio = ARTEMIS_RADIOS::ASTRODEV;
+  PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 }
 
 void read_imu(void)
@@ -258,11 +284,13 @@ void read_imu(void)
 
   packet.header.orig = NODES::TEENSY_NODE_ID;
   packet.header.dest = NODES::GROUND_NODE_ID;
-  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   packet.header.type = PacketComm::TypeId::DataBeacon;
   packet.data.resize(sizeof(beacon));
   memcpy(packet.data.data(), &beacon, sizeof(beacon));
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+  packet.header.radio = ARTEMIS_RADIOS::ASTRODEV;
+  PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 }
 
 void read_mag(void)
@@ -278,9 +306,11 @@ void read_mag(void)
 
   packet.header.orig = NODES::TEENSY_NODE_ID;
   packet.header.dest = NODES::GROUND_NODE_ID;
-  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   packet.header.type = PacketComm::TypeId::DataBeacon;
   packet.data.resize(sizeof(beacon));
   memcpy(packet.data.data(), &beacon, sizeof(beacon));
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+  packet.header.radio = ARTEMIS_RADIOS::ASTRODEV;
+  PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 }
