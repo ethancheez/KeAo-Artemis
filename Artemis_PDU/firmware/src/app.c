@@ -55,6 +55,7 @@
 #include "app.h"
 #include "definitions.h"
 #include "ff.h"
+#include "pdu_packet.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -180,7 +181,8 @@ void USART_READ(void) {
                     SERCOM3_USART_Write(&newline[0],sizeof(newline));
                     rxCounter = 0;
                     
-                    read_CMD(receiveBuffer);
+                    decode_pdu_packet(receiveBuffer);
+                    //read_CMD(receiveBuffer);
                 }
                 else
                 {

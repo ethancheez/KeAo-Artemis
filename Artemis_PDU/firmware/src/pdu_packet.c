@@ -132,13 +132,13 @@ void decode_pdu_packet(const char *input)
                         SLEEP1_Clear();
                         break;
                     case PDU_SW::HBRIDGE2:
-                        FAULT2_Set();
-                        IN5_Set();
-                        IN6_Set();
-                        IN7_Set();
-                        IN8_Set();
-                        TRQ2_Set();
-                        SLEEP2_Set();
+                        FAULT2_Clear();
+                        IN5_Clear();
+                        IN6_Clear();
+                        IN7_Clear();
+                        IN8_Clear();
+                        TRQ2_Clear();
+                        SLEEP2_Clear();
                         break;
                     case PDU_SW::BURN:
                         BURN1_EN_Clear();
