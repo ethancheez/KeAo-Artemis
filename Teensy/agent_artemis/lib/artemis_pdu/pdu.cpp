@@ -10,16 +10,24 @@ namespace Artemis
             Serial1.begin(baud_rate);
         }
 
-        void PDU::PDU_SEND(const char *cmd)
+        void PDU::send(pdu_packet packet)
         {
+            char *cmd = (char *)malloc(sizeof(packet));
+            memcpy(cmd, &packet, sizeof(packet));
+
             Serial1.print(cmd);
             Serial1.print('\n');
             Serial.print("SENDING TO PDU: [");
-            Serial.print(cmd);
+            for (size_t i = 0; i < sizeof(packet); i++)
+            {
+                Serial.print(cmd[i], HEX);
+            }
             Serial.println(']');
+
+            free(cmd);
         }
 
-        bool PDU::PDU_RECV()
+        bool PDU::recv()
         {
             if (Serial1.available() > 0)
             {
@@ -34,54 +42,36 @@ namespace Artemis
             return false;
         }
 
-        void PDU::PDU_SWITCH(PDU_CMD _cmd, bool _enable)
+        void PDU::set_switch(PDU_SW sw, uint8_t _enable)
         {
-            const char *state = _enable ? "ENABLE" : "DISABLE";
-            char *cmd = (char *)malloc(sizeof(char));
-            cmd[0] = '\0';
+            pdu_packet packet;
+            packet.type = PDU_Type::CommandSetSwitch;
+            packet.sw = sw;
+            packet.sw_state = _enable > 0 ? 1 : 0;
 
-            switch (_cmd)
-            {
-            case SW_3V3_1:
-                strcat(cmd, "CMD: SW_3V3_1 ");
-                break;
-            case SW_3V3_2:
-                strcat(cmd, "CMD: SW_3V3_2 ");
-                break;
-            case SW_5V_1:
-                strcat(cmd, "CMD: SW_5V_1 ");
-                break;
-            case SW_5V_2:
-                strcat(cmd, "CMD: SW_5V_2 ");
-                break;
-            case SW_5V_3:
-                strcat(cmd, "CMD: SW_5V_3 ");
-                break;
-            case SW_5V_4:
-                strcat(cmd, "CMD: SW_5V_4 ");
-                break;
-            case SW_12V:
-                strcat(cmd, "CMD: SW_12V ");
-                break;
-            case VBATT:
-                strcat(cmd, "CMD: VBATT ");
-                break;
-            case WDT:
-                strcat(cmd, "CMD: WDT ");
-                break;
-            case HBRIDGE1:
-                strcat(cmd, "CMD: HBRIDGE1 ");
-                break;
-            case HBRIDGE2:
-                strcat(cmd, "CMD: HBRIDGE2 ");
-                break;
-            case BURN:
-                strcat(cmd, "CMD: BURN ");
-            }
-            PDU::PDU_SEND(strcat(cmd, state));
+            send(packet);
 
             unsigned long timeoutStart = millis();
-            while (!PDU::PDU_RECV())
+            while (!recv())
+            {
+                if (millis() - timeoutStart > 5000)
+                {
+                    Serial.println("FAIL TO SEND CMD TO PDU");
+                    break;
+                }
+            }
+        }
+
+        bool PDU::get_switch(PDU_SW sw)
+        {
+            pdu_packet packet;
+            packet.type = PDU_Type::CommandGetSwitchStatus;
+            packet.sw = sw;
+
+            send(packet);
+
+            unsigned long timeoutStart = millis();
+            while (!recv())
             {
                 if (millis() - timeoutStart > 5000)
                 {
@@ -90,7 +80,7 @@ namespace Artemis
                 }
             }
 
-            free(cmd);
+            return true;
         }
     }
 }

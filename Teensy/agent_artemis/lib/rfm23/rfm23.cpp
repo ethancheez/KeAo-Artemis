@@ -30,7 +30,7 @@ namespace Artemis
                 rfm23.setFrequency(RFM23_FREQ);   // frequency default is 434MHz
                 rfm23.setTxPower(RFM23_TX_POWER); // 20 is the max
 
-                /* RFM23 modulation schemes and data rates
+                /* RFM23 modulation     schemes and data rates
                  * <FSK_Rb125Fd125>     highest FSK data rate (125kbs)
                  * <FSK_Rb2Fd5>         lowe FSK data rate (2kbs)
                  * <GFSK_Rb125Fd125>    highest GFSK rate GFSK (125kbs)
@@ -70,7 +70,6 @@ namespace Artemis
                 packet.Wrap();
 
                 Threads::Scope lock(spi1_mtx);
-                rfm23.setModeTx();
                 rfm23.send(packet.wrapped.data(), packet.wrapped.size());
                 rfm23.waitPacketSent();
 
@@ -92,12 +91,12 @@ namespace Artemis
                 digitalWrite(RFM23_TX_ON, HIGH);
 
                 Threads::Scope lock(spi1_mtx);
-                rfm23.setModeRx();
                 int wait_time = 5000 - rfm23_queue.size() * 1000;
                 if (wait_time < 100)
                     wait_time = 100;
                 if (rfm23.waitAvailableTimeout(wait_time))
                 {
+                    packet.wrapped.resize(0);
                     packet.wrapped.resize(RH_RF22_MAX_MESSAGE_LEN);
                     uint8_t bytes_recieved = packet.wrapped.size();
                     if (rfm23.recv(packet.wrapped.data(), &bytes_recieved))

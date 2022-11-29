@@ -3,9 +3,10 @@
 
 #include <TeensyThreads.h>
 #include <support/packetcomm.h>
-#include <support/configCosmos.h>
+#include <support/configCosmosKernel.h>
 
 // Sensor Defs
+#define ARTEMIS_CURRENT_BEACON_1_COUNT 2
 #define ARTEMIS_CURRENT_SENSOR_COUNT 5
 #define ARTEMIS_TEMP_SENSOR_COUNT 7
 #define AREF_VOLTAGE 3.3
@@ -20,6 +21,8 @@ enum NODES : uint8_t
   RPI_NODE_ID = 3,
   PLEIADES_NODE_ID = 4,
 };
+
+extern std::map<string, NODES> NodeType;
 
 // Structs
 struct thread_struct
@@ -82,6 +85,8 @@ enum ARTEMIS_RADIOS : uint8_t
   RFM98,
   ASTRODEV,
 };
+
+extern std::map<string, ARTEMIS_RADIOS> RadioType;
 
 // Max threads = 16
 extern vector<struct thread_struct> thread_list;

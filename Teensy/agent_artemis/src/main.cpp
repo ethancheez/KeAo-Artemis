@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <vector>
 #include <artemis_channels.h>
-#include <support/configCosmos.h>
+#include <support/configCosmosKernel.h>
 #include <USBHost_t36.h>
 #include "artemisbeacons.h"
 
@@ -11,7 +11,7 @@ bool setup_imu(void);
 void setup_current(void);
 void setup_temperature(void);
 void read_temperature(void);
-void read_current(int begin, int end);
+void read_current();
 void read_imu(void);
 void read_mag(void);
 
@@ -20,13 +20,15 @@ namespace
   PacketComm packet;
 
   USBHost usb;
+
   Adafruit_LIS3MDL magnetometer;
   Adafruit_LSM6DSOX imu;
-  Adafruit_INA219 current_1(0x40); // Solar 1
-  Adafruit_INA219 current_2(0x41); // Solar 2
-  Adafruit_INA219 current_3(0x42); // Solar 3
-  Adafruit_INA219 current_4(0x43); // Solar 4
-  Adafruit_INA219 current_5(0x44); // Battery
+
+  Adafruit_INA219 current_1(0x40); // Solar Pannel 1
+  Adafruit_INA219 current_2(0x41); // Solar Pannel 2
+  Adafruit_INA219 current_3(0x42); // Solar Pannel 3
+  Adafruit_INA219 current_4(0x43); // Solar Pannel 4
+  Adafruit_INA219 current_5(0x44); // Battery Board
 
   // Current Sensors
   // const char *current_sen_names[ARTEMIS_CURRENT_SENSOR_COUNT] = {"solar_panel_1", "solar_panel_2", "solar_panel_3", "solar_panel_4", "battery_board"};
@@ -34,12 +36,10 @@ namespace
 
   // Temperature Sensors
   const int temps[ARTEMIS_TEMP_SENSOR_COUNT] = {A0, A1, A6, A7, A8, A9, A17};
-  // const char *temp_sen_names[ARTEMIS_TEMP_SENSOR_COUNT] = {"solar_panel_1", "solar_panel_2", "solar_panel_3", "solar_panel_4", "battery_board"};
+  // const char *temp_sen_names[ARTEMIS_TEMP_SENSOR_COUNT] = {"obc", "pdu", "battery board", "solar pannel 1", "solar panel 2", "solar panel 3", "solar panel 4"};
 
   elapsedMillis sensortimer;
   elapsedMillis uptime;
-
-  const char *data;
 }
 
 void setup()
@@ -47,7 +47,6 @@ void setup()
   Serial.begin(115200);
   usb.begin();
   pinMode(RPI_ENABLE, OUTPUT);
-  // digitalWrite(RPI_ENABLE, HIGH);
   delay(3000);
 
   setup_magnetometer();
@@ -57,9 +56,9 @@ void setup()
   threads.setSliceMillis(10);
 
   // Threads
-  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rpi_channel), "rpi channel"});
 }
@@ -86,60 +85,67 @@ void loop()
     {
       PushQueue(packet, rpi_queue, rpi_queue_mtx);
     }
-    else if (packet.header.dest == NODES::PLEIADES_NODE_ID)
-    {
-      PushQueue(packet, rfm98_queue, rfm98_queue_mtx);
-    }
     else if (packet.header.dest == NODES::TEENSY_NODE_ID)
     {
       switch (packet.header.type)
       {
-      case PacketComm::TypeId::CommandEpsCommunicate:
-      case PacketComm::TypeId::CommandEpsMinimumPower:
-      case PacketComm::TypeId::CommandEpsReset:
-      case PacketComm::TypeId::CommandEpsSetTime:
-      case PacketComm::TypeId::CommandEpsState:
-      case PacketComm::TypeId::CommandEpsSwitchName:
-      case PacketComm::TypeId::CommandEpsSwitchNames:
-      case PacketComm::TypeId::CommandEpsSwitchNumber:
-      case PacketComm::TypeId::CommandEpsSwitchStatus:
-      case PacketComm::TypeId::CommandEpsWatchdog:
-      {
-        PushQueue(packet, pdu_queue, pdu_queue_mtx);
-        break;
-      }
       case PacketComm::TypeId::CommandPing:
       {
-        uint8_t temp_node = packet.header.orig;
-        packet.header.orig = packet.header.dest;
-        packet.header.dest = temp_node;
+        packet.header.dest = packet.header.orig;
+        packet.header.orig = NODES::TEENSY_NODE_ID;
         packet.header.type = PacketComm::TypeId::DataPong;
         packet.data.resize(0);
-        data = "Pong";
+        const char *data = "Pong";
         for (size_t i = 0; i < strlen(data); i++)
         {
           packet.data.push_back(data[i]);
         }
-        if (packet.header.radio == ARTEMIS_RADIOS::RFM23)
+        switch (packet.header.radio)
+        {
+        case ARTEMIS_RADIOS::RFM23:
           PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
-        else if (packet.header.radio == ARTEMIS_RADIOS::RFM98)
-          PushQueue(packet, rfm98_queue, rfm98_queue_mtx);
-        else if (packet.header.radio == ARTEMIS_RADIOS::ASTRODEV)
+          break;
+        case ARTEMIS_RADIOS::ASTRODEV:
           PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
+          break;
+        default:
+          break;
+        }
         break;
+      }
+      case PacketComm::TypeId::CommandEpsSwitchName:
+      {
+        Artemis::Teensy::PDU::PDU_SW switchid = (Artemis::Teensy::PDU::PDU_SW)packet.data[0];
+        switch (switchid)
+        {
+        case Artemis::Teensy::PDU::PDU_SW::RPI:
+        {
+          digitalWrite(RPI_ENABLE, packet.data[1]);
+          break;
+        }
+        default:
+          PushQueue(packet, pdu_queue, pdu_queue_mtx);
+          break;
+        }
+        break;
+      }
+      case PacketComm::TypeId::CommandSendBeacon:
+      {
+        read_temperature();
+        read_current();
+        read_imu();
+        read_mag();
       }
       default:
         break;
       }
     }
   }
-
-  if (sensortimer > 5000)
+  if (sensortimer > 60000)
   {
-    sensortimer -= 5000;
+    sensortimer -= 60000;
     read_temperature();
-    read_current(0, 2);
-    read_current(2, ARTEMIS_CURRENT_SENSOR_COUNT);
+    read_current();
     read_imu();
     read_mag();
   }
@@ -211,34 +217,51 @@ void read_temperature(void) // future make this its own library
   }
   packet.header.orig = NODES::TEENSY_NODE_ID;
   packet.header.dest = NODES::GROUND_NODE_ID;
-  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   packet.header.type = PacketComm::TypeId::DataBeacon;
   packet.data.resize(sizeof(beacon));
   memcpy(packet.data.data(), &beacon, sizeof(beacon));
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+  packet.header.radio = ARTEMIS_RADIOS::ASTRODEV;
+  PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 }
 
-void read_current(int begin, int end)
-
+void read_current()
 {
-  size_t beaconsize = sizeof(currentbeacon) + 2 * (end - begin) * sizeof(float);
-  currentbeacon *beacon = (currentbeacon *)malloc(beaconsize);
-  beacon->deci = uptime;
-  beacon->sensorcount = end - begin;
-
-  for (int i = begin; i < end; i++)
-  {
-    beacon->busvoltage[i - begin] = p[i]->getBusVoltage_V();
-    beacon->current[i - begin] = p[i]->getCurrent_mA();
-  }
+  currentbeacon1 beacon1;
   packet.header.orig = NODES::TEENSY_NODE_ID;
   packet.header.dest = NODES::GROUND_NODE_ID;
-  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   packet.header.type = PacketComm::TypeId::DataBeacon;
-  packet.data.resize(beaconsize);
-  memcpy(packet.data.data(), beacon, beaconsize);
+
+  beacon1.deci = uptime;
+
+  for (int i = 0; i < ARTEMIS_CURRENT_BEACON_1_COUNT; i++)
+  {
+    beacon1.busvoltage[i] = (p[i]->getBusVoltage_V());
+    beacon1.current[i] = (p[i]->getCurrent_mA());
+  }
+  packet.data.resize(sizeof(beacon1));
+  memcpy(packet.data.data(), &beacon1, sizeof(beacon1));
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
-  free(beacon);
+  packet.header.radio = ARTEMIS_RADIOS::ASTRODEV;
+  PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
+
+  currentbeacon2 beacon2;
+
+  beacon2.deci = uptime;
+
+  for (int i = ARTEMIS_CURRENT_BEACON_1_COUNT; i < ARTEMIS_CURRENT_SENSOR_COUNT; i++)
+  {
+    beacon2.busvoltage[i - ARTEMIS_CURRENT_BEACON_1_COUNT] = (p[i]->getBusVoltage_V());
+    beacon2.current[i - ARTEMIS_CURRENT_BEACON_1_COUNT] = (p[i]->getCurrent_mA());
+  }
+  packet.data.resize(sizeof(beacon2));
+  memcpy(packet.data.data(), &beacon2, sizeof(beacon2));
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
+  PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+  packet.header.radio = ARTEMIS_RADIOS::ASTRODEV;
+  PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 }
 
 void read_imu(void)
@@ -261,11 +284,13 @@ void read_imu(void)
 
   packet.header.orig = NODES::TEENSY_NODE_ID;
   packet.header.dest = NODES::GROUND_NODE_ID;
-  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   packet.header.type = PacketComm::TypeId::DataBeacon;
   packet.data.resize(sizeof(beacon));
   memcpy(packet.data.data(), &beacon, sizeof(beacon));
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+  packet.header.radio = ARTEMIS_RADIOS::ASTRODEV;
+  PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 }
 
 void read_mag(void)
@@ -281,9 +306,11 @@ void read_mag(void)
 
   packet.header.orig = NODES::TEENSY_NODE_ID;
   packet.header.dest = NODES::GROUND_NODE_ID;
-  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   packet.header.type = PacketComm::TypeId::DataBeacon;
   packet.data.resize(sizeof(beacon));
   memcpy(packet.data.data(), &beacon, sizeof(beacon));
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+  packet.header.radio = ARTEMIS_RADIOS::ASTRODEV;
+  PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 }

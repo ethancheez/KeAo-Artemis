@@ -41,6 +41,7 @@ void Artemis::Teensy::Channels::rfm23_channel()
                 Serial.print(packet.data[i], HEX);
             }
             Serial.println("]");
+            PushQueue(packet, main_queue, main_queue_mtx);
         }
         threads.delay(10);
     }

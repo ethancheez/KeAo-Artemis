@@ -7,7 +7,7 @@
 #include <artemis_defs.h>
 
 #undef RH_RF22_MAX_MESSAGE_LEN
-#define RH_RF22_MAX_MESSAGE_LEN 64
+#define RH_RF22_MAX_MESSAGE_LEN 50
 
 /* RFM23 FREQUENCY CONFIG */
 #define RFM23_FREQ 433.0

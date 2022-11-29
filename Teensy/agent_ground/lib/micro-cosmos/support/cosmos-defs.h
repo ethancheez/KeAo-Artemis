@@ -1,31 +1,31 @@
 /********************************************************************
- * Copyright (C) 2015 by Interstel Technologies, Inc.
- *   and Hawaii Space Flight Laboratory.
- *
- * This file is part of the COSMOS/core that is the central
- * module for COSMOS. For more information on COSMOS go to
- * <http://cosmos-project.com>
- *
- * The COSMOS/core software is licenced under the
- * GNU Lesser General Public License (LGPL) version 3 licence.
- *
- * You should have received a copy of the
- * GNU Lesser General Public License
- * If not, go to <http://www.gnu.org/licenses/>
- *
- * COSMOS/core is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public License
- * as published by the Free Software Foundation, either version 3 of
- * the License, or (at your option) any later version.
- *
- * COSMOS/core is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * Refer to the "licences" folder for further information on the
- * condititons and terms to use this software.
- ********************************************************************/
+* Copyright (C) 2015 by Interstel Technologies, Inc.
+*   and Hawaii Space Flight Laboratory.
+*
+* This file is part of the COSMOS/core that is the central
+* module for COSMOS. For more information on COSMOS go to
+* <http://cosmos-project.com>
+*
+* The COSMOS/core software is licenced under the
+* GNU Lesser General Public License (LGPL) version 3 licence.
+*
+* You should have received a copy of the
+* GNU Lesser General Public License
+* If not, go to <http://www.gnu.org/licenses/>
+*
+* COSMOS/core is free software: you can redistribute it and/or
+* modify it under the terms of the GNU Lesser General Public License
+* as published by the Free Software Foundation, either version 3 of
+* the License, or (at your option) any later version.
+*
+* COSMOS/core is distributed in the hope that it will be useful, but
+* WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* Lesser General Public License for more details.
+*
+* Refer to the "licences" folder for further information on the
+* condititons and terms to use this software.
+********************************************************************/
 
 /*!	\file cosmos-defs.h
     \brief COSMOS definitions
@@ -59,59 +59,60 @@
 enum PIECE
 {
     //! External Panel: n vertices and a thickness, subject to external forces
-    PIECE_TYPE_EXTERNAL_PANEL = 0,
+    PIECE_TYPE_EXTERNAL_PANEL=0,
     //! Internal Panel: n vertices and a thickness
-    PIECE_TYPE_INTERNAL_PANEL = 1,
+    PIECE_TYPE_INTERNAL_PANEL=1,
     //! Box: 8 vertices defining 2 parallel sides and a wall thickness, first set curled pointing out, second set pointing in
-    PIECE_TYPE_BOX = 2,
+    PIECE_TYPE_BOX=2,
     //! Cylinder: 3 points and a wall thickness, first end, second end, point on radius of second end
-    PIECE_TYPE_CYLINDER = 3,
+    PIECE_TYPE_CYLINDER=3,
     //! Sphere: 2 points and a wall thickness; center and point on surface.
-    PIECE_TYPE_SPHERE = 4,
+    PIECE_TYPE_SPHERE=4,
     //! Dimensionless:
-    PIECE_TYPE_DIMENSIONLESS = 5,
+    PIECE_TYPE_DIMENSIONLESS=5,
     //! Cone: same as Cylinder except first end is a point.
-    PIECE_TYPE_CONE = 6,
+    PIECE_TYPE_CONE=6,
     PIECE_TYPE_COUNT,
-    PIECE_TYPE_NONE = UINT16_MAX
+    PIECE_TYPE_NONE=UINT16_MAX
 };
 
 //! @}
+
 
 //! \ingroup defs
 //! \defgroup defs_node_type Constants defining Node types.
 //! @{
 enum NODE_TYPE : uint16_t
 {
-    NODE_TYPE_SATELLITE = 0,
-    NODE_TYPE_GROUNDSTATION = 1,
-    NODE_TYPE_MOC = 2,
-    NODE_TYPE_VEHICLE = 3,
-    NODE_TYPE_UAV = 4,
-    NODE_TYPE_TARGET = 5,
-    NODE_TYPE_BALLOON = 6,
-    NODE_TYPE_SHIP = 7,
-    NODE_TYPE_DATA = 8,
-    NODE_TYPE_COMPUTER = 9,
-    NODE_TYPE_SUN = 10,
-    NODE_TYPE_MOON = 11,
-    NODE_TYPE_MARS = 12,
-    NODE_TYPE_LOCATION = 13,
-    NODE_TYPE_TESTBED = 14,
+    NODE_TYPE_SATELLITE=0,
+    NODE_TYPE_GROUNDSTATION=1,
+    NODE_TYPE_MOC=2,
+    NODE_TYPE_VEHICLE=3,
+    NODE_TYPE_UAV=4,
+    NODE_TYPE_TARGET=5,
+    NODE_TYPE_BALLOON=6,
+    NODE_TYPE_SHIP=7,
+    NODE_TYPE_DATA=8,
+    NODE_TYPE_COMPUTER=9,
+    NODE_TYPE_SUN=10,
+    NODE_TYPE_MOON=11,
+    NODE_TYPE_MARS=12,
+    NODE_TYPE_LOCATION=13,
+    NODE_TYPE_TESTBED=14,
     NODE_TYPE_COUNT,
-    NODE_TYPE_NONE = UINT16_MAX
+    NODE_TYPE_NONE=UINT16_MAX
 };
 
 //! \defgroup defs_node_flag Constants defining Node flags.
 //! @{
 enum NODE_FLAG : uint16_t
 {
-    NODE_FLAG_NONE = 0,
-    NODE_FLAG_CHARGING = 0x0001,
-    NODE_FLAG_LAUNCHED = 0x0002,
-    NODE_FLAG_DEPLOYED = 0x0004,
-    NODE_FLAG_BOOTCHECK = 0x0008,
-    NODE_FLAG_ALL = UINT16_MAX
+    NODE_FLAG_NONE=0,
+    NODE_FLAG_CHARGING=0x0001,
+    NODE_FLAG_LAUNCHED=0x0002,
+    NODE_FLAG_DEPLOYED=0x0004,
+    NODE_FLAG_BOOTCHECK=0x0008,
+    NODE_FLAG_ALL=UINT16_MAX
 };
 
 //! @}
@@ -151,24 +152,24 @@ enum NODE_FLAG : uint16_t
 // bits 13-16
 
 //! Show a countdown timer for this event.
-#define EVENT_FLAG_COUNTDOWN 0x1000
+#define EVENT_FLAG_COUNTDOWN	0x1000
 //! Event is the exit member of a set of paired events.
-#define EVENT_FLAG_EXIT 0x2000
+#define EVENT_FLAG_EXIT			0x2000
 //! Event is part of a pair (eg. enter and leave Umbra).
-#define EVENT_FLAG_PAIR 0x4000
+#define EVENT_FLAG_PAIR			0x4000
 //! Event actualy happened (versus being predicted).
-#define EVENT_FLAG_ACTUAL 0x8000
+#define EVENT_FLAG_ACTUAL		0x8000
 
 // bits 17-19
 
 //! Conditional event
-#define EVENT_FLAG_CONDITIONAL 0x10000
+#define EVENT_FLAG_CONDITIONAL	0x10000
 //! Repeating event
-#define EVENT_FLAG_REPEAT 0x20000
+#define EVENT_FLAG_REPEAT		0x20000
 //! Event true last time
-#define EVENT_FLAG_TRUE 0x40000
+#define EVENT_FLAG_TRUE			0x40000
 //! Command Event should run by itself
-#define EVENT_FLAG_SOLO 0x80000
+#define EVENT_FLAG_SOLO			0x80000
 
 //! @}
 
@@ -180,11 +181,13 @@ enum NODE_FLAG : uint16_t
  * was initiiated by some generic equation.
  */
 
+
 #define EVENT_TYPE_REQUEST 0x1001
 
 //! Physical Events
 
-// Physical Events
+
+//Physical Events
 #define EVENT_TYPE_PHYSICAL 0x1000
 #define EVENT_TYPE_LATA 0x1101
 #define EVENT_TYPE_LATD 0x1102
@@ -195,7 +198,7 @@ enum NODE_FLAG : uint16_t
 #define EVENT_TYPE_UMBRA 0x1206
 #define EVENT_TYPE_PENUMBRA 0x1208
 
-// Ground Station Events
+//Ground Station Events
 #define EVENT_TYPE_GS 0x1400
 #define EVENT_TYPE_GS5 0x1401
 #define EVENT_TYPE_GS10 0x1402
@@ -205,7 +208,7 @@ enum NODE_FLAG : uint16_t
 #define EVENT_TYPE_TARG 0x1800
 #define EVENT_TYPE_TARGMIN 0x1801
 
-// Command Events
+//Command Events
 #define EVENT_TYPE_COMMAND 0x2000
 #define EVENT_TYPE_BUS 0x2100
 #define EVENT_TYPE_EPS 0x2110
@@ -213,11 +216,13 @@ enum NODE_FLAG : uint16_t
 #define EVENT_TYPE_PAYLOAD 0x2400
 #define EVENT_TYPE_SYSTEM 0x2800
 
-// Log Events
+//Log Events
 #define EVENT_TYPE_LOG 0x4000
 
-// Message Events
+//Message Events
 #define EVENT_TYPE_MESSAGE 0x8000
+
+
 
 //! @}
 

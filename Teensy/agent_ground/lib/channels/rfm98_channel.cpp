@@ -18,6 +18,7 @@ void Artemis::Teensy::Channels::rfm98_channel()
             switch (packet.header.type)
             {
             case PacketComm::TypeId::CommandPing:
+            case PacketComm::TypeId::CommandEpsSwitchName:
             {
                 rfm98.send(packet);
                 threads.delay(500);
@@ -37,6 +38,7 @@ void Artemis::Teensy::Channels::rfm98_channel()
                 Serial.print((char)packet.data[i]);
             }
             Serial.println("]");
+            PushQueue(packet, main_queue, main_queue_mtx);
         }
         threads.delay(10);
     }

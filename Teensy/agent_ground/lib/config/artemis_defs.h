@@ -3,14 +3,19 @@
 
 #include <TeensyThreads.h>
 #include <support/packetcomm.h>
-#include <support/configCosmos.h>
+#include <support/configCosmosKernel.h>
+#include <ArduinoJson.h>
+
+#define MAXQUEUESIZE 50
 
 // Sensor Defs
+#define ARTEMIS_CURRENT_BEACON_1_COUNT 2
 #define ARTEMIS_CURRENT_SENSOR_COUNT 5
 #define ARTEMIS_TEMP_SENSOR_COUNT 7
 #define AREF_VOLTAGE 3.3
 
-#define MAXQUEUESIZE 50
+extern const char *current_sen_names[ARTEMIS_CURRENT_SENSOR_COUNT];
+extern const char *temp_sen_names[ARTEMIS_TEMP_SENSOR_COUNT];
 
 // Nodes
 enum NODES : uint8_t
@@ -20,6 +25,8 @@ enum NODES : uint8_t
   RPI_NODE_ID = 3,
   PLEIADES_NODE_ID = 4,
 };
+
+extern std::map<string, NODES> NodeType;
 
 // Structs
 struct thread_struct
@@ -83,6 +90,31 @@ enum ARTEMIS_RADIOS : uint8_t
   ASTRODEV,
 };
 
+extern std::map<string, ARTEMIS_RADIOS> RadioType;
+
+enum PDU_SW : uint8_t
+{
+  None,
+  All,
+  SW_3V3_1,
+  SW_3V3_2,
+  SW_5V_1,
+  SW_5V_2,
+  SW_5V_3,
+  SW_5V_4,
+  SW_12V,
+  VBATT,
+  WDT,
+  HBRIDGE1,
+  HBRIDGE2,
+  BURN,
+  BURN1,
+  BURN2,
+  RPI,
+};
+
+extern std::map<string, PDU_SW> PDU_SW_Type;
+
 // Max threads = 16
 extern vector<struct thread_struct> thread_list;
 
@@ -91,20 +123,15 @@ extern Threads::Mutex main_queue_mtx;
 extern Threads::Mutex astrodev_queue_mtx;
 extern Threads::Mutex rfm23_queue_mtx;
 extern Threads::Mutex rfm98_queue_mtx;
-extern Threads::Mutex pdu_queue_mtx;
-extern Threads::Mutex rpi_queue_mtx;
 
 // Command Queues
 extern queue<PacketComm> main_queue;
 extern queue<PacketComm> astrodev_queue;
 extern queue<PacketComm> rfm23_queue;
 extern queue<PacketComm> rfm98_queue;
-extern queue<PacketComm> pdu_queue;
-extern queue<PacketComm> rpi_queue;
 
 // Other Mutex
 extern Threads::Mutex spi1_mtx;
-extern Threads::Mutex i2c1_mtx;
 
 // Utility Functions
 int kill_thread(char *thread_name);
