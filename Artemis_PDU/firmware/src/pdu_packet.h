@@ -2,18 +2,20 @@
 #define _PDU_PACKET_H
 
 #include "string.h"
+#include "stdint.h"
 
-enum PDU_Type: uint8_t
+enum PDU_Type
 {
-    None,
+    NOP,
     CommandPing,
     CommandSetSwitch,
     CommandGetSwitchStatus,
     DataPong,
     DataSwitchStatus,
 };
+typedef uint8_t PDU_Type;
 
-enum PDU_SW : uint8_t
+enum PDU_SW
 {
     None,
     All,
@@ -32,15 +34,16 @@ enum PDU_SW : uint8_t
     BURN1,
     BURN2,
 };
+typedef uint8_t PDU_SW;
 
 struct __attribute__((packed)) pdu_packet
 {
-    PDU_Type type = PDU_Type::None;
-    PDU_SW sw = PDU_SW::None;
-    uint8_t sw_state = 0;
+    PDU_Type type;
+    PDU_SW sw;
+    uint8_t sw_state;
 };
 
-void decode_pdu_packet(const char *input);
+void decode_pdu_packet(const uint8_t *input);
 void enableAllGPIOs(void);
 void disableAllGPIOs(void);
 

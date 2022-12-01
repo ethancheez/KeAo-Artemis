@@ -69,7 +69,7 @@
 #define SDCARD_DIR_NAME      "Dir1"
 
 #define APP_DATA_LEN         512
-
+    
 char APP_INIT_MSG[] = "\r\nAPP INITIALIZED\r\n";
 char SD_MOUNT_FAIL[] = "SD MOUNT FAIL\r\n";
 char SD_SUCCESS_MSG[] = "SD SUCCESS\r\n";
@@ -80,8 +80,8 @@ char SD_FAILED_MSG[] = "SD FAIL\r\n";
 #define RX_BUFFER_SIZE 256
 char newline[] = "\r\n";
 char errorMessage[] = "\r\n**** USART error has occurred ****\r\n";
-char receiveBuffer[RX_BUFFER_SIZE] = {};
-char data = 0;
+uint8_t receiveBuffer[RX_BUFFER_SIZE] = {};
+int data = 0;
 uint16_t rxCounter = 0;
 // *****************************************************************************
 
@@ -91,23 +91,7 @@ void USART_READ(void);
 void I2C_READ(void);
 void enableGPIOs(void);
 void disableGPIOs(void);
-
 void FATFS_APP(void);
-
-// *****************************************************************************
-/* Application Data
-
-  Summary:
-    Holds application data
-
-  Description:
-    This structure holds the application's data.
-
-  Remarks:
-    This structure should be initialized by the APP_Initialize function.
-
-    Application strings and buffers are be defined outside this structure.
-*/
 
 FATFS FatFs;	/* FatFs work area needed for each volume */
 FIL Fil;		/* File object needed for each open file */
@@ -122,7 +106,7 @@ FIL Fil;		/* File object needed for each open file */
 
 void APP_Initialize ( void )
 {
-    //SERCOM3_USART_Write(&APP_INIT_MSG[0], sizeof(APP_INIT_MSG));
+//    SERCOM3_USART_Write(&APP_INIT_MSG[0], sizeof(APP_INIT_MSG));
     disableGPIOs();
     RTC_Initialize();
     RTC_Timer32Start();
@@ -142,7 +126,7 @@ void APP_Initialize ( void )
 void APP_Tasks ( void )
 {
     USART_READ();
-    I2C_READ();
+//    I2C_READ();
     //FATFS_APP();
 }
 
@@ -172,17 +156,18 @@ void USART_READ(void) {
         {
             if(SERCOM3_USART_ErrorGet() == USART_ERROR_NONE)
             {
-                SERCOM3_USART_Read(&data, 1);
+//                SERCOM3_USART_Read(&data, 1);
+                data = SERCOM3_USART_ReadByte();
 
-                if((data == '\n') || (data == '\r'))
+                if(data == '\0')
                 {
                     //SERCOM3_USART_Write(&newline[0],sizeof(newline));
-                    SERCOM3_USART_Write(&receiveBuffer[0],rxCounter);
-                    SERCOM3_USART_Write(&newline[0],sizeof(newline));
+//                    SERCOM3_USART_Write(&receiveBuffer[0],rxCounter);
+//                    SERCOM3_USART_Write(&newline[0],sizeof(newline));
                     rxCounter = 0;
                     
                     decode_pdu_packet(receiveBuffer);
-                    //read_CMD(receiveBuffer);
+//                    read_CMD(receiveBuffer);
                 }
                 else
                 {
@@ -191,7 +176,7 @@ void USART_READ(void) {
             }
             else
             {
-                //SERCOM3_USART_Write(&errorMessage[0],sizeof(errorMessage));
+//                SERCOM3_USART_Write(&errorMessage[0],sizeof(errorMessage));
             }
         }
 }
