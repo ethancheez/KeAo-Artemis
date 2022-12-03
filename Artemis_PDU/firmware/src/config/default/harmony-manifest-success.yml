@@ -4,13 +4,13 @@
 
 
 project: Artemis_PDU
-creation_date: 2022-09-19T23:05:03.088-10:00[Pacific/Honolulu]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2022-11-30T20:03:20.101-10:00[Pacific/Honolulu]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
 mhc_mode: IDE            # [IDE|Standalone|Headless]
 mhc_version: v3.8.5
 mplabx_version: v6.00        # if MPLAB X plugin only
 plugin_version: v3.6.4        # if MPLAB X plugin only
-compiler: XC32 (2.10)
+compiler: XC32 (4.10)
 
 modules:
     - {name: "csp", version: "v3.13.1"}

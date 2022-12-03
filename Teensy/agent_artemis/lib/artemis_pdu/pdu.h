@@ -13,7 +13,7 @@ namespace Artemis
         public:
             enum class PDU_Type : uint8_t
             {
-                None,
+                NOP,
                 CommandPing,
                 CommandSetSwitch,
                 CommandGetSwitchStatus,
@@ -63,7 +63,7 @@ namespace Artemis
 
             struct __attribute__((packed)) pdu_packet
             {
-                PDU_Type type = PDU_Type::None;
+                PDU_Type type = PDU_Type::NOP;
                 PDU_SW sw = PDU_SW::None;
                 uint8_t sw_state = 0;
             };
