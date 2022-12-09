@@ -80,7 +80,7 @@ char SD_FAILED_MSG[] = "SD FAIL\r\n";
 #define RX_BUFFER_SIZE 256
 char newline[] = "\r\n";
 char errorMessage[] = "\r\n**** USART error has occurred ****\r\n";
-uint8_t receiveBuffer[RX_BUFFER_SIZE] = {};
+char receiveBuffer[RX_BUFFER_SIZE] = {};
 int data = 0;
 uint16_t rxCounter = 0;
 // *****************************************************************************
@@ -156,17 +156,19 @@ void USART_READ(void) {
         {
             if(SERCOM3_USART_ErrorGet() == USART_ERROR_NONE)
             {
-//                SERCOM3_USART_Read(&data, 1);
-                data = SERCOM3_USART_ReadByte();
+                SERCOM3_USART_Read(&data, 1);
+//                data = SERCOM3_USART_ReadByte();
 
-                if(data == '\0')
+                if(data == '\r' || data == '\n')
                 {
-                    //SERCOM3_USART_Write(&newline[0],sizeof(newline));
+                    SERCOM3_USART_Write("\0", 1);
+//                    SERCOM3_USART_Write(&newline[0],sizeof(newline));
 //                    SERCOM3_USART_Write(&receiveBuffer[0],rxCounter);
+//                    SERCOM3_USART_Write("\r\n", 2);
 //                    SERCOM3_USART_Write(&newline[0],sizeof(newline));
                     rxCounter = 0;
-                    
                     decode_pdu_packet(receiveBuffer);
+                    
 //                    read_CMD(receiveBuffer);
                 }
                 else
@@ -198,7 +200,7 @@ void enableGPIOs(void) {
     SW_5V_EN3_Set();
     SW_5V_EN4_Set();
     SW_VBATT_EN_Set();
-    WDT_WDI_Set();
+//    WDT_WDI_Set();
     BURN1_EN_Set();
     IN1_Set();
     IN2_Set();
@@ -227,7 +229,7 @@ void disableGPIOs(void) {
     SW_5V_EN3_Clear();
     SW_5V_EN4_Clear();
     SW_VBATT_EN_Clear();
-    WDT_WDI_Clear();
+//    WDT_WDI_Clear();
     BURN1_EN_Set();
     IN1_Clear();
     IN2_Clear();

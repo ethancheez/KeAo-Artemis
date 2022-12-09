@@ -4,6 +4,8 @@
 #include "string.h"
 #include "stdint.h"
 
+#define PDU_CMD_OFFSET 48
+
 enum PDU_Type
 {
     NOP,
@@ -43,7 +45,7 @@ struct __attribute__((packed)) pdu_packet
     uint8_t sw_state;
 };
 
-void decode_pdu_packet(const uint8_t *input);
+void decode_pdu_packet(const char *input);
 void enableAllGPIOs(void);
 void disableAllGPIOs(void);
 

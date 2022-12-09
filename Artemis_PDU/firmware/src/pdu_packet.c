@@ -1,23 +1,23 @@
 #include "pdu_packet.h"
 #include "definitions.h"
 
-void decode_pdu_packet(const uint8_t *input)
+void decode_pdu_packet(const char *input)
 {
     struct pdu_packet packet;
-    packet.type = input[0] - '0';
-    packet.sw = input[1] - '0';
-    packet.sw_state = input[2] - '0';
+    packet.type = input[0] - PDU_CMD_OFFSET;
+    packet.sw = input[1] - PDU_CMD_OFFSET;
+    packet.sw_state = input[2] - PDU_CMD_OFFSET;
     
     char *reply = malloc(sizeof(struct pdu_packet));
     switch(packet.type)
     {
         case CommandPing:
-            packet.type = DataPong + '0';
-            packet.sw += '0';
-            packet.sw_state += '0';
+            packet.type = DataPong + PDU_CMD_OFFSET;
+            packet.sw += PDU_CMD_OFFSET;
+            packet.sw_state += PDU_CMD_OFFSET;
             memcpy(reply, &packet, sizeof(struct pdu_packet));
             SERCOM3_USART_Write(&reply[0], sizeof(reply));
-//            SERCOM3_USART_Write("\0", 1);
+            SERCOM3_USART_Write("\r\n", 2);
             break;
         case CommandSetSwitch:
             if(packet.sw_state == 1)
@@ -162,7 +162,7 @@ void decode_pdu_packet(const uint8_t *input)
                 }
             }
         case CommandGetSwitchStatus:
-            packet.type = DataSwitchStatus + '0';
+            packet.type = DataSwitchStatus + PDU_CMD_OFFSET;
             switch(packet.sw)
             {
                 case SW_3V3_1:
@@ -216,11 +216,11 @@ void decode_pdu_packet(const uint8_t *input)
                 default:
                     break;
             }
-            packet.sw += '0';
-            packet.sw_state += '0';
+            packet.sw += PDU_CMD_OFFSET;
+            packet.sw_state += PDU_CMD_OFFSET;
             memcpy(reply, &packet, sizeof(struct pdu_packet));
             SERCOM3_USART_Write(&reply[0], sizeof(reply));
-//            SERCOM3_USART_Write("\0", 1);
+            SERCOM3_USART_Write("\r\n", 2);
             break;
         default:
             break;
@@ -239,7 +239,7 @@ void enableAllGPIOs(void) {
     SW_5V_EN3_Set();
     SW_5V_EN4_Set();
     SW_VBATT_EN_Set();
-    WDT_WDI_Set();
+//    WDT_WDI_Set();
     BURN1_EN_Set();
     IN1_Set();
     IN2_Set();
@@ -268,7 +268,7 @@ void disableAllGPIOs(void) {
     SW_5V_EN3_Clear();
     SW_5V_EN4_Clear();
     SW_VBATT_EN_Clear();
-    WDT_WDI_Clear();
+//    WDT_WDI_Clear();
     BURN1_EN_Set();
     IN1_Clear();
     IN2_Clear();

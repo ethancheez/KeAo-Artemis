@@ -2,7 +2,7 @@ configName: default
 folderName: Artemis_PDU
 format_version: v1.0
 frameworkPath: ..\..\Harmony3
-processor: ATSAME51N19A
+processor: ATSAME51N20A
 projectName: Artemis_PDU
 settings:
   PackageFilter: bsp;core;core_apps_sam_d5x_e5x;csp;csp_apps_sam_d5x_e5x;dev_packs;harmony-services;quick_docs;usb
@@ -11,4 +11,4 @@ settings:
   TRUSTZONE: 'false'
   CMSISPath: .\dev_packs\arm\CMSIS\5.8.0
   MERGE_STRATEGY: USER_ALL
-  DFPPath: .\dev_packs\Microchip\SAME51_DFP\3.6.130\atdf\ATSAME51N19A.atdf
+  DFPPath: .\dev_packs\Microchip\SAME51_DFP\3.6.130\atdf\ATSAME51N20A.atdf

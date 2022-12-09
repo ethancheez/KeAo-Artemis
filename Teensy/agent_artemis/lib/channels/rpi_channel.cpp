@@ -44,13 +44,13 @@ void receiveData(int byte_count)
 
 void sendData()
 {
+    Threads::Scope lock(i2c1_mtx);
     if (!ready)
     {
         I2C_Wire1.write(255); // Send empty character when no packet available
         return;
     }
 
-    Threads::Scope lock(i2c1_mtx);
     I2C_Wire1.write(packet.wrapped[send_index]);
     Serial.print(packet.wrapped[send_index], HEX);
     send_index++;

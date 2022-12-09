@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include "support/configCosmosKernel.h"
 
+#define PDU_CMD_OFFSET 48
+
 namespace Artemis
 {
     namespace Teensy

@@ -8,7 +8,10 @@ namespace
 
 void Artemis::Teensy::Channels::pdu_channel()
 {
+    while (!Serial1)
+        ;
     // Enable burn wire
+    // TODO: ASYNC DELAY TO ALLOW WDT RESET
     pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::BURN, true);
     threads.delay(10000);
     pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::BURN, false);
@@ -54,5 +57,9 @@ void Artemis::Teensy::Channels::pdu_channel()
                 break;
             }
         }
+
+        // Update WDT
+        pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::WDT, 1);
+        pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::WDT, 0);
     }
 }

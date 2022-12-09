@@ -15,12 +15,18 @@ namespace Artemis
             char *cmd = (char *)malloc(sizeof(packet));
             memcpy(cmd, &packet, sizeof(packet));
 
-            Serial1.print(cmd);
-            Serial1.print('\n');
-            Serial.print("SENDING TO PDU: [");
+            std::string msg = "";
             for (size_t i = 0; i < sizeof(packet); i++)
             {
-                Serial.print(cmd[i], HEX);
+                msg += cmd[i] + PDU_CMD_OFFSET;
+            }
+            Serial1.print(msg.c_str());
+            Serial1.print('\n');
+
+            Serial.print("SENDING TO PDU: [");
+            for (size_t i = 0; i < msg.length(); i++)
+            {
+                Serial.print(msg[i] - PDU_CMD_OFFSET, HEX);
             }
             Serial.println(']');
 
