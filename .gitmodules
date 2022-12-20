@@ -1,0 +1,3 @@
+[submodule "Teensy/agent_artemis/lib/micro-cosmos"]
+	path = Teensy/agent_artemis/lib/micro-cosmos
+	url = https://github.com/hsfl/micro-cosmos.git
