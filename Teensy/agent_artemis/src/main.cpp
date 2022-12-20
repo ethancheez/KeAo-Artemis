@@ -57,14 +57,24 @@ void setup()
 
   // Threads
   thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
   thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rpi_channel), "rpi channel"});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rpi_channel), "rpi channel"});
 }
 
 void loop()
 {
+  // Testing I2C, delete later
+  packet.header.type = (PacketComm ::TypeId)200; // TODO: CommandTakePicture
+  packet.header.orig = NODES::TEENSY_NODE_ID;
+  packet.header.dest = NODES::RPI_NODE_ID;
+  packet.data.resize(0);
+  packet.header.radio = ARTEMIS_RADIOS::NONE;
+  PushQueue(packet, rpi_queue, rpi_queue_mtx);
+  delay(1000);
+  // Testing I2C, delete later
+
   if (PullQueue(packet, main_queue, main_queue_mtx))
   {
     if (packet.header.dest == NODES::GROUND_NODE_ID)

@@ -46,19 +46,14 @@ void sendData()
 {
     Threads::Scope lock(i2c1_mtx);
     if (!ready)
-    {
-        I2C_Wire1.write(255); // Send empty character when no packet available
         return;
-    }
 
-    I2C_Wire1.write(packet.wrapped[send_index]);
-    Serial.print(packet.wrapped[send_index], HEX);
-    send_index++;
-    if (send_index == packet.wrapped.size())
+    for (size_t i = 0; i < packet.wrapped.size(); i++)
     {
-        send_index = 0;
-        packet.wrapped.resize(0);
-        ready = false;
-        Serial.println();
+        I2C_Wire1.write(packet.wrapped[i]);
+        Serial.print(packet.wrapped[i], HEX);
     }
+    packet.wrapped.resize(0);
+    ready = false;
+    Serial.println();
 }
