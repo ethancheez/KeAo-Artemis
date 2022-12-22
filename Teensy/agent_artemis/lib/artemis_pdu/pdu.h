@@ -72,6 +72,12 @@ namespace Artemis
                 uint8_t sw_state = 0;
             };
 
+            struct __attribute__((packed)) pdu_telem
+            {
+                PDU_Type type = PDU_Type::DataSwitchTelem;
+                uint8_t sw_state[12];
+            };
+
             PDU(int baud_rate);
             void set_switch(PDU_SW sw, uint8_t enable);
             bool get_switch(PDU_SW sw);

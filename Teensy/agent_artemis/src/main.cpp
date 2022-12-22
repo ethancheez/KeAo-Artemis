@@ -85,6 +85,18 @@ void loop()
   // delay(1000);
   // Testing I2C, delete later
 
+  // Testing PDU Telem
+  packet.header.type = PacketComm::TypeId::CommandEpsSwitchStatus;
+  packet.header.orig = NODES::GROUND_NODE_ID;
+  packet.header.dest = NODES::TEENSY_NODE_ID;
+  packet.header.radio = ARTEMIS_RADIOS::RFM23;
+  packet.data.resize(0);
+  packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::All);
+  packet.data.push_back(0);
+  PushQueue(packet, main_queue, main_queue_mtx);
+  delay(5000);
+  // Testing PDU Telem
+
   if (PullQueue(packet, main_queue, main_queue_mtx))
   {
     if (packet.header.dest == NODES::GROUND_NODE_ID)

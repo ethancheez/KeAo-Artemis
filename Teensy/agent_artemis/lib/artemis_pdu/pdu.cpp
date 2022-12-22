@@ -56,16 +56,24 @@ namespace Artemis
             packet.sw = sw;
             packet.sw_state = _enable > 0 ? 1 : 0;
 
-            send(packet);
-
             unsigned long timeoutStart = millis();
-            while (recv(response) < 0)
+            while (1)
             {
-                if (millis() - timeoutStart > 5000)
+                send(packet);
+                while (recv(response) < 0)
                 {
-                    Serial.println("FAIL TO SEND CMD TO PDU");
+                    if (millis() - timeoutStart > 5000)
+                    {
+                        Serial.println("FAIL TO SEND CMD TO PDU");
+                        break;
+                    }
+                }
+                if ((response[1] == (uint8_t)sw + PDU_CMD_OFFSET) || (sw == PDU_SW::All && response[0] == (uint8_t)PDU::PDU_Type::DataSwitchTelem + PDU_CMD_OFFSET))
+                {
                     break;
                 }
+
+                delay(100);
             }
             // TODO: Send to PacketComm packet -> then to ground
             Serial.print("UART RECV: ");
@@ -79,16 +87,23 @@ namespace Artemis
             packet.type = PDU_Type::CommandGetSwitchStatus;
             packet.sw = sw;
 
-            send(packet);
-
             unsigned long timeoutStart = millis();
-            while (recv(response) < 0)
+            while (1)
             {
-                if (millis() - timeoutStart > 5000)
+                send(packet);
+                while (recv(response) < 0)
                 {
-                    Serial.println("FAIL TO SEND CMD TO PDU");
+                    if (millis() - timeoutStart > 5000)
+                    {
+                        Serial.println("FAIL TO SEND CMD TO PDU");
+                        break;
+                    }
+                }
+                if ((response[1] == (uint8_t)sw + PDU_CMD_OFFSET) || (sw == PDU_SW::All && response[0] == (uint8_t)PDU::PDU_Type::DataSwitchTelem + PDU_CMD_OFFSET))
+                {
                     break;
                 }
+                delay(100);
             }
             // TODO: Send to PacketComm packet -> then to ground
             Serial.print("UART RECV: ");

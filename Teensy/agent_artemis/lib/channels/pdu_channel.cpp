@@ -13,7 +13,9 @@ void Artemis::Teensy::Channels::pdu_channel()
 {
     while (!Serial1)
         ;
+    threads.delay(5000); // Give the PDU some time to warm up...
 
+    // Ensure PDU is communicating with Teensy
     pdu_packet.type = PDU::PDU_Type::CommandPing;
     while (1)
     {
@@ -85,7 +87,7 @@ void Artemis::Teensy::Channels::pdu_channel()
         }
 
         // Update WDT
-        pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::WDT, 1);
-        pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::WDT, 0);
+        // pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::WDT, 1);
+        // pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::WDT, 0);
     }
 }
