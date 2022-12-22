@@ -162,6 +162,40 @@ void decode_pdu_packet(const char *input)
                 }
             }
         case CommandGetSwitchStatus:
+            if(packet.sw == All) {
+                free(reply);
+                reply = malloc(sizeof(struct pdu_telem));
+                struct pdu_telem telem;
+                telem.type = DataSwitchTelem + PDU_CMD_OFFSET;
+                telem.sw_state[0] = PORT_PinRead(SW_3V3_EN1_PIN) + PDU_CMD_OFFSET;
+                telem.sw_state[1] = PORT_PinRead(SW_3V3_EN2_PIN)+ PDU_CMD_OFFSET;
+                telem.sw_state[2] = PORT_PinRead(SW_5V_EN1_PIN) + PDU_CMD_OFFSET;
+                telem.sw_state[3] = PORT_PinRead(SW_5V_EN2_PIN) + PDU_CMD_OFFSET;
+                telem.sw_state[4] = PORT_PinRead(SW_5V_EN3_PIN) + PDU_CMD_OFFSET;
+                telem.sw_state[5] = PORT_PinRead(SW_5V_EN4_PIN) + PDU_CMD_OFFSET;
+                telem.sw_state[6] = (PORT_PinRead(SW_12V_EN1_PIN) && PORT_PinRead(SW_5V_EN4_PIN)) + PDU_CMD_OFFSET;
+                telem.sw_state[7] = PORT_PinRead(SW_VBATT_EN_PIN) + PDU_CMD_OFFSET;
+                telem.sw_state[8] = (PORT_PinRead(BURN1_EN_PIN) && PORT_PinRead(BURN_5V_PIN)) + PDU_CMD_OFFSET;
+                telem.sw_state[9] = (PORT_PinRead(BURN2_EN_PIN) && PORT_PinRead(BURN_5V_PIN)) + PDU_CMD_OFFSET;
+                telem.sw_state[10] = (PORT_PinRead(FAULT1_PIN) &&
+                                PORT_PinRead(IN1_PIN) &&
+                                PORT_PinRead(IN2_PIN) &&
+                                PORT_PinRead(IN3_PIN) &&
+                                PORT_PinRead(IN4_PIN) &&
+                                PORT_PinRead(TRQ1_PIN) &&
+                                PORT_PinRead(SLEEP1_PIN)) + PDU_CMD_OFFSET;
+                telem.sw_state[11] = (PORT_PinRead(FAULT2_PIN) &&
+                                PORT_PinRead(IN5_PIN) &&
+                                PORT_PinRead(IN6_PIN) &&
+                                PORT_PinRead(IN7_PIN) &&
+                                PORT_PinRead(IN8_PIN) &&
+                                PORT_PinRead(TRQ2_PIN) &&
+                                PORT_PinRead(SLEEP2_PIN)) + PDU_CMD_OFFSET;
+                memcpy(reply, &telem, sizeof(struct pdu_telem));
+                SERCOM3_USART_Write(&reply[0], sizeof(struct pdu_telem));
+                SERCOM3_USART_Write("\r\n", 2);
+                break;
+            } 
             packet.type = DataSwitchStatus + PDU_CMD_OFFSET;
             switch(packet.sw)
             {

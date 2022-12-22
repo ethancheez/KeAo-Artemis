@@ -14,6 +14,7 @@ enum PDU_Type
     CommandGetSwitchStatus,
     DataPong,
     DataSwitchStatus,
+    DataSwitchTelem,
 };
 typedef uint8_t PDU_Type;
 
@@ -43,6 +44,12 @@ struct __attribute__((packed)) pdu_packet
     PDU_Type type;
     PDU_SW sw;
     uint8_t sw_state;
+};
+
+struct __attribute__ ((packed)) pdu_telem
+{
+    PDU_Type type;
+    uint8_t sw_state[12];
 };
 
 void decode_pdu_packet(const char *input);

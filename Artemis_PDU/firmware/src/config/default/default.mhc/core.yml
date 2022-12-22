@@ -39,13 +39,20 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: '3'}
+  - type: KeyValueSet
+    attributes: {id: CONFIG_CLOCK_RTC_SRC}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '0'}
   - type: Boolean
     attributes: {id: CONF_CLOCK_XOSC32K_ENABLE}
     children:
     - type: Values
       children:
       - type: User
-        attributes: {value: 'true'}
+        attributes: {value: 'false'}
   - type: Integer
     attributes: {id: CPU_CLOCK_FREQUENCY}
     children:
@@ -127,6 +134,8 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: '2'}
+      - type: User
+        attributes: {value: '2'}
   - type: Integer
     attributes: {id: GCLK_1_DIVIDER_VALUE}
     children:
@@ -141,6 +150,13 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: '60000000'}
+  - type: Boolean
+    attributes: {id: GCLK_1_OUTPUTENABLE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'false'}
   - type: KeyValueSet
     attributes: {id: GCLK_1_SRC}
     children:
@@ -289,12 +305,49 @@ children:
       - type: Dynamic
         attributes: {id: core, value: '60000000'}
   - type: Boolean
+    attributes: {id: GCLK_ID_7_CHEN}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'false'}
+  - type: Integer
+    attributes: {id: GCLK_ID_7_FREQ}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '0'}
+  - type: KeyValueSet
+    attributes: {id: GCLK_ID_7_GENSEL}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '1'}
+  - type: Boolean
+    attributes: {id: GCLK_ID_8_CHEN}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'false'}
+  - type: Integer
+    attributes: {id: GCLK_ID_8_FREQ}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '0'}
+  - type: Boolean
     attributes: {id: GCLK_INST_NUM1}
     children:
     - type: Values
       children:
       - type: Dynamic
         attributes: {id: core, value: 'true'}
+      - type: User
+        attributes: {value: 'true'}
   - type: Boolean
     attributes: {id: GCLK_INST_NUM2}
     children:
@@ -302,6 +355,13 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: 'true'}
+  - type: Integer
+    attributes: {id: GCLK_IO_1_FREQ}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '0'}
   - type: String
     attributes: {id: KEIL_STACK_HEAP_SIZE}
     children:
@@ -687,6 +747,27 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: 'true'}
+  - type: String
+    attributes: {id: PIN_1_FUNCTION_NAME}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: ''}
+  - type: String
+    attributes: {id: PIN_1_FUNCTION_TYPE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: ''}
+  - type: String
+    attributes: {id: PIN_1_MODE}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: ''}
   - type: String
     attributes: {id: PIN_1_PERIPHERAL_FUNCTION}
     children:

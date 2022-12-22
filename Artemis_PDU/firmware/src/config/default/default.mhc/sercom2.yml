@@ -34,6 +34,15 @@ children:
       children:
       - type: Dynamic
         attributes: {id: sercom2, value: 'true'}
+  - type: Comment
+    attributes: {id: I2C_BAUD_ERROR_COMMENT}
+    children:
+    - type: Attributes
+      children:
+      - type: String
+        attributes: {id: text}
+        children:
+        - {type: Value, value: '**** Achievable I2C Clock Frequency = 114068Hz'}
   - type: String
     attributes: {id: RECEIVE_DATA_REGISTER}
     children:
