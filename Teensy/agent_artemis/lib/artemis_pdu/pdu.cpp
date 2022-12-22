@@ -1,5 +1,4 @@
 #include <pdu.h>
-#include <Arduino.h>
 
 namespace Artemis
 {
@@ -33,23 +32,25 @@ namespace Artemis
             free(cmd);
         }
 
-        bool PDU::recv()
+        int PDU::recv(std::string &response)
         {
             if (Serial1.available() > 0)
             {
                 String UART1_RX = Serial1.readString();
                 if (UART1_RX.length() > 0)
                 {
-                    Serial.print("UART RECV: ");
-                    Serial.println(UART1_RX);
-                    return true;
+                    // Serial.print("UART RECV: ");
+                    // Serial.println(UART1_RX);
+                    response = UART1_RX.c_str();
+                    return UART1_RX.length();
                 }
             }
-            return false;
+            return -1;
         }
 
         void PDU::set_switch(PDU_SW sw, uint8_t _enable)
         {
+            std::string response;
             pdu_packet packet;
             packet.type = PDU_Type::CommandSetSwitch;
             packet.sw = sw;
@@ -58,7 +59,7 @@ namespace Artemis
             send(packet);
 
             unsigned long timeoutStart = millis();
-            while (!recv())
+            while (recv(response) < 0)
             {
                 if (millis() - timeoutStart > 5000)
                 {
@@ -66,10 +67,14 @@ namespace Artemis
                     break;
                 }
             }
+            // TODO: Send to PacketComm packet -> then to ground
+            Serial.print("UART RECV: ");
+            Serial.println(response.c_str());
         }
 
         bool PDU::get_switch(PDU_SW sw)
         {
+            std::string response;
             pdu_packet packet;
             packet.type = PDU_Type::CommandGetSwitchStatus;
             packet.sw = sw;
@@ -77,7 +82,7 @@ namespace Artemis
             send(packet);
 
             unsigned long timeoutStart = millis();
-            while (!recv())
+            while (recv(response) < 0)
             {
                 if (millis() - timeoutStart > 5000)
                 {
@@ -85,7 +90,11 @@ namespace Artemis
                     break;
                 }
             }
+            // TODO: Send to PacketComm packet -> then to ground
+            Serial.print("UART RECV: ");
+            Serial.println(response.c_str());
 
+            // TODO: Return true when on, false when off
             return true;
         }
     }

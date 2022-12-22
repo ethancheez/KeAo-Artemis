@@ -4,12 +4,29 @@ namespace
 {
     Artemis::Teensy::PDU pdu(115200);
     PacketComm packet;
+    Artemis::Teensy::PDU::pdu_packet pdu_packet;
+    std::string response;
+    unsigned long timeoutStart;
 }
 
 void Artemis::Teensy::Channels::pdu_channel()
 {
     while (!Serial1)
         ;
+
+    pdu_packet.type = PDU::PDU_Type::CommandPing;
+    while (1)
+    {
+        pdu.send(pdu_packet);
+        pdu.recv(response);
+        if (response[0] == (uint8_t)PDU::PDU_Type::DataPong + PDU_CMD_OFFSET)
+        {
+            Serial.println("PDU Connection Established");
+            break;
+        }
+        threads.delay(100);
+    }
+
     // Enable burn wire
     // TODO: ASYNC DELAY TO ALLOW WDT RESET
     pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::BURN, true);
@@ -24,21 +41,30 @@ void Artemis::Teensy::Channels::pdu_channel()
             {
             case PacketComm::TypeId::CommandEpsCommunicate:
             {
-                PDU::pdu_packet pdu_packet;
                 pdu_packet.type = PDU::PDU_Type::CommandPing;
 
-                pdu.send(pdu_packet);
-
-                unsigned long timeoutStart = millis();
-                while (!pdu.recv())
+                timeoutStart = millis();
+                while (1)
                 {
-                    if (millis() - timeoutStart > 5000)
+                    pdu.send(pdu_packet);
+                    pdu.recv(response);
+                    if (response[0] == (uint8_t)PDU::PDU_Type::DataPong + PDU_CMD_OFFSET)
                     {
-                        Serial.println("FAIL TO SEND CMD TO PDU");
+                        pdu_packet.type = PDU::PDU_Type::DataPong;
+                        packet.header.dest = packet.header.orig;
+                        packet.header.orig = NODES::TEENSY_NODE_ID;
+                        PushQueue(packet, main_queue, main_queue_mtx);
                         break;
                     }
-                }
 
+                    if (millis() - timeoutStart > 5000)
+                    {
+                        Serial.println("Unable to Ping PDU");
+                        break;
+                    }
+
+                    threads.delay(100);
+                }
                 break;
             }
             case PacketComm::TypeId::CommandEpsSwitchName:

@@ -1,6 +1,7 @@
 #ifndef _PDU_H
 #define _PDU_H
 
+#include <Arduino.h>
 #include <stdint.h>
 #include "support/configCosmosKernel.h"
 
@@ -21,6 +22,7 @@ namespace Artemis
                 CommandGetSwitchStatus,
                 DataPong,
                 DataSwitchStatus,
+                DataSwitchTelem,
             };
 
             enum class PDU_SW : uint8_t
@@ -74,7 +76,7 @@ namespace Artemis
             void set_switch(PDU_SW sw, uint8_t enable);
             bool get_switch(PDU_SW sw);
             void send(pdu_packet packet);
-            bool recv();
+            int recv(std::string &response);
         };
     }
 }

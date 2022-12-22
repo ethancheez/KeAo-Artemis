@@ -56,23 +56,33 @@ void setup()
   threads.setSliceMillis(10);
 
   // Threads
-  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
-  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
   thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
-  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
-  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rpi_channel), "rpi channel"});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
+
+  // Turn on Pi
+  // packet.header.type = PacketComm::TypeId::CommandEpsSwitchName;
+  // packet.header.orig = NODES::GROUND_NODE_ID;
+  // packet.header.dest = NODES::TEENSY_NODE_ID;
+  // packet.header.radio = ARTEMIS_RADIOS::RFM23;
+  // packet.data.resize(0);
+  // packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::RPI);
+  // packet.data.push_back(1);
+  // PushQueue(packet, main_queue, main_queue_mtx);
+  Serial.println("Setup Complete");
 }
 
 void loop()
 {
   // Testing I2C, delete later
-  packet.header.type = (PacketComm ::TypeId)200; // TODO: CommandTakePicture
-  packet.header.orig = NODES::TEENSY_NODE_ID;
-  packet.header.dest = NODES::RPI_NODE_ID;
-  packet.data.resize(0);
-  packet.header.radio = ARTEMIS_RADIOS::NONE;
-  PushQueue(packet, rpi_queue, rpi_queue_mtx);
-  delay(1000);
+  // packet.header.type = (PacketComm ::TypeId)200; // TODO: CommandTakePicture
+  // packet.header.orig = NODES::TEENSY_NODE_ID;
+  // packet.header.dest = NODES::RPI_NODE_ID;
+  // packet.data.resize(0);
+  // packet.header.radio = ARTEMIS_RADIOS::NONE;
+  // PushQueue(packet, rpi_queue, rpi_queue_mtx);
+  // delay(1000);
   // Testing I2C, delete later
 
   if (PullQueue(packet, main_queue, main_queue_mtx))
@@ -123,6 +133,11 @@ void loop()
         }
         break;
       }
+      case PacketComm::TypeId::CommandEpsCommunicate:
+      {
+        PushQueue(packet, pdu_queue, pdu_queue_mtx);
+      }
+      break;
       case PacketComm::TypeId::CommandEpsSwitchName:
       {
         Artemis::Teensy::PDU::PDU_SW switchid = (Artemis::Teensy::PDU::PDU_SW)packet.data[0];
@@ -130,7 +145,18 @@ void loop()
         {
         case Artemis::Teensy::PDU::PDU_SW::RPI:
         {
-          digitalWrite(RPI_ENABLE, packet.data[1]);
+          float curr_V = p[4]->getBusVoltage_V();
+          Serial.println(curr_V);
+          if ((packet.data[1] == 1 && curr_V >= 7.0) || (packet.data[1] == 1 && packet.data[2] == 1))
+          {
+            Serial.println(packet.data[1]);
+            digitalWrite(RPI_ENABLE, packet.data[1]);
+            thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rpi_channel), "rpi thread"});
+          }
+          else if (packet.data[1] == 0)
+          {
+            PushQueue(packet, rpi_queue, rpi_queue_mtx);
+          }
           break;
         }
         default:
@@ -139,6 +165,27 @@ void loop()
         }
         break;
       }
+      case PacketComm::TypeId::CommandEpsSwitchStatus:
+      {
+        Artemis::Teensy::PDU::PDU_SW switchid = (Artemis::Teensy::PDU::PDU_SW)packet.data[0];
+        switch (switchid)
+        {
+        case Artemis::Teensy::PDU::PDU_SW::RPI:
+        {
+          packet.data.resize(1);
+          packet.data.push_back(digitalRead(RPI_ENABLE));
+          packet.header.type = PacketComm::TypeId::DataEpsResponse;
+          packet.header.dest = packet.header.orig;
+          packet.header.orig = NODES::TEENSY_NODE_ID;
+          PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+        }
+        break;
+        default:
+          PushQueue(packet, pdu_queue, pdu_queue_mtx);
+          break;
+        }
+      }
+      break;
       case PacketComm::TypeId::CommandSendBeacon:
       {
         read_temperature();
