@@ -2,53 +2,61 @@
 // #include "support/timelib.h"
 #include <elapsedMillis.h>
 
-namespace Artemis
-{
-    namespace Teensy
-    {
-        namespace Radio
-        {
+namespace Cosmos {
+    namespace Devices {
+        namespace Radios {
             Astrodev::Astrodev()
             {
                 buffer_full = false;
             }
 
-            Astrodev::Astrodev(HardwareSerial *hw_serial) : serial(hw_serial)
+            Astrodev::Astrodev(HardwareSerial* hw_serial) : serial(hw_serial)
             {
                 buffer_full = false;
             }
 
-            int32_t Astrodev::Init(HardwareSerial *hw_serial, uint32_t baud_rate)
+            int32_t Astrodev::Init(HardwareSerial* hw_serial, uint32_t baud_rate)
             {
-                int32_t iretn = 0;
-                int32_t retries = 5;
                 serial = hw_serial;
                 serial->begin(baud_rate);
                 serial->clear();
                 serial->flush();
 
-                Serial.println("Resetting radio...");
+                return 0;
+            }
+
+            int32_t Astrodev::Connect()
+            {
+                int32_t iretn = 0;
+                int32_t retries = 5;
+                Serial.println("Connecting to radio, resetting...");
                 do
                 {
                     iretn = Reset();
-                    threads.delay(2000);
                     if (--retries < 0)
                     {
                         Serial.println("Radio reset unsuccessful");
                         return iretn;
+                    }
+                    else
+                    {
+                        threads.delay(2000);
                     }
                 } while (iretn < 0);
 
                 Serial.println("Radio reset successful");
                 Serial.println("Radio ping test...");
 
-                if ((iretn = Ping()) < 0)
+                if ((iretn=Ping()) < 0)
                 {
                     Reset();
-                    threads.delay(5000);
-                    if ((iretn = Ping()) < 0)
+                    if ((iretn=Ping()) < 0)
                     {
                         return iretn;
+                    }
+                    else
+                    {
+                        threads.delay(5000);
                     }
                 }
                 Serial.println("Radio ping test successful");
@@ -66,6 +74,17 @@ namespace Artemis
                     return GENERAL_ERROR_BAD_SIZE;
                 }
 
+                switch (message.header.command)
+                {
+                case Command::TRANSMIT:
+                    {
+                        ack_transmit = false;
+                    }
+                    break;
+                default:
+                    break;
+                }
+                
                 message.header.sync0 = SYNC0;
                 message.header.sync1 = SYNC1;
                 message.header.type = COMMAND;
@@ -74,15 +93,15 @@ namespace Artemis
 #ifdef DEBUG_PRINT
                 char msg[4];
                 Serial.print("tpre: ");
-                for (uint16_t i = 0; i < 8; i++)
+                for (uint16_t i=0; i<8; i++)
                 {
-                    // serial->write(message.preamble[i]);
+                    //serial->write(message.preamble[i]);
                     sprintf(msg, "0x%02X", message.preamble[i]);
                     Serial.print(msg);
                     Serial.print(" ");
                     if (i == 6)
                     {
-                        // threads.delay(50);
+                        //threads.delay(50);
                     }
                 }
 #endif
@@ -104,11 +123,11 @@ namespace Artemis
                     uint16_t cs;
                     uint8_t csb[2];
                 };
-                cs = CalcCS(&message.preamble[2], 6 + message.header.sizelo);
+                cs = CalcCS(&message.preamble[2], 6+message.header.sizelo);
                 message.payload[message.header.sizelo] = csb[0];
-                message.payload[message.header.sizelo + 1] = csb[1];
+                message.payload[message.header.sizelo+1] = csb[1];
 
-                for (uint16_t i = 0; i < message.header.sizelo + 2; i++)
+                for (uint16_t i=0; i<message.header.sizelo+2; i++)
                 {
                     serial->write(message.payload[i]);
 #ifdef DEBUG_PRINT
@@ -135,7 +154,7 @@ namespace Artemis
                     return iretn;
                 }
 
-                tmessage.header.command = (uint8_t)Command::TRANSMIT;
+                tmessage.header.command = Command::TRANSMIT;
                 tmessage.header.sizelo = packet.wrapped.size();
                 if (tmessage.header.sizelo > MTU)
                 {
@@ -143,7 +162,7 @@ namespace Artemis
                 }
 
                 memcpy(&tmessage.payload[0], packet.wrapped.data(), packet.wrapped.size());
-
+                
                 return Transmit(tmessage);
             }
 
@@ -157,7 +176,7 @@ namespace Artemis
                 int32_t iretn;
                 frame message;
 
-                message.header.command = (uint8_t)Command::NOOP;
+                message.header.command = Command::NOOP;
                 message.header.sizehi = 0;
                 message.header.sizelo = 0;
                 iretn = Transmit(message);
@@ -199,7 +218,7 @@ namespace Artemis
                 int32_t iretn;
                 frame message;
 
-                message.header.command = (uint8_t)Command::RESET;
+                message.header.command = Command::RESET;
                 message.header.sizehi = 0;
                 message.header.sizelo = 0;
                 iretn = Transmit(message);
@@ -238,7 +257,7 @@ namespace Artemis
                 int32_t iretn;
                 frame message;
 
-                message.header.command = (uint8_t)Command::GETTCVCONFIG;
+                message.header.command = Command::GETTCVCONFIG;
                 message.header.sizehi = 0;
                 message.header.sizelo = 0;
                 iretn = Transmit(message);
@@ -250,7 +269,7 @@ namespace Artemis
                 {
                     return iretn;
                 }
-
+                
                 // Don't try to get the response
                 if (!get_response)
                 {
@@ -259,8 +278,10 @@ namespace Artemis
 
                 threads.delay(10);
                 iretn = Receive(message);
+#ifdef DEBUG_PRINT
                 Serial.print("GReceive iretn: ");
                 Serial.println(iretn);
+#endif
                 if (iretn < 0)
                 {
                     return iretn;
@@ -279,7 +300,7 @@ namespace Artemis
                 int32_t iretn;
                 frame message;
 
-                message.header.command = (uint8_t)Command::SETTCVCONFIG;
+                message.header.command = Command::SETTCVCONFIG;
                 message.header.sizehi = 0;
                 message.header.sizelo = sizeof(tcv_configuration);
                 message.tcv = tcv_configuration;
@@ -314,10 +335,15 @@ namespace Artemis
 
             int32_t Astrodev::GetTelemetry()
             {
+                return GetTelemetry(true);
+            }
+
+            int32_t Astrodev::GetTelemetry(bool get_response)
+            {
                 int32_t iretn;
                 frame message;
 
-                message.header.command = (uint8_t)Command::TELEMETRY;
+                message.header.command = Command::TELEMETRY;
                 message.header.sizehi = 0;
                 message.header.sizelo = 0;
                 iretn = Transmit(message);
@@ -330,6 +356,24 @@ namespace Artemis
                     return iretn;
                 }
 
+                // Don't try to get the response
+                if (!get_response)
+                {
+                    return iretn;
+                }
+
+                threads.delay(10);
+                iretn = Receive(message);
+#ifdef DEBUG_PRINT
+                Serial.print("TReceive iretn: ");
+                Serial.println(iretn);
+#endif
+                if (iretn < 0)
+                {
+                    return iretn;
+                }
+                memcpy(&last_telem, &message.payload[0], message.header.sizelo);
+
                 return 0;
             }
 
@@ -338,7 +382,7 @@ namespace Artemis
                 int32_t iretn;
                 frame message;
 
-                message.header.command = (uint8_t)Command::RFCONFIG;
+                message.header.command = Command::RFCONFIG;
                 message.header.sizehi = 0;
                 message.header.sizelo = sizeof(rf_config);
                 message.rf = config;
@@ -348,12 +392,13 @@ namespace Artemis
                 return iretn;
             }
 
+
             uint16_t Astrodev::CalcCS(uint8_t *data, uint16_t size)
             {
-                uint8_t ck_a = 0, ck_b = 0;
+                uint8_t ck_a=0, ck_b=0;
                 uint16_t cs;
 
-                for (uint16_t i = 0; i < size; ++i)
+                for (uint16_t i=0; i<size; ++i)
                 {
                     ck_a += data[i];
                     ck_b += ck_a;
@@ -371,7 +416,7 @@ namespace Artemis
                 int16_t ch = -1;
 
                 // Wait for sync characters
-                elapsedMillis wdt;
+                elapsedMillis wdt = 0;
                 while (wdt < 1000)
                 {
                     threads.delay(10);
@@ -399,7 +444,7 @@ namespace Artemis
                 {
                     // threads.yield();
                     // Read rest of header in case not all bytes were read
-                    size_t bytesRead2 = serial->readBytes(&message.preamble[2 + bytesRead], 6 - bytesRead);
+                    size_t bytesRead2 = serial->readBytes(&message.preamble[2+bytesRead], 6-bytesRead);
                     if (bytesRead + bytesRead2 != 6)
                     {
                         return ASTRODEV_ERROR_HEADER;
@@ -415,7 +460,7 @@ namespace Artemis
 
 #ifdef DEBUG_PRINT
                 Serial.print("header.command: ");
-                Serial.println(message.header.command);
+                Serial.println(unsigned(message.header.command));
 #endif
 
                 // Check payload bytes
@@ -430,13 +475,22 @@ namespace Artemis
                     {
                         Serial.println("BUFFER FULL!!!!!!!!!!!!!!!!!!!!!!!!!");
                     }
-                    else
-                    {
+                    else {
                         Serial.println("BUFFER OK!!!!!!!!!!!!!!!!!!!!!!!!!");
                     }
 #endif
-                    last_ack = true;
-                    return 0;
+                    switch (message.header.command)
+                    {
+                    case Command::TRANSMIT:
+                        {
+                            ack_transmit = true;
+                        }
+                        break;
+                    default:
+                        break;
+                    }
+                    // TODO: check this doesn't catch any strange stuff
+                    return (int32_t)message.header.command;
                 }
                 else if (message.header.status.ack == 0x0f && message.header.sizelo == 0xff)
                 {
@@ -446,12 +500,20 @@ namespace Artemis
                     {
                         Serial.println("BUFFER FULL##############################");
                     }
-                    else
-                    {
+                    else {
                         Serial.println("BUFFER OK##############################");
                     }
 #endif
-                    last_ack = false;
+                    switch (message.header.command)
+                    {
+                    case Command::TRANSMIT:
+                        {
+                            ack_transmit = false;
+                        }
+                        break;
+                    default:
+                        break;
+                    }
                     return ASTRODEV_ERROR_NACK;
                 }
 
@@ -461,13 +523,13 @@ namespace Artemis
                 uint8_t size = message.header.sizelo;
                 if (!size)
                 {
-                    return message.header.command;
+                    return (int32_t)message.header.command;
                 }
                 // Read rest of payload bytes
-                size_t sizeToRead = size + 2;
+                size_t sizeToRead = size+2;
 #ifdef DEBUG_PRINT
-                Serial.print("size: ");
-                Serial.println(size);
+                Serial.print("sizeToRead: ");
+                Serial.println(sizeToRead);
 #endif
                 size_t readLocation = 0;
                 bytesRead = serial->readBytes(&message.payload[readLocation], sizeToRead);
@@ -481,28 +543,28 @@ namespace Artemis
                 {
                     sizeToRead -= bytesRead;
                     readLocation += bytesRead;
-                    threads.delay(500);
+                    threads.delay(10);
                     bytesRead = serial->readBytes(&message.payload[readLocation], sizeToRead);
 #ifdef DEBUG_PRINT
-                    Serial.print("bytesRead: ");
-                    Serial.println(bytesRead);
+                Serial.print("bytesRead: ");
+                Serial.println(bytesRead);
 #endif
-                    if (++iterations > 20)
+                    if (++iterations > 4)
                     {
                         break;
                     }
                 }
 
                 // Check payload for accuracy
-                cs = message.payload[size] | (message.payload[size + 1] << 8L);
-                if (cs != CalcCS(&message.preamble[2], 6 + size))
+                cs = message.payload[size] | (message.payload[size+1] << 8L);
+                if (cs != CalcCS(&message.preamble[2], 6+size))
                 {
                     return (ASTRODEV_ERROR_PAYLOAD_CS);
                 }
 #ifdef DEBUG_PRINT
                 char msg[4];
                 Serial.print("recv msg: ");
-                for (uint16_t i = 0; i < message.header.sizelo; i++)
+                for (uint16_t i=0; i<message.header.sizelo; i++)
                 {
                     sprintf(msg, "0x%02X", message.payload[i]);
                     Serial.print(msg);
@@ -512,151 +574,10 @@ namespace Artemis
 #endif
                 // Handle command types outside of astrodev library
                 // i.e., pushing payloads to appropriate queues and what not
-                return message.header.command;
+                return (int32_t)message.header.command;
             }
 
-            // void Astrodev::receive_loop()
-            // {
-            //     running = true;
-            //     elapsedMillis wdt;
-
-            //     last_error = 0;
-            //     while(running)
-            //     {
-            //         int32_t ch;
-            //         frame next_frame;
-            //         last_error = 0;
-            //         while (wdt < 5000)
-            //         {
-            //             // Wait for first sync character
-            //             do
-            //             {
-            //                 ch = serial->read();
-            //                 if (ch < 0)
-            //                 {
-            //                     last_error = ASTRODEV_ERROR_SYNC0;
-            //                     break;
-            //                 }
-            //             } while (ch != SYNC0);
-            //             next_message.preamble[0] = ch;
-            //             wdt = 0;
-
-            //             // Second sync character must immediately follow
-            //             ch = serial->read();
-            //             if (ch < 0 || ch != SYNC1)
-            //             {
-            //                 last_error = ASTRODEV_ERROR_SYNC1;
-            //                 break;
-            //             }
-            //             next_message.preamble[1] = ch;
-            //             wdt = 0;
-
-            //             // Read rest of header
-            //             for (uint16_t i=2; i<8; ++i)
-            //             {
-            //                 ch = serial->read();
-            //                 if (ch < 0)
-            //                 {
-            //                     last_error = ASTRODEV_ERROR_HEADER;
-            //                     break;
-            //                 }
-            //                 next_message.preamble[i] = ch;
-            //             }
-            //             if (last_error < 0)
-            //             {
-            //                 break;
-            //             }
-            //             wdt = 0;
-
-            //             // Check header for accuracy
-            //             union
-            //             {
-            //                 uint16_t cs;
-            //                 uint8_t csb[2];
-            //             };
-            //             cs = CalcCS(&next_message.preamble[2], 4);
-            //             if (cs != next_message.header.cs)
-            //             {
-            //                 last_error = ASTRODEV_ERROR_HEADER_CS;
-            //                 break;
-            //             }
-            //             wdt = 0;
-
-            //             // Check for NOACK
-            //             if (next_message.header.ack == 0x0a && next_message.header.size == 0x0a)
-            //             {
-            //                 last_ack = true;
-            //                 last_command = (Command)next_message.header.command;
-            //                 wdt = 0;
-            //             }
-            //             else if (next_message.header.ack == 0x0f && next_message.header.size == 0xff)
-            //             {
-            //                 last_ack = false;
-            //                 last_command = (Command)next_message.header.command;
-            //                 wdt = 0;
-            //             }
-            //             else
-            //             {
-            //                 // Read rest of frame
-            //                 switch ((Command)next_message.header.command)
-            //                 {
-            //                 // Simple ACK:NOACK
-            //                 case Command::NOOP:
-            //                 case Command::RESET:
-            //                 case Command::TRANSMIT:
-            //                 case Command::SETTCVCONFIG:
-            //                 case Command::FLASH:
-            //                 case Command::RFCONFIG:
-            //                 case Command::BEACONDATA:
-            //                 case Command::BEACONCONFIG:
-            //                 case Command::DIOKEY:
-            //                 case Command::FIRMWAREUPDATE:
-            //                 case Command::FIRMWAREPACKET:
-            //                 case Command::FASTSETPA:
-            //                     break;
-            //                 default:
-            //                     {
-            //                         for (uint16_t i=0; i<next_message.header.size+2; ++i)
-            //                         {
-            //                             if((ch = serial->read()) < 0)
-            //                             {
-            //                                 //                                        serial->drain();
-            //                                 last_error = ASTRODEV_ERROR_PAYLOAD;
-            //                                 break;
-            //                             }
-            //                             next_frame.payload[i] = ch;
-            //                         }
-            //                         if (last_error < 0)
-            //                         {
-            //                             break;
-            //                         }
-
-            //                         // Check payload for accuracy
-            //                         cs = next_frame.payload[next_message.header.size] | (next_frame.payload[next_message.header.size+1] << 8L);
-            //                         if (cs != CalcCS(&next_message.preamble[2], 6+next_message.header.size))
-            //                         {
-            //                             last_error = ASTRODEV_ERROR_PAYLOAD_CS;
-            //                             break;
-            //                         }
-            //                     }
-            //                     break;
-            //                 }
-            //                 if (next_message.header.command == (uint8_t)Command::TELEMETRY)
-            //                 {
-            //                     last_telem = next_frame.telem;
-            //                 }
-            //                 else if (next_message.header.command == (uint8_t)Command::RECEIVE)
-            //                 {
-            //                     vector<uint8_t> payload;
-            //                     payload.insert(payload.begin(), (uint8_t *)next_frame.payload, (uint8_t *)next_frame.payload+next_message.header.size);
-            //                     push_queue_in(payload);
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
-
-            void Astrodev::setSerial(HardwareSerial *new_serial)
+            void Astrodev::setSerial(HardwareSerial* new_serial)
             {
                 serial = new_serial;
             }
