@@ -5,6 +5,11 @@
 #include <USBHost_t36.h>
 #include "artemisbeacons.h"
 
+// For setting Teensy Clock Frequency (only for Teensy 4.0 and 4.1)
+#if defined(__IMXRT1062__)
+extern "C" uint32_t set_arm_clock(uint32_t frequency);
+#endif
+
 /* Helper Function Defs */
 bool setup_magnetometer(void);
 bool setup_imu(void);
@@ -35,7 +40,7 @@ namespace
   Adafruit_INA219 *p[ARTEMIS_CURRENT_SENSOR_COUNT] = {&current_1, &current_2, &current_3, &current_4, &current_5};
 
   // Temperature Sensors
-  const int temps[ARTEMIS_TEMP_SENSOR_COUNT] = {A0, A1, A6, A7, A8, A9, A17};
+  const int temps[ARTEMIS_TEMP_SENSOR_COUNT] = {A0, A1, A6, A7, A8, A9, A2};
   // const char *temp_sen_names[ARTEMIS_TEMP_SENSOR_COUNT] = {"obc", "pdu", "battery board", "solar pannel 1", "solar panel 2", "solar panel 3", "solar panel 4"};
 
   elapsedMillis sensortimer;
@@ -45,21 +50,26 @@ namespace
 void setup()
 {
   Serial.begin(115200);
+
+#if defined(__IMXRT1062__)
+  set_arm_clock(150000000); // Allowed Frequencies (MHz): 24, 150, 396, 450, 528, 600
+#endif
+
   usb.begin();
   pinMode(RPI_ENABLE, OUTPUT);
   delay(3000);
 
-  setup_magnetometer();
-  setup_imu();
-  setup_current();
+  // setup_magnetometer();
+  // setup_imu();
+  // setup_current();
 
   threads.setSliceMillis(10);
 
   // Threads
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), "rfm23 thread"});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), "rfm98 thread"});
-  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), "pdu thread"});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), "astrodev thread"});
 
   // Turn on Pi
   // packet.header.type = PacketComm::TypeId::CommandEpsSwitchName;
@@ -86,13 +96,13 @@ void loop()
   // Testing I2C, delete later
 
   // Testing PDU Telem
-  packet.header.type = PacketComm::TypeId::CommandEpsSwitchStatus;
-  packet.header.nodeorig = NODES::GROUND_NODE_ID;
-  packet.header.nodedest = NODES::TEENSY_NODE_ID;
+  packet.header.type = PacketComm::TypeId::DataObcPong;
+  packet.header.nodeorig = NODES::TEENSY_NODE_ID;
+  packet.header.nodedest = NODES::GROUND_NODE_ID;
   // packet.header.radio = ARTEMIS_RADIOS::RFM23;
-  packet.data.resize(0);
-  packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::All);
-  packet.data.push_back(0);
+  // packet.data.resize(0);
+  // packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::All);
+  // packet.data.push_back(0);
   PushQueue(packet, main_queue, main_queue_mtx);
   delay(5000);
   // Testing PDU Telem
@@ -101,6 +111,7 @@ void loop()
   {
     if (packet.header.nodedest == NODES::GROUND_NODE_ID)
     {
+      PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
       // switch (packet.header.radio)
       // {
       // case ARTEMIS_RADIOS::RFM23:
@@ -213,10 +224,10 @@ void loop()
   if (sensortimer > 60000)
   {
     sensortimer -= 60000;
-    read_temperature();
-    read_current();
-    read_imu();
-    read_mag();
+    // read_temperature();
+    // read_current();
+    // read_imu();
+    // read_mag();
   }
   threads.delay(10);
 }
