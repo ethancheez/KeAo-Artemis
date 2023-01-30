@@ -1,3 +1,4 @@
-[submodule "Teensy/agent_artemis/lib/micro-cosmos"]
-	path = Teensy/agent_artemis/lib/micro-cosmos
+
+[submodule "Teensy/keao_fsw/lib/micro-cosmos"]
+	path = Teensy/keao_fsw/lib/micro-cosmos
 	url = https://github.com/hsfl/micro-cosmos.git
