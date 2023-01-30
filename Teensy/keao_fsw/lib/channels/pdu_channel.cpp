@@ -53,8 +53,8 @@ void Artemis::Teensy::Channels::pdu_channel()
                     if (response[0] == (uint8_t)PDU::PDU_Type::DataPong + PDU_CMD_OFFSET)
                     {
                         pdu_packet.type = PDU::PDU_Type::DataPong;
-                        packet.header.dest = packet.header.orig;
-                        packet.header.orig = NODES::TEENSY_NODE_ID;
+                        packet.header.nodedest = packet.header.nodeorig;
+                        packet.header.nodeorig = NODES::TEENSY_NODE_ID;
                         PushQueue(packet, main_queue, main_queue_mtx);
                         break;
                     }

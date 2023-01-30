@@ -17,12 +17,12 @@ void Artemis::Teensy::Channels::rfm98_channel()
         {
             switch (packet.header.type)
             {
-            case PacketComm::TypeId::DataBeacon:
-            case PacketComm::TypeId::DataPong:
+            case PacketComm::TypeId::DataObcBeacon:
+            case PacketComm::TypeId::DataObcPong:
             case PacketComm::TypeId::DataEpsResponse:
             case PacketComm::TypeId::DataRadioResponse:
             case PacketComm::TypeId::DataAdcsResponse:
-            case PacketComm::TypeId::DataResponse:
+            case PacketComm::TypeId::DataObcResponse:
             {
                 rfm98.send(packet);
                 threads.delay(500);
