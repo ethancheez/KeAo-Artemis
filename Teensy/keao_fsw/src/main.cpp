@@ -95,34 +95,31 @@ void loop()
   // delay(1000);
   // Testing I2C, delete later
 
-  // Testing PDU Telem
+  // Testing Astrodev
   packet.header.type = PacketComm::TypeId::DataObcPong;
   packet.header.nodeorig = NODES::TEENSY_NODE_ID;
   packet.header.nodedest = NODES::GROUND_NODE_ID;
-  // packet.header.radio = ARTEMIS_RADIOS::RFM23;
-  // packet.data.resize(0);
-  // packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::All);
-  // packet.data.push_back(0);
+  packet.header.chanorig = 0;
+  packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
   PushQueue(packet, main_queue, main_queue_mtx);
-  delay(5000);
-  // Testing PDU Telem
+  delay(500);
+  // Testing Astrodev
 
   if (PullQueue(packet, main_queue, main_queue_mtx))
   {
     if (packet.header.nodedest == NODES::GROUND_NODE_ID)
     {
-      PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
-      // switch (packet.header.radio)
-      // {
-      // case ARTEMIS_RADIOS::RFM23:
-      //   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
-      //   break;
-      // case ARTEMIS_RADIOS::ASTRODEV:
-      //   PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
-      //   break;
-      // default:
-      //   break;
-      // }
+      switch (packet.header.chandest)
+      {
+      case Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL:
+        PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+        break;
+      case Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL:
+        PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
+        break;
+      default:
+        break;
+      }
     }
     else if (packet.header.nodedest == NODES::RPI_NODE_ID)
     {
@@ -143,17 +140,17 @@ void loop()
         {
           packet.data.push_back(data[i]);
         }
-        // switch (packet.header.radio)
-        // {
-        // case ARTEMIS_RADIOS::RFM23:
-        //   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
-        //   break;
-        // case ARTEMIS_RADIOS::ASTRODEV:
-        //   PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
-        //   break;
-        // default:
-        //   break;
-        // }
+        switch (packet.header.chandest)
+        {
+        case Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL:
+          PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+          break;
+        case Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL:
+          PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
+          break;
+        default:
+          break;
+        }
         break;
       }
       case PacketComm::TypeId::CommandEpsCommunicate:
