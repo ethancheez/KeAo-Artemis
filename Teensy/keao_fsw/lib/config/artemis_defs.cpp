@@ -25,12 +25,12 @@ Threads::Mutex pdu_queue_mtx;
 Threads::Mutex rpi_queue_mtx;
 
 // Command Queues
-queue<PacketComm> main_queue;
-queue<PacketComm> astrodev_queue;
-queue<PacketComm> rfm23_queue;
-queue<PacketComm> rfm98_queue;
-queue<PacketComm> pdu_queue;
-queue<PacketComm> rpi_queue;
+std::deque<PacketComm> main_queue;
+std::deque<PacketComm> astrodev_queue;
+std::deque<PacketComm> rfm23_queue;
+std::deque<PacketComm> rfm98_queue;
+std::deque<PacketComm> pdu_queue;
+std::deque<PacketComm> rpi_queue;
 
 // Other Mutex
 Threads::Mutex spi1_mtx;
@@ -53,24 +53,24 @@ int kill_thread(uint8_t channel_id)
 }
 
 // Thread-safe way of pushing onto the packet queue
-int32_t PushQueue(PacketComm &packet, queue<PacketComm> &queue, Threads::Mutex &mtx)
+int32_t PushQueue(PacketComm &packet, std::deque<PacketComm> &queue, Threads::Mutex &mtx)
 {
     Threads::Scope lock(mtx);
-    if (queue.size() >= MAXQUEUESIZE)
+    if (queue.size() > MAXQUEUESIZE)
     {
-        queue.pop();
+        queue.pop_front();
     }
-    queue.push(packet);
+    queue.push_back(packet);
     return 1;
 }
 // Thread-safe way of pulling from the packet queue
-int32_t PullQueue(PacketComm &packet, queue<PacketComm> &queue, Threads::Mutex &mtx)
+int32_t PullQueue(PacketComm &packet, std::deque<PacketComm> &queue, Threads::Mutex &mtx)
 {
     Threads::Scope lock(mtx);
     if (queue.size() > 0)
     {
         packet = queue.front();
-        queue.pop();
+        queue.pop_front();
         return 1;
     }
     else

@@ -35,9 +35,9 @@ void Artemis::Teensy::Channels::rpi_channel()
 
                     // Empty RPI Queue
                     while (!rpi_queue.empty())
-                        rpi_queue.pop();
+                        rpi_queue.pop_front();
 
-                    kill_thread((char *)"rpi thread");
+                    kill_thread(Artemis::Teensy::Channels::Channel_ID::RPI_CHANNEL);
                     return;
                 }
             }

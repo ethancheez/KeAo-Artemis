@@ -66,10 +66,10 @@ void setup()
   threads.setSliceMillis(10);
 
   // Threads
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel), Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL});
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel), Artemis::Teensy::Channels::Channel_ID::RFM98_CHANNEL});
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel), Artemis::Teensy::Channels::Channel_ID::PDU_CHANNEL});
-  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel), Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel, 9000), Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel, 9000), Artemis::Teensy::Channels::Channel_ID::RFM98_CHANNEL});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel, 9000), Artemis::Teensy::Channels::Channel_ID::PDU_CHANNEL});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel, 9000), Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL});
 
   // Turn on Pi
   // packet.header.type = PacketComm::TypeId::CommandEpsSwitchName;

@@ -100,12 +100,12 @@ extern Threads::Mutex pdu_queue_mtx;
 extern Threads::Mutex rpi_queue_mtx;
 
 // Command Queues
-extern queue<PacketComm> main_queue;
-extern queue<PacketComm> astrodev_queue;
-extern queue<PacketComm> rfm23_queue;
-extern queue<PacketComm> rfm98_queue;
-extern queue<PacketComm> pdu_queue;
-extern queue<PacketComm> rpi_queue;
+extern std::deque<PacketComm> main_queue;
+extern std::deque<PacketComm> astrodev_queue;
+extern std::deque<PacketComm> rfm23_queue;
+extern std::deque<PacketComm> rfm98_queue;
+extern std::deque<PacketComm> pdu_queue;
+extern std::deque<PacketComm> rpi_queue;
 
 // Other Mutex
 extern Threads::Mutex spi1_mtx;
@@ -113,7 +113,7 @@ extern Threads::Mutex i2c1_mtx;
 
 // Utility Functions
 int kill_thread(uint8_t channel_id);
-int32_t PushQueue(PacketComm &packet, queue<PacketComm> &queue, Threads::Mutex &mtx);
-int32_t PullQueue(PacketComm &packet, queue<PacketComm> &queue, Threads::Mutex &mtx);
+int32_t PushQueue(PacketComm &packet, std::deque<PacketComm> &queue, Threads::Mutex &mtx);
+int32_t PullQueue(PacketComm &packet, std::deque<PacketComm> &queue, Threads::Mutex &mtx);
 
 #endif // _ARTEMIS_DEFS_H
