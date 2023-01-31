@@ -75,7 +75,7 @@ void Artemis::Teensy::Channels::astrodev_channel()
                 Serial.print((char)packet.data[i]);
             }
             Serial.println("]");
-            PushQueue(packet, main_queue, main_queue_mtx);
+            // PushQueue(packet, main_queue, main_queue_mtx);
         }
 
         
@@ -203,6 +203,7 @@ int32_t astrodev_recv()
                 Serial.println("Unwrap fail in RX radio recv");
                 return -1;
             }
+            PushQueue(packet, main_queue, main_queue_mtx);
             break;
         default:
             Serial.print("cmd ");

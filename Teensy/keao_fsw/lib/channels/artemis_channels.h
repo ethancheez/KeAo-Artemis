@@ -22,6 +22,16 @@ namespace Artemis
     {
         namespace Channels
         {
+            // Channel IDs
+            enum Channel_ID : uint8_t
+            {
+                RFM23_CHANNEL = 1,
+                RFM98_CHANNEL,
+                ASTRODEV_CHANNEL,
+                PDU_CHANNEL,
+                RPI_CHANNEL,
+            };
+
             void rfm23_channel();
             void rfm98_channel();
             void astrodev_channel();

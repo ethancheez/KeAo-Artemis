@@ -11,7 +11,7 @@
 #define ARTEMIS_TEMP_SENSOR_COUNT 7
 #define AREF_VOLTAGE 3.3
 
-#define MAXQUEUESIZE 50
+#define MAXQUEUESIZE 30
 
 // Nodes
 enum NODES : uint8_t
@@ -28,7 +28,7 @@ extern std::map<string, NODES> NodeType;
 struct thread_struct
 {
   int thread_id;
-  const char *thread_name;
+  uint8_t channel_id;
 };
 
 // Enums
@@ -112,7 +112,7 @@ extern Threads::Mutex spi1_mtx;
 extern Threads::Mutex i2c1_mtx;
 
 // Utility Functions
-int kill_thread(char *thread_name);
+int kill_thread(uint8_t channel_id);
 int32_t PushQueue(PacketComm &packet, queue<PacketComm> &queue, Threads::Mutex &mtx);
 int32_t PullQueue(PacketComm &packet, queue<PacketComm> &queue, Threads::Mutex &mtx);
 

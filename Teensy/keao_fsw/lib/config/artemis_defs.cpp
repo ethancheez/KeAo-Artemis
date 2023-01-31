@@ -37,11 +37,11 @@ Threads::Mutex spi1_mtx;
 Threads::Mutex i2c1_mtx;
 
 // Utility Functions
-int kill_thread(char *thread_name)
+int kill_thread(uint8_t channel_id)
 {
     for (auto it = thread_list.begin(); it != thread_list.end(); it++)
     {
-        if (it->thread_name == thread_name)
+        if (it->channel_id == channel_id)
         {
             int ret = it->thread_id;
             threads.kill(it->thread_id);
