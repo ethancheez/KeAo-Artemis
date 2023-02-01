@@ -17,6 +17,7 @@ int32_t astrodev_send();
 namespace
 {
     using namespace Cosmos::Devices::Radios;
+    using namespace Artemis;
     Astrodev astrodev;
     Astrodev::frame incoming_message;
     PacketComm packet;
@@ -181,8 +182,8 @@ int32_t astrodev_recv()
         case Astrodev::Command::TELEMETRY:
             // Setup PacketComm packet stuff
             packet.header.type = Cosmos::Support::PacketComm::TypeId::CommandRadioAstrodevCommunicate;
-            packet.header.nodeorig = NODES::TEENSY_NODE_ID;
-            packet.header.nodedest = NODES::TEENSY_NODE_ID;
+            packet.header.nodeorig = (uint8_t)NODES::TEENSY_NODE_ID;
+            packet.header.nodedest = (uint8_t)NODES::TEENSY_NODE_ID;
             packet.data.resize(incoming_message.header.sizelo + 4);
             packet.data[0] = 0;
             packet.data[1] = 0x20;

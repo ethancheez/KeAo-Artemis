@@ -11,10 +11,10 @@
 #define ARTEMIS_TEMP_SENSOR_COUNT 7
 #define AREF_VOLTAGE 3.3
 
-#define MAXQUEUESIZE 30
+#define MAXQUEUESIZE 50
 
 // Nodes
-enum NODES : uint8_t
+enum class NODES : uint8_t
 {
   GROUND_NODE_ID = 1,
   TEENSY_NODE_ID = 2,
@@ -24,14 +24,12 @@ enum NODES : uint8_t
 
 extern std::map<string, NODES> NodeType;
 
-// Structs
 struct thread_struct
 {
   int thread_id;
   uint8_t channel_id;
 };
 
-// Enums
 enum TEENSY_PINS
 {
   UART4_RXD,
@@ -77,16 +75,6 @@ enum TEENSY_PINS
   A16_UNUSED,
   AIN2
 };
-
-enum ARTEMIS_RADIOS : uint8_t
-{
-  NONE,
-  RFM23,
-  RFM98,
-  ASTRODEV,
-};
-
-extern std::map<string, ARTEMIS_RADIOS> RadioType;
 
 // Max threads = 16
 extern vector<struct thread_struct> thread_list;

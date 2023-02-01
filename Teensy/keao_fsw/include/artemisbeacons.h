@@ -1,5 +1,8 @@
+#ifndef _ARTEMIS_BEACONS_H
+#define _ARTEMIS_BEACONS_H
+
 #include <cstdint>
-#include "artemis_defs.h"
+#include <artemis_defs.h>
 
 enum class TypeId : uint8_t
 {
@@ -49,3 +52,5 @@ struct __attribute__((packed)) imubeacon
     float gyrox = 0, gyroy = 0, gyroz = 0;
     float imutemp = 0;
 };
+
+#endif // _ARTEMIS_BEACONS_H

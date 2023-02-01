@@ -9,13 +9,6 @@ std::map<string, NODES> NodeType = {
     {"pleiades", NODES::PLEIADES_NODE_ID},
 };
 
-std::map<string, ARTEMIS_RADIOS> RadioType = {
-    {"none", ARTEMIS_RADIOS::NONE},
-    {"rfm23", ARTEMIS_RADIOS::RFM23},
-    {"rfm98", ARTEMIS_RADIOS::RFM98},
-    {"astrodev", ARTEMIS_RADIOS::ASTRODEV},
-};
-
 // Mutex for Command Queues
 Threads::Mutex main_queue_mtx;
 Threads::Mutex astrodev_queue_mtx;

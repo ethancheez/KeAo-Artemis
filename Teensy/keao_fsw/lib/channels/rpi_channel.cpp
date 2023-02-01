@@ -5,6 +5,7 @@ void sendData();
 
 namespace
 {
+    using namespace Artemis;
     PacketComm packet;
     bool ready = false;
 }

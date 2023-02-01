@@ -54,7 +54,7 @@ void Artemis::Teensy::Channels::pdu_channel()
                     {
                         pdu_packet.type = PDU::PDU_Type::DataPong;
                         packet.header.nodedest = packet.header.nodeorig;
-                        packet.header.nodeorig = NODES::TEENSY_NODE_ID;
+                        packet.header.nodeorig = (uint8_t)NODES::TEENSY_NODE_ID;
                         PushQueue(packet, main_queue, main_queue_mtx);
                         break;
                     }
