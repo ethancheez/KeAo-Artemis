@@ -4,6 +4,7 @@
 #include <support/configCosmosKernel.h>
 #include <USBHost_t36.h>
 #include "artemisbeacons.h"
+#include "tests/packet_tests.h"
 
 // For setting Teensy Clock Frequency (only for Teensy 4.0 and 4.1)
 #if defined(__IMXRT1062__)
@@ -40,7 +41,7 @@ namespace
   Adafruit_INA219 *p[ARTEMIS_CURRENT_SENSOR_COUNT] = {&current_1, &current_2, &current_3, &current_4, &current_5};
 
   // Temperature Sensors
-  const int temps[ARTEMIS_TEMP_SENSOR_COUNT] = {A0, A1, A6, A7, A8, A9, A2};
+  const int temps[ARTEMIS_TEMP_SENSOR_COUNT] = {A0, A1, A6, A7, A8, A9, A17};
   // const char *temp_sen_names[ARTEMIS_TEMP_SENSOR_COUNT] = {"obc", "pdu", "battery board", "solar pannel 1", "solar panel 2", "solar panel 3", "solar panel 4"};
 
   elapsedMillis sensortimer;
@@ -52,7 +53,7 @@ void setup()
   Serial.begin(115200);
 
 #if defined(__IMXRT1062__)
-  set_arm_clock(150000000); // Allowed Frequencies (MHz): 24, 150, 396, 450, 528, 600
+  set_arm_clock(450000000); // Allowed Frequencies (MHz): 24, 150, 396, 450, 528, 600
 #endif
 
   usb.begin();
@@ -68,14 +69,13 @@ void setup()
   // Threads
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm23_channel, 9000), Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL});
   // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::rfm98_channel, 9000), Artemis::Teensy::Channels::Channel_ID::RFM98_CHANNEL});
-  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel, 9000), Artemis::Teensy::Channels::Channel_ID::PDU_CHANNEL});
-  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel, 9000), Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL});
+  thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::pdu_channel, 9000), Artemis::Teensy::Channels::Channel_ID::PDU_CHANNEL});
+  // thread_list.push_back({threads.addThread(Artemis::Teensy::Channels::astrodev_channel, 9000), Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL});
 
   // Turn on Pi
   // packet.header.type = PacketComm::TypeId::CommandEpsSwitchName;
-  // packet.header.orig = NODES::GROUND_NODE_ID;
-  // packet.header.dest = NODES::TEENSY_NODE_ID;
-  // packet.header.radio = ARTEMIS_RADIOS::RFM23;
+  // packet.header.nodeorig = NODES::GROUND_NODE_ID;
+  // packet.header.nodedest = NODES::TEENSY_NODE_ID;
   // packet.data.resize(0);
   // packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::RPI);
   // packet.data.push_back(1);
@@ -85,25 +85,9 @@ void setup()
 
 void loop()
 {
-  // Testing I2C, delete later
-  // packet.header.type = (PacketComm ::TypeId)200; // TODO: CommandTakePicture
-  // packet.header.orig = NODES::TEENSY_NODE_ID;
-  // packet.header.dest = NODES::RPI_NODE_ID;
-  // packet.data.resize(0);
-  // packet.header.radio = ARTEMIS_RADIOS::NONE;
-  // PushQueue(packet, rpi_queue, rpi_queue_mtx);
-  // delay(1000);
-  // Testing I2C, delete later
-
-  // Testing Astrodev
-  packet.header.type = PacketComm::TypeId::DataObcPong;
-  packet.header.nodeorig = NODES::TEENSY_NODE_ID;
-  packet.header.nodedest = NODES::GROUND_NODE_ID;
-  packet.header.chanorig = 0;
-  packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
-  PushQueue(packet, main_queue, main_queue_mtx);
-  delay(500);
-  // Testing Astrodev
+  // Packet Testing. Comment if not testing
+  send_test_packets();
+  threads.delay(5000);
 
   if (PullQueue(packet, main_queue, main_queue_mtx))
   {
@@ -364,9 +348,10 @@ void read_imu(void)
   packet.header.type = PacketComm::TypeId::DataObcBeacon;
   packet.data.resize(sizeof(beacon));
   memcpy(packet.data.data(), &beacon, sizeof(beacon));
-  // packet.header.radio = ARTEMIS_RADIOS::RFM23;
+  packet.header.chanorig = 0;
+  packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
-  // packet.header.radio = ARTEMIS_RADIOS::ASTRODEV;
+  packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
   PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 }
 
@@ -386,8 +371,8 @@ void read_mag(void)
   packet.header.type = PacketComm::TypeId::DataObcBeacon;
   packet.data.resize(sizeof(beacon));
   memcpy(packet.data.data(), &beacon, sizeof(beacon));
-  // packet.header.radio = ARTEMIS_RADIOS::RFM23;
+  packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
   PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
-  // packet.header.radio = ARTEMIS_RADIOS::ASTRODEV;
+  packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
   PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 }
