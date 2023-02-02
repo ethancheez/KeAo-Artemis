@@ -38,10 +38,10 @@ namespace Artemis
 
             public:
                 RFM23(uint8_t slaveSelectPin = RFM23_CS_PIN, uint8_t interruptPin = RFM23_INT_PIN, RHGenericSPI &spi = hardware_spi1);
-                void reset();
-                bool init();
-                void send(PacketComm &packet);
-                bool recv(PacketComm &packet);
+                int32_t reset();
+                int32_t init();
+                int32_t send(PacketComm &packet);
+                int32_t recv(PacketComm &packet);
             };
         }
     }

@@ -56,12 +56,12 @@ void setup()
   // Threads
   // thread_list.push_back({threads.addThread(Channels::rfm23_channel, 9000), Channels::Channel_ID::RFM23_CHANNEL});
   // thread_list.push_back({threads.addThread(Channels::rfm98_channel, 9000), Channels::Channel_ID::RFM98_CHANNEL});
-  // thread_list.push_back({threads.addThread(Channels::pdu_channel, 9000), Channels::Channel_ID::PDU_CHANNEL});
+  thread_list.push_back({threads.addThread(Channels::pdu_channel, 9000), Channels::Channel_ID::PDU_CHANNEL});
   // thread_list.push_back({threads.addThread(Channels::astrodev_channel, 9000), Channels::Channel_ID::ASTRODEV_CHANNEL});
 
   // Set Radio Downlink Priority
   // TODO: Implement touches in each radio channel. If does not touch within timeout, radio is "dead". Change downlink priority. 
-  Artemis::Teensy::Channels::comm_id = Artemis::Teensy::Channels::ASTRODEV_CHANNEL;
+  Channels::comm_id = Channels::ASTRODEV_CHANNEL;
 
   Serial.println("Setup Complete");
 }
@@ -79,10 +79,10 @@ void loop()
     {
       switch (packet.header.chandest)
       {
-      case Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL:
+      case Channels::Channel_ID::RFM23_CHANNEL:
         PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
         break;
-      case Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL:
+      case Channels::Channel_ID::ASTRODEV_CHANNEL:
         PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
         break;
       default:

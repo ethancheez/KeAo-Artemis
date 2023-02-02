@@ -2,7 +2,7 @@
 
 namespace
 {
-    Artemis::Teensy::PDU pdu(115200);
+    Artemis::Teensy::PDU pdu(&Serial1, 115200);
     PacketComm packet;
     Artemis::Teensy::PDU::pdu_packet pdu_packet;
     std::string response;

@@ -33,8 +33,7 @@ void Artemis::Teensy::Channels::rfm98_channel()
             }
         }
 
-        packet.data.resize(0);
-        if (rfm98.recv(packet))
+        if (rfm98.recv(packet) >= 0)
         {
             Serial.print("[RFM98] RECEIVED: [");
             for (size_t i = 0; i < packet.data.size(); i++)

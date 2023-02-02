@@ -4,12 +4,13 @@ namespace Artemis
 {
     namespace Teensy
     {
-        PDU::PDU(int baud_rate)
+        PDU::PDU(HardwareSerial *hw_serial, int baud_rate)
         {
-            Serial1.begin(baud_rate);
+            serial = hw_serial;
+            serial->begin(baud_rate);
         }
 
-        void PDU::send(pdu_packet packet)
+        int32_t PDU::send(pdu_packet packet)
         {
             char *cmd = (char *)malloc(sizeof(packet));
             memcpy(cmd, &packet, sizeof(packet));
@@ -19,8 +20,8 @@ namespace Artemis
             {
                 msg += cmd[i] + PDU_CMD_OFFSET;
             }
-            Serial1.print(msg.c_str());
-            Serial1.print('\n');
+            serial->print(msg.c_str());
+            serial->print('\n');
 
             Serial.print("SENDING TO PDU: [");
             for (size_t i = 0; i < msg.length(); i++)
@@ -30,13 +31,14 @@ namespace Artemis
             Serial.println(']');
 
             free(cmd);
+            return 0;
         }
 
-        int PDU::recv(std::string &response)
+        int32_t PDU::recv(std::string &response)
         {
-            if (Serial1.available() > 0)
+            if (serial->available() > 0)
             {
-                String UART1_RX = Serial1.readString();
+                String UART1_RX = serial->readString();
                 if (UART1_RX.length() > 0)
                 {
                     // Serial.print("UART RECV: ");
@@ -48,7 +50,7 @@ namespace Artemis
             return -1;
         }
 
-        void PDU::set_switch(PDU_SW sw, uint8_t _enable)
+        int32_t PDU::set_switch(PDU_SW sw, uint8_t _enable)
         {
             std::string response;
             pdu_packet packet;
@@ -56,15 +58,24 @@ namespace Artemis
             packet.sw = sw;
             packet.sw_state = _enable > 0 ? 1 : 0;
 
-            unsigned long timeoutStart = millis();
+            uint8_t attempts = 1;
+            elapsedMillis timeout;
             while (1)
             {
                 send(packet);
                 while (recv(response) < 0)
                 {
-                    if (millis() - timeoutStart > 5000)
+                    if (timeout > 5000)
                     {
-                        Serial.println("FAIL TO SEND CMD TO PDU");
+                        Serial.print("Attempt ");
+                        Serial.print(attempts);
+                        Serial.println(": FAIL TO SEND CMD TO PDU");
+                        timeout = 0;
+
+                        if (++attempts == 5)
+                        {
+                            return -1;
+                        }
                         break;
                     }
                 }
@@ -78,24 +89,34 @@ namespace Artemis
             // TODO: Send to PacketComm packet -> then to ground
             Serial.print("UART RECV: ");
             Serial.println(response.c_str());
+            return 0;
         }
 
-        bool PDU::get_switch(PDU_SW sw)
+        int32_t PDU::get_switch(PDU_SW sw)
         {
             std::string response;
             pdu_packet packet;
             packet.type = PDU_Type::CommandGetSwitchStatus;
             packet.sw = sw;
 
-            unsigned long timeoutStart = millis();
+            uint8_t attempts = 1;
+            elapsedMillis timeout;
             while (1)
             {
                 send(packet);
                 while (recv(response) < 0)
                 {
-                    if (millis() - timeoutStart > 5000)
+                    if (timeout > 5000)
                     {
-                        Serial.println("FAIL TO SEND CMD TO PDU");
+                        Serial.print("Attempt ");
+                        Serial.print(attempts);
+                        Serial.println(": FAIL TO SEND CMD TO PDU");
+                        timeout = 0;
+
+                        if (++attempts == 5)
+                        {
+                            return -1;
+                        }
                         break;
                     }
                 }
@@ -109,8 +130,19 @@ namespace Artemis
             Serial.print("UART RECV: ");
             Serial.println(response.c_str());
 
-            // TODO: Return true when on, false when off
-            return true;
+            if (sw == PDU_SW::All)
+            {
+                for (size_t i = 2; i < response.length(); i++)
+                {
+                    if (response[i] == '0')
+                    {
+                        return 0;
+                    }
+                }
+                return 1;
+            }
+
+            return response[3] - PDU_CMD_OFFSET;
         }
     }
 }

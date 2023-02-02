@@ -8,7 +8,7 @@ namespace Artemis
         {
             RFM98::RFM98(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi) : rfm98(slaveSelectPin, interruptPin, spi) {}
 
-            bool RFM98::init()
+            int32_t RFM98::init()
             {
                 Threads::Scope lock(spi1_mtx);
                 SPI1.setMISO(RFM98_SPI_MISO);
@@ -26,7 +26,7 @@ namespace Artemis
                     if (timeout > 10000)
                     {
                         Serial.println("[RFM98] INIT FAILED");
-                        return false;
+                        return -1;
                     }
                 }
 
@@ -36,18 +36,19 @@ namespace Artemis
                 Serial.println("[RFM98] INIT SUCCESS");
                 rfm98.sleep();
                 rfm98.setModeIdle();
-                return true;
+                return 0;
             }
 
-            void RFM98::reset()
+            int32_t RFM98::reset()
             {
                 digitalWrite(RFM98_RST_PIN, LOW);
                 threads.delay(10);
                 digitalWrite(RFM98_RST_PIN, HIGH);
                 threads.delay(10);
+                return 0;
             }
 
-            void RFM98::send(PacketComm &packet)
+            int32_t RFM98::send(PacketComm &packet)
             {
                 packet.Wrap();
 
@@ -62,16 +63,19 @@ namespace Artemis
                     Serial.print(packet.wrapped[i]);
                 }
                 Serial.println("]");
+
+                return 0;
             }
 
-            bool RFM98::recv(PacketComm &packet)
+            int32_t RFM98::recv(PacketComm &packet)
             {
                 int32_t iretn = 0;
 
-                Threads::Scope lock(spi1_mtx);
                 int wait_time = 5000 - rfm98_queue.size() * 1000;
                 if (wait_time < 100)
                     wait_time = 100;
+
+                Threads::Scope lock(spi1_mtx);
                 if (rfm98.waitAvailableTimeout(wait_time))
                 {
                     packet.wrapped.resize(RH_RF95_MAX_MESSAGE_LEN);
@@ -79,17 +83,17 @@ namespace Artemis
                     if (rfm98.recv(packet.wrapped.data(), &bytes_received))
                     {
                         packet.wrapped.resize(bytes_received);
-                        packet.Unwrap();
+                        iretn = packet.Unwrap();
                         rfm98.setModeIdle();
 
                         if (iretn < 0)
-                            return false;
+                            return -1;
 
-                        return true;
+                        return packet.wrapped.size();
                     }
                 }
                 rfm98.setModeIdle();
-                return false;
+                return -1;
             }
         }
     }
