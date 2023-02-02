@@ -36,7 +36,10 @@ namespace Artemis
     {
         for (auto &it : current_sensors)
         {
-            it.second->begin(&Wire2);
+            if (it.second->begin(&Wire2))
+            {
+                return -1;
+            }
         }
 
         return 0;

@@ -20,6 +20,7 @@ namespace
   USBHost usb;
   elapsedMillis sensortimer;
   elapsedMillis uptime;
+  int32_t iretn = 0;
 }
 
 void setup()
@@ -34,9 +35,21 @@ void setup()
   pinMode(RPI_ENABLE, OUTPUT);
   delay(3000);
 
-  devices.setup_magnetometer();
-  devices.setup_imu();
-  devices.setup_current();
+  iretn = devices.setup_magnetometer();
+  if (iretn < 0)
+  {
+    Serial.println("Fail to initialize magnetometer");
+  }
+  iretn = devices.setup_imu();
+  if (iretn < 0)
+  {
+    Serial.println("Fail to initialize IMU");
+  }
+  iretn = devices.setup_current();
+  if (iretn < 0)
+  {
+    Serial.println("Fail to initialize current sensors");
+  }
 
   threads.setSliceMillis(10);
 
@@ -174,6 +187,8 @@ void loop()
       }
     }
   }
+
+  // Periodic Telemetry
   if (sensortimer > 10000)
   {
     sensortimer = 0;
