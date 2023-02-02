@@ -1,4 +1,5 @@
 #include <artemis_defs.h>
+#include <artemis_channels.h>
 
 vector<struct thread_struct> thread_list;
 
@@ -45,7 +46,6 @@ int kill_thread(uint8_t channel_id)
     return -1;
 }
 
-// Thread-safe way of pushing onto the packet queue
 int32_t PushQueue(PacketComm &packet, std::deque<PacketComm> &queue, Threads::Mutex &mtx)
 {
     Threads::Scope lock(mtx);
@@ -56,7 +56,7 @@ int32_t PushQueue(PacketComm &packet, std::deque<PacketComm> &queue, Threads::Mu
     queue.push_back(packet);
     return 1;
 }
-// Thread-safe way of pulling from the packet queue
+
 int32_t PullQueue(PacketComm &packet, std::deque<PacketComm> &queue, Threads::Mutex &mtx)
 {
     Threads::Scope lock(mtx);
@@ -70,4 +70,27 @@ int32_t PullQueue(PacketComm &packet, std::deque<PacketComm> &queue, Threads::Mu
     {
         return 0;
     }
+}
+
+int32_t PushCommQueue(PacketComm &packet)
+{
+    switch (Artemis::Teensy::Channels::comm_id)
+    {
+    case Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL:
+        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
+        PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
+        return 0;
+        break;
+    case Artemis::Teensy::Channels::Channel_ID::RFM98_CHANNEL:
+        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::RFM98_CHANNEL;
+        PushQueue(packet, rfm98_queue, rfm98_queue_mtx);
+        return 0;
+        break;
+    case Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL:
+        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
+        PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
+        return 0;
+        break;
+    }
+    return -1;
 }

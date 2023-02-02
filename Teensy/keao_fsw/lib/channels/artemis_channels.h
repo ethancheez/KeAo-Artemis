@@ -28,6 +28,8 @@ namespace Artemis
                 RPI_CHANNEL,
             };
 
+            uint8_t comm_id = 0;
+
             void rfm23_channel();
             void rfm98_channel();
             void astrodev_channel();
