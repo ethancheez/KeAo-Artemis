@@ -61,7 +61,7 @@ void setup()
 
   // Set Radio Downlink Priority
   // TODO: Implement touches in each radio channel. If does not touch within timeout, radio is "dead". Change downlink priority. 
-  Channels::comm_id = Channels::ASTRODEV_CHANNEL;
+  // Channels::comm_id = Channels::ASTRODEV_CHANNEL;
 
   Serial.println("Setup Complete");
 }

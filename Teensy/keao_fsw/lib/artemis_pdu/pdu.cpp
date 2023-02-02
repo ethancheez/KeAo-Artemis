@@ -8,6 +8,8 @@ namespace Artemis
         {
             serial = hw_serial;
             serial->begin(baud_rate);
+            serial->clear();
+            serial->flush();
         }
 
         int32_t PDU::send(pdu_packet packet)

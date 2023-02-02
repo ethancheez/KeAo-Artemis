@@ -74,7 +74,7 @@ namespace Artemis
         packet.data.resize(sizeof(beacon));
         memcpy(packet.data.data(), &beacon, sizeof(beacon));
         packet.header.chanorig = 0;
-        PushCommQueue(packet);
+        // PushCommQueue(packet);
 
         return 0;
     }
@@ -108,13 +108,13 @@ namespace Artemis
         packet.data.resize(sizeof(beacon1));
         memcpy(packet.data.data(), &beacon1, sizeof(beacon1));
         packet.header.chanorig = 0;
-        PushCommQueue(packet);
+        // PushCommQueue(packet);
 
         beacon2.deci = uptime;
         packet.data.resize(sizeof(beacon2));
         memcpy(packet.data.data(), &beacon2, sizeof(beacon2));
         packet.header.chanorig = 0;
-        PushCommQueue(packet);
+        // PushCommQueue(packet);
 
         return 0;
     }
@@ -144,7 +144,7 @@ namespace Artemis
         packet.data.resize(sizeof(beacon));
         memcpy(packet.data.data(), &beacon, sizeof(beacon));
         packet.header.chanorig = 0;
-        PushCommQueue(packet);
+        // PushCommQueue(packet);
 
         return 0;
     }
@@ -167,7 +167,7 @@ namespace Artemis
         packet.data.resize(sizeof(beacon));
         memcpy(packet.data.data(), &beacon, sizeof(beacon));
         packet.header.chanorig = 0;
-        PushCommQueue(packet);
+        // PushCommQueue(packet);
 
         return 0;
     }
