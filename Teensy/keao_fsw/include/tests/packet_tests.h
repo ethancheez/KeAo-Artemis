@@ -1,4 +1,4 @@
-#include <artemis_channels.h>
+#include "channels/artemis_channels.h"
 
 #ifndef _PACKET_TESTS_H
 #define _PACKET_TESTS_H

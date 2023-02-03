@@ -1,5 +1,5 @@
 #include "artemis_devices.h"
-#include <artemis_channels.h>
+#include "channels/artemis_channels.h"
 
 namespace Artemis
 {

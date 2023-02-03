@@ -1,4 +1,4 @@
-#include <artemis_channels.h>
+#include "channels/artemis_channels.h"
 
 namespace
 {
