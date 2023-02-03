@@ -2,7 +2,7 @@
 #define _ARTEMIS_DEVICES_H
 
 #include <support/configCosmosKernel.h>
-#include <artemis_defs.h>
+#include "config/artemis_defs.h"
 #include "artemisbeacons.h"
 #include <Adafruit_LIS3MDL.h>
 #include <Adafruit_Sensor.h>

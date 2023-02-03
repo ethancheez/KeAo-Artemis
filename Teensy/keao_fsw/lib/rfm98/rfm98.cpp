@@ -2,21 +2,24 @@
 
 namespace Artemis
 {
-    namespace Teensy
+    namespace Devices
     {
-        namespace Radio
+        namespace Radios
         {
             RFM98::RFM98(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi) : rfm98(slaveSelectPin, interruptPin, spi) {}
 
-            int32_t RFM98::init()
+            int32_t RFM98::init(rfm98_config cfg, Threads::Mutex *mtx)
             {
-                Threads::Scope lock(spi1_mtx);
-                SPI1.setMISO(RFM98_SPI_MISO);
-                SPI1.setMOSI(RFM98_SPI_MOSI);
-                SPI1.setSCK(RFM98_SPI_SCK);
+                config = cfg;
+                spi_mtx = mtx;
 
-                pinMode(RFM98_RST_PIN, OUTPUT);
-                digitalWrite(RFM98_RST_PIN, LOW);
+                Threads::Scope lock(*spi_mtx);
+                SPI1.setMISO(config.pins.spi_miso);
+                SPI1.setMOSI(config.pins.spi_mosi);
+                SPI1.setSCK(config.pins.spi_sck);
+
+                pinMode(config.pins.reset, OUTPUT);
+                digitalWrite(config.pins.reset, LOW);
 
                 reset();
 
@@ -30,8 +33,8 @@ namespace Artemis
                     }
                 }
 
-                rfm98.setFrequency(RFM98_FREQ);
-                rfm98.setTxPower(RFM98_TX_POWER, false);
+                rfm98.setFrequency(config.freq);
+                rfm98.setTxPower(config.tx_power, false);
 
                 Serial.println("[RFM98] INIT SUCCESS");
                 rfm98.sleep();
@@ -41,9 +44,9 @@ namespace Artemis
 
             int32_t RFM98::reset()
             {
-                digitalWrite(RFM98_RST_PIN, LOW);
+                digitalWrite(config.pins.reset, LOW);
                 threads.delay(10);
-                digitalWrite(RFM98_RST_PIN, HIGH);
+                digitalWrite(config.pins.reset, HIGH);
                 threads.delay(10);
                 return 0;
             }
@@ -52,7 +55,7 @@ namespace Artemis
             {
                 packet.Wrap();
 
-                Threads::Scope lock(spi1_mtx);
+                Threads::Scope lock(*spi_mtx);
                 rfm98.send(packet.wrapped.data(), packet.wrapped.size());
                 rfm98.waitPacketSent();
                 rfm98.sleep();
@@ -71,12 +74,8 @@ namespace Artemis
             {
                 int32_t iretn = 0;
 
-                int wait_time = 5000 - rfm98_queue.size() * 1000;
-                if (wait_time < 100)
-                    wait_time = 100;
-
-                Threads::Scope lock(spi1_mtx);
-                if (rfm98.waitAvailableTimeout(wait_time))
+                Threads::Scope lock(*spi_mtx);
+                if (rfm98.waitAvailableTimeout(100))
                 {
                     packet.wrapped.resize(RH_RF95_MAX_MESSAGE_LEN);
                     uint8_t bytes_received = packet.wrapped.size();

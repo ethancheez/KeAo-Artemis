@@ -59,10 +59,6 @@ void setup()
   thread_list.push_back({threads.addThread(Channels::pdu_channel, 9000), Channels::Channel_ID::PDU_CHANNEL});
   // thread_list.push_back({threads.addThread(Channels::astrodev_channel, 9000), Channels::Channel_ID::ASTRODEV_CHANNEL});
 
-  // Set Radio Downlink Priority
-  // TODO: Implement touches in each radio channel. If does not touch within timeout, radio is "dead". Change downlink priority. 
-  // Channels::comm_id = Channels::ASTRODEV_CHANNEL;
-
   Serial.println("Setup Complete");
 }
 

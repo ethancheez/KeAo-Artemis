@@ -1,14 +1,30 @@
 #include "channels/artemis_channels.h"
+#include <rfm98.h>
 
 namespace
 {
-    Artemis::Teensy::Radio::RFM98 rfm98(RFM98_CS_PIN, RFM98_INT_PIN, hardware_spi1);
+    using namespace Artemis::Devices::Radios;
+
+    RFM98::rfm98_config config = {
+        .freq = 433,
+        .tx_power = 23,
+        .pins = {
+            .spi_miso = SPI1_D0,
+            .spi_mosi = SPI1_D1,
+            .spi_sck = SPI1_SCLK,
+            .nirq = T_GPIO2,
+            .cs = T_CS1,
+            .reset = T_GPIO3,
+        },
+    };
+
+    RFM98 rfm98(config.pins.cs, config.pins.nirq, hardware_spi1);
     PacketComm packet;
 }
 
 void Artemis::Teensy::Channels::rfm98_channel()
 {
-    while (!rfm98.init())
+    while (!rfm98.init(config, &spi1_mtx))
         ;
 
     while (true)

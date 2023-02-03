@@ -1,12 +1,10 @@
 #ifndef _ARTEMIS_CHANNELS_H
 #define _ARTEMIS_CHANNELS_H
 
-#include <artemis_defs.h>
+#include "config/artemis_defs.h"
 #include <errno.h>
+#include <atomic>
 #include <TeensyThreads.h>
-#include <rfm23.h>
-#include <rfm98.h>
-#include <astrodev.h>
 #include <Wire.h>
 #include <i2c_driver_wire.h>
 #include <pdu.h>
@@ -27,8 +25,6 @@ namespace Artemis
                 PDU_CHANNEL,
                 RPI_CHANNEL,
             };
-
-            // uint8_t comm_id = 0;
 
             void rfm23_channel();
             void rfm98_channel();

@@ -1,6 +1,7 @@
 #include "channels/artemis_channels.h"
 #include <deque>
 #include <Arduino.h>
+#include <astrodev.h>
 
 /* TODO:    Test astrodev channel without astrodev threads
  *          See if we need individual threads for sending/receiving
@@ -8,7 +9,6 @@
 
 #define ASTRODEV_BAUD 9600
 #define ASTRODEV_FREQ 435000
-using namespace Artemis::Teensy::Radio;
 
 int32_t astrodev_init(HardwareSerial *new_serial, uint32_t baud_rate);
 int32_t astrodev_recv();

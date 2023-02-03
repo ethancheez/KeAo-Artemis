@@ -3,45 +3,50 @@
 
 #include <RH_RF22.h>
 #include <RHHardwareSPI1.h>
-#include <artemis_defs.h>
+#include <TeensyThreads.h>
+#include <support/packetcomm.h>
 
 #undef RH_RF22_MAX_MESSAGE_LEN
 #define RH_RF22_MAX_MESSAGE_LEN 50
 
-/* RFM23 FREQUENCY CONFIG */
-#define RFM23_FREQ 433.0
-
-/* RFM23 PIN CONFIG */
-#define RFM23_CS_PIN SPI1_CS1
-#define RFM23_INT_PIN NIRQ
-
-/* SPI MISO/MOSI/SCK CONFIG */
-#define RFM23_SPI_MISO SPI1_D0
-#define RFM23_SPI_MOSI SPI1_D1
-#define RFM23_SPI_SCK SPI1_SCLK
-
-/* RFM23 Power Level */
-#define RFM23_TX_POWER 20
-#define RFM23_RX_ON RX_ON
-#define RFM23_TX_ON TX_ON
-
 namespace Artemis
 {
-    namespace Teensy
+    namespace Devices
     {
-        namespace Radio
+        namespace Radios
         {
             class RFM23
             {
+            public:
+                struct __attribute__((packed)) rfm23_config
+                {
+                    uint16_t freq;
+                    uint8_t tx_power;
+
+                    struct
+                    {
+                        uint8_t spi_miso;
+                        uint8_t spi_mosi;
+                        uint8_t spi_sck;
+                        uint8_t nirq;
+                        uint8_t cs;
+                        uint8_t tx_on;
+                        uint8_t rx_on;
+                    } pins;
+                };
+
+                RFM23(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi = hardware_spi1);
+                int32_t reset();
+                int32_t init(rfm23_config cfg, Threads::Mutex *mtx);
+                int32_t send(PacketComm &packet);
+                int32_t recv(PacketComm &packet);
+                int32_t set_tx_power(uint8_t power);
+
             private:
                 RH_RF22 rfm23;
 
-            public:
-                RFM23(uint8_t slaveSelectPin = RFM23_CS_PIN, uint8_t interruptPin = RFM23_INT_PIN, RHGenericSPI &spi = hardware_spi1);
-                int32_t reset();
-                int32_t init();
-                int32_t send(PacketComm &packet);
-                int32_t recv(PacketComm &packet);
+                Threads::Mutex *spi_mtx;
+                rfm23_config config;
             };
         }
     }

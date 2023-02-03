@@ -1,14 +1,31 @@
 #include "channels/artemis_channels.h"
+#include <rfm23.h>
 
 namespace
 {
-    Artemis::Teensy::Radio::RFM23 rfm23(RFM23_CS_PIN, RFM23_INT_PIN, hardware_spi1);
+    using namespace Artemis::Devices::Radios;
+
+    RFM23::rfm23_config config = {
+        .freq = 433,
+        .tx_power = 20,
+        .pins = {
+            .spi_miso = SPI1_D0,
+            .spi_mosi = SPI1_D1,
+            .spi_sck = SPI1_SCLK,
+            .nirq = NIRQ,
+            .cs = SPI1_CS1,
+            .tx_on = TX_ON,
+            .rx_on = RX_ON,
+        },
+    };
+
+    RFM23 rfm23(config.pins.cs, config.pins.nirq, hardware_spi1);
     PacketComm packet;
 }
 
 void Artemis::Teensy::Channels::rfm23_channel()
 {
-    while (!rfm23.init())
+    while (!rfm23.init(config, &spi1_mtx))
         ;
 
     while (true)

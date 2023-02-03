@@ -2,7 +2,7 @@
 #define _ARTEMIS_BEACONS_H
 
 #include <cstdint>
-#include <artemis_defs.h>
+#include "config/artemis_defs.h"
 
 enum class TypeId : uint8_t
 {
