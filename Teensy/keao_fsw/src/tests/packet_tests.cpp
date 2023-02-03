@@ -1,4 +1,5 @@
 #include "tests/packet_tests.h"
+#include <pdu.h>
 
 using namespace Artemis;
 

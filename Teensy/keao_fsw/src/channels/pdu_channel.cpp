@@ -1,4 +1,5 @@
 #include "channels/artemis_channels.h"
+#include <pdu.h>
 
 namespace
 {

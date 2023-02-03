@@ -2,13 +2,6 @@
 #define _ARTEMIS_CHANNELS_H
 
 #include "config/artemis_defs.h"
-#include <errno.h>
-#include <atomic>
-#include <TeensyThreads.h>
-#include <Wire.h>
-#include <i2c_driver_wire.h>
-#include <pdu.h>
-#include <support/packetcomm.h>
 
 namespace Artemis
 {

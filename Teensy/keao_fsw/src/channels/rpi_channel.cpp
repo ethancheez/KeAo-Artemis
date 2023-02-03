@@ -1,4 +1,6 @@
 #include "channels/artemis_channels.h"
+#include <i2c_driver_wire.h>
+#include <pdu.h>
 
 void receiveData(int byte_count);
 void sendData();

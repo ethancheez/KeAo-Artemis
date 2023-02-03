@@ -5,12 +5,6 @@
 #include <support/packetcomm.h>
 #include <support/configCosmosKernel.h>
 
-// Sensor Defs
-#define ARTEMIS_CURRENT_BEACON_1_COUNT 2
-#define ARTEMIS_CURRENT_SENSOR_COUNT 5
-#define ARTEMIS_TEMP_SENSOR_COUNT 7
-#define AREF_VOLTAGE 3.3
-
 #define MAXQUEUESIZE 50
 
 // Nodes

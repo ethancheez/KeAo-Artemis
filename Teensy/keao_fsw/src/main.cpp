@@ -1,8 +1,9 @@
-#include <Arduino.h>
 #include <vector>
-#include "channels/artemis_channels.h"
-#include <support/configCosmosKernel.h>
+#include <Arduino.h>
 #include <USBHost_t36.h>
+#include <support/configCosmosKernel.h>
+#include <pdu.h>
+#include "channels/artemis_channels.h"
 #include "artemis_devices.h"
 #include "artemisbeacons.h"
 #include "tests/packet_tests.h"
