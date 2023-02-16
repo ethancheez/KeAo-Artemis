@@ -70,12 +70,12 @@ namespace Artemis
                 return 0;
             }
 
-            int32_t RFM98::recv(PacketComm &packet)
+            int32_t RFM98::recv(PacketComm &packet, uint16_t timeout)
             {
                 int32_t iretn = 0;
 
                 Threads::Scope lock(*spi_mtx);
-                if (rfm98.waitAvailableTimeout(100))
+                if (rfm98.waitAvailableTimeout(timeout))
                 {
                     packet.wrapped.resize(RH_RF95_MAX_MESSAGE_LEN);
                     uint8_t bytes_received = packet.wrapped.size();

@@ -50,7 +50,10 @@ void Artemis::Teensy::Channels::rfm23_channel()
             }
         }
 
-        if (rfm23.recv(packet) >= 0)
+        int32_t timeout = 5000 - rfm23_queue.size() * 1000;
+        if (timeout < 100)
+            timeout = 100;
+        if (rfm23.recv(packet, (uint16_t)timeout) >= 0)
         {
             Serial.print("[RFM23] RECEIVED: [");
             for (size_t i = 0; i < packet.data.size(); i++)

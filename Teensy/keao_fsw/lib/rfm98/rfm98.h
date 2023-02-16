@@ -35,7 +35,7 @@ namespace Artemis
                 int32_t reset();
                 int32_t init(rfm98_config cfg, Threads::Mutex *mtx);
                 int32_t send(PacketComm &packet);
-                int32_t recv(PacketComm &packet);
+                int32_t recv(PacketComm &packet, uint16_t timeout);
 
             private:
                 RH_RF95 rfm98;

@@ -39,7 +39,7 @@ namespace Artemis
                 int32_t reset();
                 int32_t init(rfm23_config cfg, Threads::Mutex *mtx);
                 int32_t send(PacketComm &packet);
-                int32_t recv(PacketComm &packet);
+                int32_t recv(PacketComm &packet, uint16_t timeout);
                 int32_t set_tx_power(uint8_t power);
 
             private:

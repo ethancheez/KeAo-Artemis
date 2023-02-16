@@ -89,7 +89,7 @@ namespace Artemis
                 return 0;
             }
 
-            int32_t RFM23::recv(PacketComm &packet)
+            int32_t RFM23::recv(PacketComm &packet, uint16_t timeout)
             {
                 int32_t iretn = 0;
 
@@ -97,7 +97,7 @@ namespace Artemis
                 digitalWrite(config.pins.tx_on, HIGH);
 
                 Threads::Scope lock(*spi_mtx);
-                if (rfm23.waitAvailableTimeout(100))
+                if (rfm23.waitAvailableTimeout(timeout))
                 {
                     packet.wrapped.resize(0);
                     packet.wrapped.resize(RH_RF22_MAX_MESSAGE_LEN);
