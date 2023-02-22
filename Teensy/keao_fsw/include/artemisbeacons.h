@@ -12,12 +12,13 @@
 
 enum class TypeId : uint8_t
 {
-    None = 0,
-    temperature = 1,
-    current1 = 2,
-    current2 = 3,
-    imu = 4,
-    mag = 5,
+    None,
+    temperature,
+    current1,
+    current2,
+    imu,
+    mag,
+    gps,
 };
 
 struct __attribute__((packed)) temperaturebeacon
@@ -57,6 +58,13 @@ struct __attribute__((packed)) imubeacon
     float accelx = 0, accely = 0, accelz = 0;
     float gyrox = 0, gyroy = 0, gyroz = 0;
     float imutemp = 0;
+};
+
+struct __attribute__((packed)) gpsbeacon
+{
+    TypeId type = TypeId::gps;
+    uint32_t deci = 0;
+    float latitude = 0, longitude = 0, speed = 0, angle = 0, altitude = 0, satellites = 0;
 };
 
 #endif // _ARTEMIS_BEACONS_H

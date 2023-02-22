@@ -46,18 +46,15 @@ void setup()
   {
     Serial.println("Fail to initialize IMU");
   }
-  iretn = devices.setup_current();
-  if (iretn < 0)
-  {
-    Serial.println("Fail to initialize current sensors");
-  }
+  devices.setup_current();
+  devices.setup_gps();
 
   threads.setSliceMillis(10);
 
   // Threads
-  thread_list.push_back({threads.addThread(Channels::rfm23_channel, 9000), Channels::Channel_ID::RFM23_CHANNEL});
+  // thread_list.push_back({threads.addThread(Channels::rfm23_channel, 9000), Channels::Channel_ID::RFM23_CHANNEL});
   // thread_list.push_back({threads.addThread(Channels::rfm98_channel, 9000), Channels::Channel_ID::RFM98_CHANNEL});
-  thread_list.push_back({threads.addThread(Channels::pdu_channel, 9000), Channels::Channel_ID::PDU_CHANNEL});
+  // thread_list.push_back({threads.addThread(Channels::pdu_channel, 9000), Channels::Channel_ID::PDU_CHANNEL});
   // thread_list.push_back({threads.addThread(Channels::astrodev_channel, 9000), Channels::Channel_ID::ASTRODEV_CHANNEL});
 
   Serial.println("Setup Complete");
@@ -193,6 +190,9 @@ void loop()
     devices.read_current(uptime);
     devices.read_imu(uptime);
     devices.read_mag(uptime);
+    devices.read_gps(uptime);
   }
+  devices.update_gps();
+
   threads.delay(10);
 }

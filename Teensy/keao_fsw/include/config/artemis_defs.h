@@ -24,7 +24,7 @@ struct thread_struct
   uint8_t channel_id;
 };
 
-enum TEENSY_PINS
+enum TEENSY_PINS // Artemis OBC v4.23
 {
   UART4_RXD,
   UART4_TXD,

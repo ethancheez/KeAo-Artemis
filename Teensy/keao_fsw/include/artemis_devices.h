@@ -8,14 +8,16 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_LSM6DSOX.h>
 #include <Adafruit_INA219.h>
+#include <Adafruit_GPS.h>
 
 namespace Artemis
 {
     class Devices
     {
     public:
-        Adafruit_LIS3MDL magnetometer;
-        Adafruit_LSM6DSOX imu;
+        Adafruit_LIS3MDL *magnetometer = new Adafruit_LIS3MDL();
+        Adafruit_LSM6DSOX *imu = new Adafruit_LSM6DSOX();
+        Adafruit_GPS *gps = new Adafruit_GPS(&Serial7);
 
         // Current Sensors
         std::map<std::string, Adafruit_INA219 *> current_sensors = {
@@ -38,13 +40,20 @@ namespace Artemis
         };
 
         int32_t setup_magnetometer(void);
+        int32_t read_mag(uint32_t uptime);
+
         int32_t setup_imu(void);
+        int32_t read_imu(uint32_t uptime);
+
         int32_t setup_current(void);
+        int32_t read_current(uint32_t uptime);
+
         int32_t setup_temperature(void);
         int32_t read_temperature(uint32_t uptime);
-        int32_t read_current(uint32_t uptime);
-        int32_t read_imu(uint32_t uptime);
-        int32_t read_mag(uint32_t uptime);
+
+        int32_t setup_gps(void);
+        int32_t update_gps(void);
+        int32_t read_gps(uint32_t uptime);
     };
 }
 
