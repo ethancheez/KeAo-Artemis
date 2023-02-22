@@ -24,7 +24,7 @@ namespace
 
 void Artemis::Teensy::Channels::rfm98_channel()
 {
-    while (!rfm98.init(config, &spi1_mtx))
+    while (rfm98.init(config, &spi1_mtx) < 0)
         ;
 
     while (true)

@@ -86,7 +86,7 @@ namespace Artemis
                     break;
                 }
 
-                delay(100);
+                threads.delay(100);
             }
             // TODO: Send to PacketComm packet -> then to ground
             Serial.print("UART RECV: ");
@@ -126,7 +126,7 @@ namespace Artemis
                 {
                     break;
                 }
-                delay(100);
+                threads.delay(100);
             }
             // TODO: Send to PacketComm packet -> then to ground
             Serial.print("UART RECV: ");

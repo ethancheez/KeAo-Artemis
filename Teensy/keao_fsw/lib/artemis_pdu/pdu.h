@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <stdint.h>
+#include <TeensyThreads.h>
 #include "support/configCosmosKernel.h"
 
 #define PDU_CMD_OFFSET 48

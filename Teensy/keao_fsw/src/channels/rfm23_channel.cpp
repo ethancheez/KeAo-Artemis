@@ -7,7 +7,7 @@ namespace
 
     RFM23::rfm23_config config = {
         .freq = 433,
-        .tx_power = 20,
+        .tx_power = RH_RF22_RF23BP_TXPOW_30DBM,
         .pins = {
             .spi_miso = SPI1_D0,
             .spi_mosi = SPI1_D1,
@@ -18,14 +18,15 @@ namespace
             .rx_on = RX_ON,
         },
     };
-
+    
     RFM23 rfm23(config.pins.cs, config.pins.nirq, hardware_spi1);
     PacketComm packet;
+    elapsedMillis telem;
 }
 
 void Artemis::Teensy::Channels::rfm23_channel()
 {
-    while (!rfm23.init(config, &spi1_mtx))
+    while (rfm23.init(config, &spi1_mtx) < 0)
         ;
 
     while (true)
@@ -63,6 +64,14 @@ void Artemis::Teensy::Channels::rfm23_channel()
             Serial.println("]");
             PushQueue(packet, main_queue, main_queue_mtx);
         }
+
+        if (telem > 10000)
+        {
+            Serial.print("[RFM23] TSEN = ");
+            Serial.println(rfm23.get_tsen());
+            telem = 0;
+        }
+
         threads.delay(10);
     }
 }

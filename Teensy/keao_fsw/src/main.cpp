@@ -55,7 +55,7 @@ void setup()
   threads.setSliceMillis(10);
 
   // Threads
-  // thread_list.push_back({threads.addThread(Channels::rfm23_channel, 9000), Channels::Channel_ID::RFM23_CHANNEL});
+  thread_list.push_back({threads.addThread(Channels::rfm23_channel, 9000), Channels::Channel_ID::RFM23_CHANNEL});
   // thread_list.push_back({threads.addThread(Channels::rfm98_channel, 9000), Channels::Channel_ID::RFM98_CHANNEL});
   thread_list.push_back({threads.addThread(Channels::pdu_channel, 9000), Channels::Channel_ID::PDU_CHANNEL});
   // thread_list.push_back({threads.addThread(Channels::astrodev_channel, 9000), Channels::Channel_ID::ASTRODEV_CHANNEL});

@@ -10,6 +10,7 @@ namespace Artemis
 
             int32_t RFM98::init(rfm98_config cfg, Threads::Mutex *mtx)
             {
+                Serial.println("[RFM98] Initializing ...");
                 config = cfg;
                 spi_mtx = mtx;
 
@@ -53,11 +54,18 @@ namespace Artemis
 
             int32_t RFM98::send(PacketComm &packet)
             {
-                packet.Wrap();
+                int32_t iretn = 0;
+                
+                iretn = packet.Wrap();
+                if (iretn < 0)
+                {
+                    Serial.println("Unwrap fail");
+                    return -1;
+                }
 
                 Threads::Scope lock(*spi_mtx);
                 rfm98.send(packet.wrapped.data(), packet.wrapped.size());
-                rfm98.waitPacketSent();
+                rfm98.waitPacketSent(100);
                 rfm98.sleep();
                 rfm98.setModeIdle();
                 Serial.print("[RFM98] SENDING: [");

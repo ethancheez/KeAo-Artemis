@@ -41,6 +41,7 @@ namespace Artemis
                 int32_t send(PacketComm &packet);
                 int32_t recv(PacketComm &packet, uint16_t timeout);
                 int32_t set_tx_power(uint8_t power);
+                int32_t get_tsen();
 
             private:
                 RH_RF22 rfm23;

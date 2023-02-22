@@ -10,6 +10,7 @@ namespace Artemis
 
             int32_t RFM23::init(rfm23_config cfg, Threads::Mutex *mtx)
             {
+                Serial.println("[RFM23] Initializing ...");
                 config = cfg;
                 spi_mtx = mtx;
 
@@ -30,8 +31,8 @@ namespace Artemis
                         return -1;
                     }
                 }
-                rfm23.setFrequency(config.freq);   // frequency default is 434MHz
-                rfm23.setTxPower(config.tx_power); // 20 is the max
+                rfm23.setFrequency(config.freq);
+                rfm23.setTxPower(config.tx_power);
 
                 /* RFM23 modulation     schemes and data rates
                  * <FSK_Rb125Fd125>     highest FSK data rate (125kbs)
@@ -43,7 +44,7 @@ namespace Artemis
 
                 rfm23.sleep();
                 timeout = 0;
-                while (!rfm23.setModemConfig(RH_RF22::GFSK_Rb125Fd125))
+                while (!rfm23.setModemConfig(RH_RF22::FSK_Rb2Fd5))
                 {
                     if (timeout > 10000)
                     {
@@ -67,15 +68,22 @@ namespace Artemis
 
             int32_t RFM23::send(PacketComm &packet)
             {
-                digitalWrite(config.pins.rx_on, LOW);
+                int32_t iretn = 0;
+
+                digitalWrite(config.pins.rx_on, HIGH);
                 digitalWrite(config.pins.tx_on, LOW);
 
                 packet.wrapped.resize(0);
-                packet.Wrap();
+                iretn = packet.Wrap();
+                if (iretn < 0)
+                {
+                    Serial.println("Unwrap fail");
+                    return -1;
+                }
 
                 Threads::Scope lock(*spi_mtx);
                 rfm23.send(packet.wrapped.data(), packet.wrapped.size());
-                rfm23.waitPacketSent();
+                rfm23.waitPacketSent(100);
 
                 rfm23.sleep();
                 rfm23.setModeIdle();
@@ -127,6 +135,11 @@ namespace Artemis
 
                 config.tx_power = power;
                 return 0;
+            }
+
+            int32_t RFM23::get_tsen()
+            {
+                return rfm23.temperatureRead();
             }
         }
     }
