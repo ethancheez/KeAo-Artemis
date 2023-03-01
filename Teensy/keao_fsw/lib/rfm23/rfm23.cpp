@@ -8,11 +8,19 @@ namespace Artemis
         {
             RFM23::RFM23(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi) : rfm23(slaveSelectPin, interruptPin, spi) {}
 
+            RFM23::~RFM23()
+            {
+                gcm.clear();
+            }
+
             int32_t RFM23::init(rfm23_config cfg, Threads::Mutex *mtx)
             {
                 Serial.println("[RFM23] Initializing ...");
                 config = cfg;
                 spi_mtx = mtx;
+
+                // Set up AES-256 encryption
+                gcm.setKey(AES_256_KEY, strlen(AES_256_KEY));
 
                 Threads::Scope lock(*spi_mtx);
                 SPI1.setMISO(config.pins.spi_miso);
@@ -77,20 +85,33 @@ namespace Artemis
                 iretn = packet.Wrap();
                 if (iretn < 0)
                 {
-                    Serial.println("Unwrap fail");
+                    Serial.println("[RFM23] Wrap fail");
+                    return -1;
+                }
+
+                // Encrypt
+                vector<uint8_t> encrypted;
+                vector<uint8_t> iv;
+                RNG.rand(iv.data(), AES_IV_SIZE);
+                gcm.encrypt(encrypted.data(), packet.wrapped.data(), packet.wrapped.size());
+                encrypted.insert(encrypted.end(), iv.begin(), iv.end());
+
+                if (encrypted.size() > RH_RF22_MAX_MESSAGE_LEN)
+                {
+                    Serial.println("[RFM23] Packet Size Overflow");
                     return -1;
                 }
 
                 Threads::Scope lock(*spi_mtx);
-                rfm23.send(packet.wrapped.data(), packet.wrapped.size());
+                rfm23.send(encrypted.data(), encrypted.size());
                 rfm23.waitPacketSent(100);
 
                 rfm23.sleep();
                 rfm23.setModeIdle();
                 Serial.print("[RFM23] SENDING: [");
-                for (size_t i = 0; i < packet.wrapped.size(); i++)
+                for (size_t i = 0; i < encrypted.size(); i++)
                 {
-                    Serial.print(packet.wrapped[i], HEX);
+                    Serial.print(encrypted[i], HEX);
                 }
                 Serial.println("]");
 
@@ -107,17 +128,37 @@ namespace Artemis
                 Threads::Scope lock(*spi_mtx);
                 if (rfm23.waitAvailableTimeout(timeout))
                 {
-                    packet.wrapped.resize(0);
-                    packet.wrapped.resize(RH_RF22_MAX_MESSAGE_LEN);
-                    uint8_t bytes_recieved = packet.wrapped.size();
-                    if (rfm23.recv(packet.wrapped.data(), &bytes_recieved))
+                    vector<uint8_t> encrypted;
+                    encrypted.resize(RH_RF22_MAX_MESSAGE_LEN);
+                    uint8_t bytes_received = encrypted.size();
+                    if (rfm23.recv(encrypted.data(), &bytes_received))
                     {
-                        packet.wrapped.resize(bytes_recieved);
+                        encrypted.resize(bytes_received);
+
+                        // Decrypt
+                        vector<uint8_t> ciphertext;
+                        vector<uint8_t> iv;
+                        for (size_t i = 0; i < encrypted.size() - AES_IV_SIZE; i++)
+                        {
+                            ciphertext.push_back(encrypted[i]);
+                        }
+                        for (size_t i = encrypted.size() - AES_IV_SIZE; i < encrypted.size(); i++)
+                        {
+                            iv.push_back(encrypted[i]);
+                        }
+                        packet.wrapped.clear();
+                        gcm.setIV(iv.data(), iv.size());
+                        gcm.decrypt(packet.wrapped.data(), ciphertext.data(), ciphertext.size());
+
+                        // packet.wrapped.resize(bytes_recieved);
                         iretn = packet.Unwrap();
                         rfm23.setModeIdle();
 
                         if (iretn < 0)
+                        {
+                            Serial.println("[RFM23] Unwrap fail");
                             return -1;
+                        }
 
                         return packet.wrapped.size();
                     }

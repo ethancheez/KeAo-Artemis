@@ -8,11 +8,19 @@ namespace Artemis
         {
             RFM98::RFM98(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi) : rfm98(slaveSelectPin, interruptPin, spi) {}
 
+            RFM98::~RFM98()
+            {
+                gcm.clear();
+            }
+
             int32_t RFM98::init(rfm98_config cfg, Threads::Mutex *mtx)
             {
                 Serial.println("[RFM98] Initializing ...");
                 config = cfg;
                 spi_mtx = mtx;
+
+                // Set up AES-256 encryption
+                gcm.setKey(AES_256_KEY, strlen(AES_256_KEY));
 
                 Threads::Scope lock(*spi_mtx);
                 SPI1.setMISO(config.pins.spi_miso);
@@ -55,23 +63,36 @@ namespace Artemis
             int32_t RFM98::send(PacketComm &packet)
             {
                 int32_t iretn = 0;
-                
+
                 iretn = packet.Wrap();
                 if (iretn < 0)
                 {
-                    Serial.println("Unwrap fail");
+                    Serial.println("[RFM98] Wrap fail");
+                    return -1;
+                }
+
+                // Encrypt
+                vector<uint8_t> encrypted;
+                vector<uint8_t> iv;
+                RNG.rand(iv.data(), AES_IV_SIZE);
+                gcm.encrypt(encrypted.data(), packet.wrapped.data(), packet.wrapped.size());
+                encrypted.insert(encrypted.end(), iv.begin(), iv.end());
+
+                if (encrypted.size() > RH_RF95_MAX_MESSAGE_LEN)
+                {
+                    Serial.println("[RFM98] Packet Size Overflow");
                     return -1;
                 }
 
                 Threads::Scope lock(*spi_mtx);
-                rfm98.send(packet.wrapped.data(), packet.wrapped.size());
+                rfm98.send(encrypted.data(), encrypted.size());
                 rfm98.waitPacketSent(100);
-                rfm98.sleep();
+
                 rfm98.setModeIdle();
                 Serial.print("[RFM98] SENDING: [");
-                for (size_t i = 0; i < packet.wrapped.size(); i++)
+                for (size_t i = 0; i < encrypted.size(); i++)
                 {
-                    Serial.print(packet.wrapped[i]);
+                    Serial.print(encrypted[i]);
                 }
                 Serial.println("]");
 
@@ -85,16 +106,37 @@ namespace Artemis
                 Threads::Scope lock(*spi_mtx);
                 if (rfm98.waitAvailableTimeout(timeout))
                 {
-                    packet.wrapped.resize(RH_RF95_MAX_MESSAGE_LEN);
-                    uint8_t bytes_received = packet.wrapped.size();
-                    if (rfm98.recv(packet.wrapped.data(), &bytes_received))
+                    vector<uint8_t> encrypted;
+                    encrypted.resize(RH_RF95_MAX_MESSAGE_LEN);
+                    uint8_t bytes_received = encrypted.size();
+                    if (rfm98.recv(encrypted.data(), &bytes_received))
                     {
-                        packet.wrapped.resize(bytes_received);
+                        encrypted.resize(bytes_received);
+
+                        // Decrypt
+                        vector<uint8_t> ciphertext;
+                        vector<uint8_t> iv;
+                        for (size_t i = 0; i < encrypted.size() - AES_IV_SIZE; i++)
+                        {
+                            ciphertext.push_back(encrypted[i]);
+                        }
+                        for (size_t i = encrypted.size() - AES_IV_SIZE; i < encrypted.size(); i++)
+                        {
+                            iv.push_back(encrypted[i]);
+                        }
+                        packet.wrapped.clear();
+                        gcm.setIV(iv.data(), iv.size());
+                        gcm.decrypt(packet.wrapped.data(), ciphertext.data(), ciphertext.size());
+
+                        // packet.wrapped.resize(bytes_received);
                         iretn = packet.Unwrap();
                         rfm98.setModeIdle();
 
                         if (iretn < 0)
+                        {
+                            Serial.println("[RFM98] Unwrap fail");
                             return -1;
+                        }
 
                         return packet.wrapped.size();
                     }

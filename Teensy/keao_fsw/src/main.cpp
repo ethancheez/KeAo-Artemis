@@ -36,6 +36,7 @@ void setup()
   pinMode(RPI_ENABLE, OUTPUT);
   delay(3000);
 
+  // Set up devices
   iretn = devices.setup_magnetometer();
   if (iretn < 0)
   {

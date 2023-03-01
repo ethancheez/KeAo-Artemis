@@ -4,7 +4,11 @@
 #include <RH_RF95.h>
 #include <RHHardwareSPI1.h>
 #include <TeensyThreads.h>
+#include <GCM.h>
+#include <AES.h>
+#include <RNG.h>
 #include <support/packetcomm.h>
+#include "private.h"
 
 namespace Artemis
 {
@@ -32,6 +36,7 @@ namespace Artemis
                 };
 
                 RFM98(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi = hardware_spi1);
+                ~RFM98();
                 int32_t reset();
                 int32_t init(rfm98_config cfg, Threads::Mutex *mtx);
                 int32_t send(PacketComm &packet);
@@ -39,6 +44,7 @@ namespace Artemis
 
             private:
                 RH_RF95 rfm98;
+                GCM<AES256> gcm;
 
                 Threads::Mutex *spi_mtx;
                 rfm98_config config;
