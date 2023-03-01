@@ -20,7 +20,7 @@ namespace Artemis
                 spi_mtx = mtx;
 
                 // Set up AES-256 encryption
-                gcm.setKey(AES_256_KEY, strlen(AES_256_KEY));
+                gcm.setKey(config.key, strlen((char*)config.key));
 
                 Threads::Scope lock(*spi_mtx);
                 SPI1.setMISO(config.pins.spi_miso);
@@ -74,7 +74,7 @@ namespace Artemis
                 // Encrypt
                 vector<uint8_t> encrypted;
                 vector<uint8_t> iv;
-                RNG.rand(iv.data(), AES_IV_SIZE);
+                RNG.rand(iv.data(), config.iv_size);
                 gcm.encrypt(encrypted.data(), packet.wrapped.data(), packet.wrapped.size());
                 encrypted.insert(encrypted.end(), iv.begin(), iv.end());
 
@@ -116,11 +116,11 @@ namespace Artemis
                         // Decrypt
                         vector<uint8_t> ciphertext;
                         vector<uint8_t> iv;
-                        for (size_t i = 0; i < encrypted.size() - AES_IV_SIZE; i++)
+                        for (size_t i = 0; i < encrypted.size() - config.iv_size; i++)
                         {
                             ciphertext.push_back(encrypted[i]);
                         }
-                        for (size_t i = encrypted.size() - AES_IV_SIZE; i < encrypted.size(); i++)
+                        for (size_t i = encrypted.size() - config.iv_size; i < encrypted.size(); i++)
                         {
                             iv.push_back(encrypted[i]);
                         }

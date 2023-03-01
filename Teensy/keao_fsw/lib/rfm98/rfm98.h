@@ -8,7 +8,6 @@
 #include <AES.h>
 #include <RNG.h>
 #include <support/packetcomm.h>
-#include "private.h"
 
 namespace Artemis
 {
@@ -33,6 +32,9 @@ namespace Artemis
                         uint8_t cs;
                         uint8_t reset;
                     } pins;
+
+                    const uint8_t *key;
+                    uint8_t iv_size;
                 };
 
                 RFM98(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi = hardware_spi1);

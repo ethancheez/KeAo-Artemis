@@ -8,7 +8,6 @@
 #include <AES.h>
 #include <RNG.h>
 #include <support/packetcomm.h>
-#include "private.h"
 
 #undef RH_RF22_MAX_MESSAGE_LEN
 #define RH_RF22_MAX_MESSAGE_LEN 50
@@ -37,6 +36,9 @@ namespace Artemis
                         uint8_t tx_on;
                         uint8_t rx_on;
                     } pins;
+
+                    const uint8_t *key;
+                    uint8_t iv_size;
                 };
 
                 RFM23(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi = hardware_spi1);
