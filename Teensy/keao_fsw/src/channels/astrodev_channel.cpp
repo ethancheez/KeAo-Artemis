@@ -160,7 +160,6 @@ int32_t astrodev_init(HardwareSerial *new_serial, uint32_t baud_rate)
     Serial.println("config check OK!");
     Serial.println("GetTCVConfig successful");
 
-    astrodev.SetAES(AES_256_KEY, AES_IV_SIZE);
     return 0;
 }
 
@@ -195,7 +194,8 @@ int32_t astrodev_recv()
             break;
         case Astrodev::Command::RECEIVE:
             // Packets from the ground will be in PacketComm protocol
-            memcpy(packet.wrapped.data(), &incoming_message.packet[0], strlen((char *)incoming_message.packet));
+            packet.wrapped.resize(incoming_message.header.sizelo - 18);
+            memcpy(packet.wrapped.data(), &incoming_message.payload[16], incoming_message.header.sizelo - 18);
             iretn = packet.Unwrap();
             if (iretn < 0)
             {
