@@ -4,10 +4,8 @@
 #include <RH_RF95.h>
 #include <RHHardwareSPI1.h>
 #include <TeensyThreads.h>
-#include <GCM.h>
-#include <AES.h>
-#include <RNG.h>
 #include <support/packetcomm.h>
+#include <cosmos-crypto.h>
 
 namespace Artemis
 {
@@ -33,12 +31,10 @@ namespace Artemis
                         uint8_t reset;
                     } pins;
 
-                    const uint8_t *key;
-                    uint8_t iv_size;
+                    const char *key;
                 };
 
                 RFM98(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi = hardware_spi1);
-                ~RFM98();
                 int32_t reset();
                 int32_t init(rfm98_config cfg, Threads::Mutex *mtx);
                 int32_t send(PacketComm &packet);
@@ -46,7 +42,7 @@ namespace Artemis
 
             private:
                 RH_RF95 rfm98;
-                GCM<AES256> gcm;
+                Artemis::Teensy::Crypto crypto;
 
                 Threads::Mutex *spi_mtx;
                 rfm98_config config;

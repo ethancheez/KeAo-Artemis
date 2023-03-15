@@ -29,8 +29,8 @@ void send_test_packets()
     packet.header.type = PacketComm::TypeId::DataObcPong;
     packet.header.nodeorig = (uint8_t)NODES::TEENSY_NODE_ID;
     packet.header.nodedest = (uint8_t)NODES::GROUND_NODE_ID;
-    packet.header.chanorig = 0;
-    packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
+    packet.header.chanin = 0;
+    packet.header.chanout = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
     PushQueue(packet, main_queue, main_queue_mtx);
 #endif
 
@@ -41,6 +41,10 @@ void send_test_packets()
     packet.data.resize(0);
     packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::All);
     packet.data.push_back(1);
+    PushQueue(packet, main_queue, main_queue_mtx);
+    packet.data.resize(0);
+    packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::All);
+    packet.data.push_back(0);
     PushQueue(packet, main_queue, main_queue_mtx);
 #endif
 }

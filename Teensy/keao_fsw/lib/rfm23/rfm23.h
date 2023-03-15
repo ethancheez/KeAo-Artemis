@@ -4,10 +4,8 @@
 #include <RH_RF22.h>
 #include <RHHardwareSPI1.h>
 #include <TeensyThreads.h>
-#include <GCM.h>
-#include <AES.h>
-#include <RNG.h>
 #include <support/packetcomm.h>
+#include <cosmos-crypto.h>
 
 #undef RH_RF22_MAX_MESSAGE_LEN
 #define RH_RF22_MAX_MESSAGE_LEN 50
@@ -37,12 +35,10 @@ namespace Artemis
                         uint8_t rx_on;
                     } pins;
 
-                    const uint8_t *key;
-                    uint8_t iv_size;
+                    const char *key;
                 };
 
                 RFM23(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi = hardware_spi1);
-                ~RFM23();
                 int32_t reset();
                 int32_t init(rfm23_config cfg, Threads::Mutex *mtx);
                 int32_t send(PacketComm &packet);
@@ -52,7 +48,7 @@ namespace Artemis
 
             private:
                 RH_RF22 rfm23;
-                GCM<AES256> gcm;
+                Artemis::Teensy::Crypto crypto;
 
                 Threads::Mutex *spi_mtx;
                 rfm23_config config;

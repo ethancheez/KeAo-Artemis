@@ -2,6 +2,7 @@
 #include <deque>
 #include <Arduino.h>
 #include <astrodev.h>
+#include "private.h"
 
 /* TODO:    Test astrodev channel without astrodev threads
  *          See if we need individual threads for sending/receiving
@@ -79,7 +80,6 @@ void Artemis::Teensy::Channels::astrodev_channel()
             // PushQueue(packet, main_queue, main_queue_mtx);
         }
 
-        
         threads.delay(10);
     }
 }
@@ -160,6 +160,7 @@ int32_t astrodev_init(HardwareSerial *new_serial, uint32_t baud_rate)
     Serial.println("config check OK!");
     Serial.println("GetTCVConfig successful");
 
+    astrodev.SetAES(AES_256_KEY, AES_IV_SIZE);
     return 0;
 }
 
@@ -194,10 +195,7 @@ int32_t astrodev_recv()
             break;
         case Astrodev::Command::RECEIVE:
             // Packets from the ground will be in PacketComm protocol
-            Serial.print("in rx receive, bytes:");
-            Serial.println(incoming_message.header.sizelo);
-            packet.wrapped.resize(incoming_message.header.sizelo - 18);
-            memcpy(packet.wrapped.data(), &incoming_message.payload[16], incoming_message.header.sizelo - 18);
+            memcpy(packet.wrapped.data(), &incoming_message.packet[0], strlen((char *)incoming_message.packet));
             iretn = packet.Unwrap();
             if (iretn < 0)
             {
@@ -222,7 +220,7 @@ int32_t astrodev_send()
     uint8_t retries = 0;
     Serial.println(" | Transmit message...");
     // TODO: Attempt resend on NACK? Would be difficult to coordinate
-    while(true)
+    while (true)
     {
         if (!astrodev.buffer_full.load())
         {
@@ -237,7 +235,7 @@ int32_t astrodev_send()
         {
             Serial.println("Buffer full, waiting a bit");
             // Retry 3 times
-            if(++retries > 3)
+            if (++retries > 3)
             {
                 return -1;
             }

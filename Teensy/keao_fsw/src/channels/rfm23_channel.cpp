@@ -18,8 +18,7 @@ namespace
             .tx_on = TX_ON,
             .rx_on = RX_ON,
         },
-        .key = (uint8_t *)AES_256_KEY,
-        .iv_size = AES_IV_SIZE,
+        .key = AES_256_KEY,
     };
 
     RFM23 rfm23(config.pins.cs, config.pins.nirq, hardware_spi1);

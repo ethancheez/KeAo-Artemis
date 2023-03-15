@@ -35,10 +35,10 @@ namespace Artemis
         packet.header.type = PacketComm::TypeId::DataObcBeacon;
         packet.data.resize(sizeof(beacon));
         memcpy(packet.data.data(), &beacon, sizeof(beacon));
-        packet.header.chanorig = 0;
-        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
+        packet.header.chanin = 0;
+        packet.header.chanout = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
         PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
-        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
+        packet.header.chanout = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
         PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 
         return 0;
@@ -82,10 +82,10 @@ namespace Artemis
         packet.header.type = PacketComm::TypeId::DataObcBeacon;
         packet.data.resize(sizeof(beacon));
         memcpy(packet.data.data(), &beacon, sizeof(beacon));
-        packet.header.chanorig = 0;
-        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
+        packet.header.chanin = 0;
+        packet.header.chanout = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
         PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
-        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
+        packet.header.chanout = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
         PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 
         return 0;
@@ -132,19 +132,19 @@ namespace Artemis
         beacon1.deci = uptime;
         packet.data.resize(sizeof(beacon1));
         memcpy(packet.data.data(), &beacon1, sizeof(beacon1));
-        packet.header.chanorig = 0;
-        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
+        packet.header.chanin = 0;
+        packet.header.chanout = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
         PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
-        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
+        packet.header.chanout = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
         PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 
         beacon2.deci = uptime;
         packet.data.resize(sizeof(beacon2));
         memcpy(packet.data.data(), &beacon2, sizeof(beacon2));
-        packet.header.chanorig = 0;
-        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
+        packet.header.chanin = 0;
+        packet.header.chanout = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
         PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
-        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
+        packet.header.chanout = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
         PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 
         return 0;
@@ -178,10 +178,10 @@ namespace Artemis
         packet.header.type = PacketComm::TypeId::DataObcBeacon;
         packet.data.resize(sizeof(beacon));
         memcpy(packet.data.data(), &beacon, sizeof(beacon));
-        packet.header.chanorig = 0;
-        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
+        packet.header.chanin = 0;
+        packet.header.chanout = Artemis::Teensy::Channels::Channel_ID::RFM23_CHANNEL;
         PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
-        packet.header.chandest = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
+        packet.header.chanout = Artemis::Teensy::Channels::Channel_ID::ASTRODEV_CHANNEL;
         PushQueue(packet, astrodev_queue, astrodev_queue_mtx);
 
         return 0;

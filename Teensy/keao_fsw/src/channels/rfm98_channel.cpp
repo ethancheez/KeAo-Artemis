@@ -17,8 +17,7 @@ namespace
             .cs = T_CS1,
             .reset = T_GPIO3,
         },
-        .key = (uint8_t *)AES_256_KEY,
-        .iv_size = AES_IV_SIZE,
+        .key = AES_256_KEY,
     };
 
     RFM98 rfm98(config.pins.cs, config.pins.nirq, hardware_spi1);

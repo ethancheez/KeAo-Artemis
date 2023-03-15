@@ -8,19 +8,11 @@ namespace Artemis
         {
             RFM98::RFM98(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi) : rfm98(slaveSelectPin, interruptPin, spi) {}
 
-            RFM98::~RFM98()
-            {
-                gcm.clear();
-            }
-
             int32_t RFM98::init(rfm98_config cfg, Threads::Mutex *mtx)
             {
                 Serial.println("[RFM98] Initializing ...");
                 config = cfg;
                 spi_mtx = mtx;
-
-                // Set up AES-256 encryption
-                gcm.setKey(config.key, strlen((char*)config.key));
 
                 Threads::Scope lock(*spi_mtx);
                 SPI1.setMISO(config.pins.spi_miso);
@@ -48,6 +40,9 @@ namespace Artemis
                 Serial.println("[RFM98] INIT SUCCESS");
                 rfm98.sleep();
                 rfm98.setModeIdle();
+
+                crypto.setKey(config.key);
+
                 return 0;
             }
 
@@ -71,17 +66,13 @@ namespace Artemis
                     return -1;
                 }
 
-                // Encrypt
                 vector<uint8_t> encrypted;
-                vector<uint8_t> iv;
-                RNG.rand(iv.data(), config.iv_size);
-                gcm.encrypt(encrypted.data(), packet.wrapped.data(), packet.wrapped.size());
-                encrypted.insert(encrypted.end(), iv.begin(), iv.end());
+                crypto.randomizeIV(8);
+                crypto.encrypt(packet.wrapped, encrypted);
 
                 if (encrypted.size() > RH_RF95_MAX_MESSAGE_LEN)
                 {
-                    Serial.println("[RFM98] Packet Size Overflow");
-                    return -1;
+                    return COSMOS_GENERAL_ERROR_OVERSIZE;
                 }
 
                 Threads::Scope lock(*spi_mtx);
@@ -114,19 +105,14 @@ namespace Artemis
                         encrypted.resize(bytes_received);
 
                         // Decrypt
-                        vector<uint8_t> ciphertext;
                         vector<uint8_t> iv;
-                        for (size_t i = 0; i < encrypted.size() - config.iv_size; i++)
-                        {
-                            ciphertext.push_back(encrypted[i]);
-                        }
-                        for (size_t i = encrypted.size() - config.iv_size; i < encrypted.size(); i++)
+                        for (size_t i = encrypted.size() - 8; i < encrypted.size(); i++)
                         {
                             iv.push_back(encrypted[i]);
                         }
-                        packet.wrapped.clear();
-                        gcm.setIV(iv.data(), iv.size());
-                        gcm.decrypt(packet.wrapped.data(), ciphertext.data(), ciphertext.size());
+
+                        crypto.setIV(iv);
+                        crypto.decrypt(encrypted, packet.wrapped);
 
                         // packet.wrapped.resize(bytes_received);
                         iretn = packet.Unwrap();

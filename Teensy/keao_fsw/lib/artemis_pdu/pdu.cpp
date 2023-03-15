@@ -28,11 +28,12 @@ namespace Artemis
             Serial.print("SENDING TO PDU: [");
             for (size_t i = 0; i < msg.length(); i++)
             {
-                Serial.print(msg[i] - PDU_CMD_OFFSET, HEX);
+                Serial.print((unsigned)(msg[i] - PDU_CMD_OFFSET));
             }
             Serial.println(']');
 
             free(cmd);
+            threads.delay(10);
             return 0;
         }
 
@@ -43,9 +44,9 @@ namespace Artemis
                 String UART1_RX = serial->readString();
                 if (UART1_RX.length() > 0)
                 {
-                    // Serial.print("UART RECV: ");
-                    // Serial.println(UART1_RX);
                     response = UART1_RX.c_str();
+
+                    serial->clear();
                     return UART1_RX.length();
                 }
             }

@@ -55,7 +55,7 @@ void setup()
   // Threads
   // thread_list.push_back({threads.addThread(Channels::rfm23_channel, 9000), Channels::Channel_ID::RFM23_CHANNEL});
   // thread_list.push_back({threads.addThread(Channels::rfm98_channel, 9000), Channels::Channel_ID::RFM98_CHANNEL});
-  // thread_list.push_back({threads.addThread(Channels::pdu_channel, 9000), Channels::Channel_ID::PDU_CHANNEL});
+  thread_list.push_back({threads.addThread(Channels::pdu_channel, 9000), Channels::Channel_ID::PDU_CHANNEL});
   // thread_list.push_back({threads.addThread(Channels::astrodev_channel, 9000), Channels::Channel_ID::ASTRODEV_CHANNEL});
 
   Serial.println("Setup Complete");
@@ -72,7 +72,7 @@ void loop()
   {
     if (packet.header.nodedest == (uint8_t)NODES::GROUND_NODE_ID)
     {
-      switch (packet.header.chandest)
+      switch (packet.header.chanout)
       {
       case Channels::Channel_ID::RFM23_CHANNEL:
         PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
@@ -103,7 +103,7 @@ void loop()
         {
           packet.data.push_back(data[i]);
         }
-        switch (packet.header.chandest)
+        switch (packet.header.chanout)
         {
         case Channels::Channel_ID::RFM23_CHANNEL:
           PushQueue(packet, rfm23_queue, rfm23_queue_mtx);
