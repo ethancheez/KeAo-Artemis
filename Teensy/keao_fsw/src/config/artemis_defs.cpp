@@ -48,7 +48,7 @@ int kill_thread(uint8_t channel_id)
 int32_t PushQueue(PacketComm &packet, std::deque<PacketComm> &queue, Threads::Mutex &mtx)
 {
     Threads::Scope lock(mtx);
-    if (queue.size() > MAXQUEUESIZE)
+    if (queue.size() >= MAXQUEUESIZE)
     {
         queue.pop_front();
     }

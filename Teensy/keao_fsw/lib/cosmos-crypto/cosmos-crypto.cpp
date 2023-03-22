@@ -7,7 +7,6 @@ namespace Artemis
     {
         Crypto::Crypto(const char *key)
         {
-            // Set up AES-256 encryption
             gcm.setKey((uint8_t *)key, strlen(key));
         }
 

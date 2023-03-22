@@ -212,10 +212,11 @@ namespace Artemis
             if (gps->parse(gps->lastNMEA())) // A successful message was parsed
             {
                 // Serial.print(gps->lastNMEA());
+                return 0;
             }
         }
 
-        return 0;
+        return -1;
     }
 
     int32_t Devices::read_gps(uint32_t uptime)

@@ -134,6 +134,7 @@ namespace Artemis
                         }
 
                         crypto.setIV(iv);
+                        encrypted.resize(encrypted.size() - 8);
                         crypto.decrypt(encrypted, packet.wrapped);
 
                         // packet.wrapped.resize(bytes_recieved);
