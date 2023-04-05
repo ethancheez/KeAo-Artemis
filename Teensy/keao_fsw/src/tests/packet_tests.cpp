@@ -42,9 +42,5 @@ void send_test_packets()
     packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::All);
     packet.data.push_back(1);
     PushQueue(packet, main_queue, main_queue_mtx);
-    packet.data.resize(0);
-    packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::All);
-    packet.data.push_back(0);
-    PushQueue(packet, main_queue, main_queue_mtx);
 #endif
 }
