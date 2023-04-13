@@ -89,13 +89,12 @@ namespace Artemis
 
                 threads.delay(100);
             }
-            // TODO: Send to PacketComm packet -> then to ground
             Serial.print("UART RECV: ");
             Serial.println(response.c_str());
             return 0;
         }
 
-        int32_t PDU::get_switch(PDU_SW sw)
+        int32_t PDU::get_switch(PDU_SW sw, string &ret)
         {
             std::string response;
             pdu_packet packet;
@@ -129,9 +128,9 @@ namespace Artemis
                 }
                 threads.delay(100);
             }
-            // TODO: Send to PacketComm packet -> then to ground
             Serial.print("UART RECV: ");
             Serial.println(response.c_str());
+            ret = response;
 
             if (sw == PDU_SW::All)
             {

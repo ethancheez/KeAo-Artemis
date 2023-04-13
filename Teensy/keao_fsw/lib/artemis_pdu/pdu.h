@@ -81,7 +81,7 @@ namespace Artemis
 
             PDU(HardwareSerial *hw_serial, int baud_rate);
             int32_t set_switch(PDU_SW sw, uint8_t enable);
-            int32_t get_switch(PDU_SW sw);
+            int32_t get_switch(PDU_SW sw, string &ret);
             int32_t send(pdu_packet packet);
             int32_t recv(std::string &response);
 

@@ -30,7 +30,7 @@ struct thread_struct
   uint8_t channel_id;
 };
 
-enum TEENSY_PINS // Artemis OBC v4.23
+enum TEENSY_PINS // Artemis OBC v4.24
 {
   UART4_RXD,
   UART4_TXD,
@@ -39,8 +39,8 @@ enum TEENSY_PINS // Artemis OBC v4.23
   T_GPIO4,
   T_GPIO5,
   T_GPIO6,
-  RADIO_RESET, // 4.24: UART6_RX
-  NIRQ,        // 4.24: UART6_TX
+  UART6_RX,
+  UART6_TX,
   T_CS1,
   T_CS,
   SPI0_MOSI,
@@ -64,7 +64,7 @@ enum TEENSY_PINS // Artemis OBC v4.23
   UART5_RXD,
   RX_ON,
   TX_ON,
-  PI_STATUS, // 4.24: RADIO_RESET
+  RADIO_RESET,
   GPS_RSTN,
   UART2_RXD,
   UART2_TXD,
@@ -72,7 +72,7 @@ enum TEENSY_PINS // Artemis OBC v4.23
   SDN,
   SPI1_CS1,
   SPI1_D0,
-  A16_UNUSED, // 4.24: NIRQ
+  NIRQ,
   AIN2
 };
 

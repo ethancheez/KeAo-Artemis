@@ -1,6 +1,12 @@
 #ifndef _PRIVATE_H
 #define _PRIVATE_H
 
+/* Make a copy of this file and rename it to private.h
+ * Ensure that the private.h file is not commited to git
+ *
+ * DO NOT DELETE THIS TEMPLATE FILE
+ */
+
 /* openssl enc -aes-256-ctr -k secret -P -md sha512 -pbkdf2 */
 #define AES_256_KEY "secretkey"
 #define AES_IV_SIZE 0
