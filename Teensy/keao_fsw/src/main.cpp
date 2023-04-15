@@ -13,6 +13,10 @@
 extern "C" uint32_t set_arm_clock(uint32_t frequency);
 #endif
 
+void send_beacons(void);
+void req_switch_beacon(void);
+bool turn_on_pi(void);
+
 namespace
 {
   using namespace Artemis::Teensy;
@@ -101,25 +105,10 @@ void loop()
       // If Raspberry Pi is not on
       if (!digitalRead(UART6_RX))
       {
-        // Read voltage of battery (V_BATT)
-        float curr_V = devices.current_sensors["battery_board"]->getBusVoltage_V();
-        Serial.println(curr_V);
-        // If battery is at least 7.0V OR is overrided by packet.data[2] field, turn on Pi
-        if ((packet.data[1] == 1 && curr_V >= 7.0) || (packet.data[1] == 1 && packet.data[2] == 1))
+        // Attempt to turn on Pi. If unsuccessful, downlink switch beacon
+        if (!turn_on_pi())
         {
-          Serial.println(packet.data[1]);
-          digitalWrite(RPI_ENABLE, packet.data[1]);
-          thread_list.push_back({threads.addThread(Channels::rpi_channel), Channels::Channel_ID::RPI_CHANNEL});
-        }
-        // Otherwise, downlink a switch beacon with all the current switch statuses
-        else
-        {
-          packet.header.type = PacketComm::TypeId::CommandEpsSwitchStatus;
-          packet.header.nodeorig = (uint8_t)NODES::GROUND_NODE_ID;
-          packet.header.nodedest = (uint8_t)NODES::TEENSY_NODE_ID;
-          packet.data.clear();
-          packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::All);
-          PushQueue(packet, pdu_queue, pdu_queue_mtx);
+          req_switch_beacon();
         }
       }
       // Push packet to RPI channel
@@ -179,13 +168,9 @@ void loop()
         // Controlling RPI Switch. Do not forward to PDU
         case PDU::PDU_SW::RPI:
         {
-          float curr_V = devices.current_sensors["battery_board"]->getBusVoltage_V();
-          Serial.println(curr_V);
-          if ((packet.data[1] == 1 && curr_V >= 7.0) || (packet.data[1] == 1 && packet.data[2] == 1))
+          if (packet.data[1] == 1 && !turn_on_pi())
           {
-            Serial.println(packet.data[1]);
-            digitalWrite(RPI_ENABLE, packet.data[1]);
-            thread_list.push_back({threads.addThread(Channels::rpi_channel), Channels::Channel_ID::RPI_CHANNEL});
+            req_switch_beacon();
           }
           else if (packet.data[1] == 0)
           {
@@ -243,11 +228,7 @@ void loop()
       // If a Beacon Request Packet
       case PacketComm::TypeId::CommandObcSendBeacon:
       {
-        devices.read_temperature(uptime);
-        devices.read_current(uptime);
-        devices.read_imu(uptime);
-        devices.read_mag(uptime);
-        devices.read_gps(uptime);
+        send_beacons();
         break;
       }
       default:
@@ -260,21 +241,51 @@ void loop()
   if (sensortimer > 10000)
   {
     sensortimer = 0;
-    devices.read_temperature(uptime);
-    devices.read_current(uptime);
-    devices.read_imu(uptime);
-    devices.read_mag(uptime);
-    devices.read_gps(uptime);
-
-    // Get PDU Switches
-    packet.header.type = PacketComm::TypeId::CommandEpsSwitchStatus;
-    packet.header.nodeorig = (uint8_t)NODES::GROUND_NODE_ID;
-    packet.header.nodedest = (uint8_t)NODES::TEENSY_NODE_ID;
-    packet.data.clear();
-    packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::All);
-    PushQueue(packet, pdu_queue, pdu_queue_mtx);
+    send_beacons();
   }
   devices.update_gps();
 
   threads.delay(10);
+}
+
+/*********************************************************
+ *****               HELPER FUNCTIONS                *****
+ *********************************************************/
+
+void send_beacons(void)
+{
+  devices.read_temperature(uptime);
+  devices.read_current(uptime);
+  devices.read_imu(uptime);
+  devices.read_mag(uptime);
+  devices.read_gps(uptime);
+
+  req_switch_beacon();
+}
+
+void req_switch_beacon(void)
+{
+  // Get PDU Switches
+  packet.header.type = PacketComm::TypeId::CommandEpsSwitchStatus;
+  packet.header.nodeorig = (uint8_t)NODES::GROUND_NODE_ID;
+  packet.header.nodedest = (uint8_t)NODES::TEENSY_NODE_ID;
+  packet.data.clear();
+  packet.data.push_back((uint8_t)Artemis::Teensy::PDU::PDU_SW::All);
+  PushQueue(packet, pdu_queue, pdu_queue_mtx);
+}
+
+bool turn_on_pi(void)
+{
+  // Read voltage of battery (V_BATT)
+  float curr_V = devices.current_sensors["battery_board"]->getBusVoltage_V();
+  Serial.println(curr_V);
+  // If battery is at least 7.0V, turn on Pi
+  if (curr_V >= 7.0)
+  {
+    digitalWrite(RPI_ENABLE, HIGH);
+    thread_list.push_back({threads.addThread(Channels::rpi_channel), Channels::Channel_ID::RPI_CHANNEL});
+    return true;
+  }
+
+  return false;
 }

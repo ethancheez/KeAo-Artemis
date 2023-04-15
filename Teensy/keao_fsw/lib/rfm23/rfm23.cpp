@@ -95,7 +95,13 @@ namespace Artemis
 
                 Threads::Scope lock(*spi_mtx);
                 rfm23.send(encrypted.data(), encrypted.size());
-                rfm23.waitPacketSent(100);
+                iretn = rfm23.waitPacketSent(1000);
+
+                if (iretn == false)
+                {
+                    Serial.println("[RFM23] TX Timeout");
+                    return -1;
+                }
 
                 rfm23.sleep();
                 rfm23.setModeIdle();

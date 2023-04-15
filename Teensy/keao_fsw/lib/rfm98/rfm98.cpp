@@ -77,7 +77,13 @@ namespace Artemis
 
                 Threads::Scope lock(*spi_mtx);
                 rfm98.send(encrypted.data(), encrypted.size());
-                rfm98.waitPacketSent(100);
+                iretn = rfm98.waitPacketSent(1000);
+
+                if (iretn == false)
+                {
+                    Serial.println("[RFM98] TX Timeout");
+                    return -1;
+                }
 
                 rfm98.setModeIdle();
                 Serial.print("[RFM98] SENDING: [");

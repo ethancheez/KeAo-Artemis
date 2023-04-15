@@ -52,7 +52,7 @@ void send_test_packets()
     String data_str = String(packet_count);
     for (size_t i = 0; i < data_str.length(); i++)
     {
-        packet.data.push_back(data_str[i]);
+        packet.data.push_back(data_str[i] - '0');
     }
     packet_count++;
 

@@ -5,6 +5,7 @@
 
 // #define TEST_PI
 // #define TEST_I2C_PI
+// #define TEST_RFM23
 // #define TEST_ASTRODEV
 // #define TEST_PDU
 // #define TEST_CAMERACAPTURE
