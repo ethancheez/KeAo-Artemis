@@ -19,6 +19,7 @@ namespace
             .rx_on = RX_ON,
         },
         .key = AES_256_KEY,
+        .iv_size = AES_IV_SIZE,
     };
 
     RFM23 rfm23(config.pins.cs, config.pins.nirq, hardware_spi1);

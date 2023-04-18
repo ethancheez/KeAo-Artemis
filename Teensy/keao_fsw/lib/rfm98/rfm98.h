@@ -32,13 +32,14 @@ namespace Artemis
                     } pins;
 
                     const char *key;
+                    size_t iv_size;
                 };
 
                 RFM98(uint8_t slaveSelectPin, uint8_t interruptPin, RHGenericSPI &spi = hardware_spi1);
                 int32_t reset();
                 int32_t init(rfm98_config cfg, Threads::Mutex *mtx);
-                int32_t send(PacketComm &packet);
-                int32_t recv(PacketComm &packet, uint16_t timeout);
+                int32_t send(PacketComm &packet, bool encrypt = true);
+                int32_t recv(PacketComm &packet, uint16_t timeout, bool decrypt = true);
 
             private:
                 RH_RF95 rfm98;

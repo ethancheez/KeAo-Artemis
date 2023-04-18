@@ -69,14 +69,14 @@ namespace Artemis
                 return 0;
             }
 
-            int32_t RFM23::send(PacketComm &packet)
+            int32_t RFM23::send(PacketComm &packet, bool encrypt)
             {
                 int32_t iretn = 0;
 
                 digitalWrite(config.pins.rx_on, HIGH);
                 digitalWrite(config.pins.tx_on, LOW);
 
-                packet.wrapped.resize(0);
+                packet.wrapped.clear();
                 iretn = packet.Wrap();
                 if (iretn < 0)
                 {
@@ -84,17 +84,24 @@ namespace Artemis
                     return -1;
                 }
 
-                vector<uint8_t> encrypted;
-                crypto.randomizeIV(8);
-                crypto.encrypt(packet.wrapped, encrypted);
+                vector<uint8_t> payload;
+                if (encrypt)
+                {
+                    crypto.randomizeIV(config.iv_size);
+                    crypto.encrypt(packet.wrapped, payload);
+                }
+                else
+                {
+                    payload = packet.wrapped;
+                }
 
-                if (encrypted.size() > RH_RF22_MAX_MESSAGE_LEN)
+                if (payload.size() > RH_RF22_MAX_MESSAGE_LEN)
                 {
                     return COSMOS_GENERAL_ERROR_OVERSIZE;
                 }
 
                 Threads::Scope lock(*spi_mtx);
-                rfm23.send(encrypted.data(), encrypted.size());
+                rfm23.send(payload.data(), payload.size());
                 iretn = rfm23.waitPacketSent(1000);
 
                 if (iretn == false)
@@ -106,16 +113,16 @@ namespace Artemis
                 rfm23.sleep();
                 rfm23.setModeIdle();
                 Serial.print("[RFM23] SENDING: [");
-                for (size_t i = 0; i < encrypted.size(); i++)
+                for (size_t i = 0; i < payload.size(); i++)
                 {
-                    Serial.print(encrypted[i], HEX);
+                    Serial.print(payload[i], HEX);
                 }
                 Serial.println("]");
 
                 return 0;
             }
 
-            int32_t RFM23::recv(PacketComm &packet, uint16_t timeout)
+            int32_t RFM23::recv(PacketComm &packet, uint16_t timeout, bool decrypt)
             {
                 int32_t iretn = 0;
 
@@ -125,25 +132,31 @@ namespace Artemis
                 Threads::Scope lock(*spi_mtx);
                 if (rfm23.waitAvailableTimeout(timeout))
                 {
-                    vector<uint8_t> encrypted;
-                    encrypted.resize(RH_RF22_MAX_MESSAGE_LEN);
-                    uint8_t bytes_received = encrypted.size();
-                    if (rfm23.recv(encrypted.data(), &bytes_received))
+                    vector<uint8_t> payload;
+                    payload.resize(RH_RF22_MAX_MESSAGE_LEN);
+                    uint8_t bytes_received = payload.size();
+                    if (rfm23.recv(payload.data(), &bytes_received))
                     {
-                        encrypted.resize(bytes_received);
+                        payload.resize(bytes_received);
 
-                        // Decrypt
-                        vector<uint8_t> iv;
-                        for (size_t i = encrypted.size() - 8; i < encrypted.size(); i++)
+                        if (decrypt)
                         {
-                            iv.push_back(encrypted[i]);
+                            // Decrypt
+                            vector<uint8_t> iv;
+                            for (size_t i = payload.size() - config.iv_size; i < payload.size(); i++)
+                            {
+                                iv.push_back(payload[i]);
+                            }
+
+                            crypto.setIV(iv);
+                            payload.resize(payload.size() - config.iv_size);
+                            crypto.decrypt(payload, packet.wrapped);
+                        }
+                        else
+                        {
+                            packet.wrapped = payload;
                         }
 
-                        crypto.setIV(iv);
-                        encrypted.resize(encrypted.size() - 8);
-                        crypto.decrypt(encrypted, packet.wrapped);
-
-                        // packet.wrapped.resize(bytes_recieved);
                         iretn = packet.Unwrap();
                         rfm23.setModeIdle();
 
