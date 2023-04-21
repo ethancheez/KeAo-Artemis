@@ -175,8 +175,8 @@ void decode_pdu_packet(const char *input)
                 telem.sw_state[5] = PORT_PinRead(SW_5V_EN4_PIN) + PDU_CMD_OFFSET;
                 telem.sw_state[6] = (PORT_PinRead(SW_12V_EN1_PIN) && PORT_PinRead(SW_5V_EN4_PIN)) + PDU_CMD_OFFSET;
                 telem.sw_state[7] = PORT_PinRead(SW_VBATT_EN_PIN) + PDU_CMD_OFFSET;
-                telem.sw_state[8] = (PORT_PinRead(BURN1_EN_PIN) && PORT_PinRead(BURN_5V_PIN)) + PDU_CMD_OFFSET;
-                telem.sw_state[9] = (PORT_PinRead(BURN2_EN_PIN) && PORT_PinRead(BURN_5V_PIN)) + PDU_CMD_OFFSET;
+                telem.sw_state[8] = PORT_PinRead(BURN1_EN_PIN) + PDU_CMD_OFFSET;
+                telem.sw_state[9] = PORT_PinRead(BURN2_EN_PIN) + PDU_CMD_OFFSET;
                 telem.sw_state[10] = (PORT_PinRead(FAULT1_PIN) &&
                                 PORT_PinRead(IN1_PIN) &&
                                 PORT_PinRead(IN2_PIN) &&
@@ -224,10 +224,10 @@ void decode_pdu_packet(const char *input)
                     packet.sw_state = PORT_PinRead(SW_VBATT_EN_PIN);
                     break;
                 case BURN1:
-                    packet.sw_state = PORT_PinRead(BURN1_EN_PIN) && PORT_PinRead(BURN_5V_PIN);
+                    packet.sw_state = PORT_PinRead(BURN1_EN_PIN);
                     break;
                 case BURN2:
-                    packet.sw_state = PORT_PinRead(BURN2_EN_PIN) && PORT_PinRead(BURN_5V_PIN);
+                    packet.sw_state = PORT_PinRead(BURN2_EN_PIN);
                     break;
                 case HBRIDGE1:
                     packet.sw_state = PORT_PinRead(FAULT1_PIN) &&
@@ -264,6 +264,7 @@ void decode_pdu_packet(const char *input)
 
 void enableAllGPIOs(void) {
     BURN_5V_Set();
+    BURN1_EN_Set();
     BURN2_EN_Set();
     SW_12V_EN1_Set();
     SW_3V3_EN1_Set();
@@ -274,7 +275,6 @@ void enableAllGPIOs(void) {
     SW_5V_EN4_Set();
     SW_VBATT_EN_Set();
 //    WDT_WDI_Set();
-    BURN1_EN_Set();
     IN1_Set();
     IN2_Set();
     IN3_Set();
@@ -293,6 +293,7 @@ void enableAllGPIOs(void) {
 
 void disableAllGPIOs(void) {
     BURN_5V_Clear();
+    BURN1_EN_Clear();
     BURN2_EN_Clear();
     SW_12V_EN1_Clear();
     SW_3V3_EN2_Clear();
@@ -303,7 +304,6 @@ void disableAllGPIOs(void) {
     SW_5V_EN4_Clear();
     SW_VBATT_EN_Clear();
 //    WDT_WDI_Clear();
-    BURN1_EN_Set();
     IN1_Clear();
     IN2_Clear();
     IN3_Clear();

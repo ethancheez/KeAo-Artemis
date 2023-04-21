@@ -77,7 +77,7 @@ void Artemis::Teensy::Channels::astrodev_channel()
                 Serial.print((char)packet.data[i]);
             }
             Serial.println("]");
-            // PushQueue(packet, main_queue, main_queue_mtx);
+            PushQueue(packet, main_queue, main_queue_mtx);
         }
 
         threads.delay(10);

@@ -38,7 +38,6 @@ void setup()
 
   usb.begin();
   pinMode(RPI_ENABLE, OUTPUT);
-  pinMode(UART6_RX, INPUT);
   delay(3000);
 
   // Set up devices
@@ -63,11 +62,14 @@ void setup()
   thread_list.push_back({threads.addThread(Channels::pdu_channel, 9000), Channels::Channel_ID::PDU_CHANNEL});
   thread_list.push_back({threads.addThread(Channels::astrodev_channel, 9000), Channels::Channel_ID::ASTRODEV_CHANNEL});
 
+  threads.delay(10000);
   Serial.println("Setup Complete");
 }
 
 void loop()
 {
+  pinMode(UART6_RX, INPUT);
+
   // Test packets. Enable/disable in platformio.ini with the '-D TEST_PACKETS' flag.
 #ifdef TEST_PACKETS
   send_test_packets();

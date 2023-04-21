@@ -104,13 +104,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 972E955D94A63BA89BF6ABD6AADB1023
-- generatedChecksum: 91A238B228CD5600CA675ABC909076F8
+- generatedChecksum: F2806AE493D6DECBB76BD3DDBF56353D
   logicalPath: config/default
   name: initialization.c
   physicalPath: ''
   security: NON_SECURE
   type: SOURCE
-  userChecksum: 91A238B228CD5600CA675ABC909076F8
+  userChecksum: F2806AE493D6DECBB76BD3DDBF56353D
 - generatedChecksum: D150E90A3EF7027255A83B86DF1261C4
   logicalPath: config/default
   name: interrupts.c
@@ -216,6 +216,13 @@ files:
   security: NON_SECURE
   type: SOURCE
   userChecksum: 5C73CEE260331A73F077C333A410D8EF
+- generatedChecksum: 8697918025ACEBAA239E13267699A8C8
+  logicalPath: config/default/peripheral/wdt
+  name: plib_wdt.c
+  physicalPath: peripheral/wdt
+  security: NON_SECURE
+  type: SOURCE
+  userChecksum: 8697918025ACEBAA239E13267699A8C8
 - generatedChecksum: F15E17304E6AD2ACE252D0B824D8D4A4
   logicalPath: FreeRTOS/Source/portable/GCC/SAM/ARM_CM4F
   name: port.c
@@ -524,13 +531,13 @@ files:
   security: NON_SECURE
   type: HEADER
   userChecksum: 44CC145B076FF266BB0915481ADC58AB
-- generatedChecksum: 7FE7C835B50E60A15117FB99652976D5
+- generatedChecksum: 3F6C705E00202ACEB2A6F2A4ECDA891D
   logicalPath: config/default
   name: definitions.h
   physicalPath: ''
   security: NON_SECURE
   type: HEADER
-  userChecksum: 7FE7C835B50E60A15117FB99652976D5
+  userChecksum: 3F6C705E00202ACEB2A6F2A4ECDA891D
 - generatedChecksum: 1EA4EDD5EA90F43EC407DE32441159A9
   logicalPath: FreeRTOS/Source/include
   name: deprecated_definitions.h
@@ -1035,6 +1042,13 @@ files:
   security: NON_SECURE
   type: HEADER
   userChecksum: 89D68FCEF2422C9008AB71DE144653CB
+- generatedChecksum: 0F40425C137DC971B27BD007E575A49E
+  logicalPath: config/default/peripheral/wdt
+  name: plib_wdt.h
+  physicalPath: peripheral/wdt
+  security: NON_SECURE
+  type: HEADER
+  userChecksum: 0F40425C137DC971B27BD007E575A49E
 - generatedChecksum: 78C79CCFE5C33F1C5D2875FBFFFB5D32
   logicalPath: packs/ATSAME51N20A_DFP/component
   name: pm.h

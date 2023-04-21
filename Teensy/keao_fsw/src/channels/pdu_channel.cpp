@@ -88,9 +88,9 @@ void Artemis::Teensy::Channels::pdu_channel()
                 {
                     switchbeacon beacon;
                     beacon.deci = uptime;
-                    for (size_t i = 2; i < response.length(); i++)
+                    for (size_t i = 1; i < response.length() - 2; i++)
                     {
-                        beacon.sw[i - 2] = response[i] - PDU_CMD_OFFSET;
+                        beacon.sw[i - 1] = response[i] - PDU_CMD_OFFSET;
                     }
                     beacon.sw[12] = digitalRead(RPI_ENABLE);
 
@@ -113,5 +113,7 @@ void Artemis::Teensy::Channels::pdu_channel()
         // Update WDT
         // pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::WDT, 1);
         // pdu.set_switch(Artemis::Teensy::PDU::PDU_SW::WDT, 0);
+
+        threads.delay(10);
     }
 }
