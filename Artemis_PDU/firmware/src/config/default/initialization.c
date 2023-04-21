@@ -62,8 +62,8 @@
 #pragma config NVMCTRL_SEESBLK = 0x0U
 #pragma config NVMCTRL_SEEPSZ = 0x0U
 #pragma config RAMECC_ECCDIS = SET
-#pragma config WDT_ENABLE = SET
-#pragma config WDT_ALWAYSON = SET
+#pragma config WDT_ENABLE = CLEAR
+#pragma config WDT_ALWAYSON = CLEAR
 #pragma config WDT_PER = CYC8192
 #pragma config WDT_WINDOW = CYC8192
 #pragma config WDT_EWOFFSET = CYC8192

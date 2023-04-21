@@ -129,7 +129,7 @@ void APP_Tasks ( void )
     USART_READ();
 //    I2C_READ();
 //    FATFS_APP();
-    triggerWDT();
+//    triggerWDT();
 }
 
 UINT bw;
@@ -159,12 +159,19 @@ void USART_READ(void) {
             if(SERCOM3_USART_ErrorGet() == USART_ERROR_NONE)
             {
                 SERCOM3_USART_Read(&data, 1);
+//                data = SERCOM3_USART_ReadByte();
 
                 if(data == '\r' || data == '\n')
                 {
                     SERCOM3_USART_Write("\0", 1);
+//                    SERCOM3_USART_Write(&newline[0],sizeof(newline));
+//                    SERCOM3_USART_Write(&receiveBuffer[0],rxCounter);
+//                    SERCOM3_USART_Write("\r\n", 2);
+//                    SERCOM3_USART_Write(&newline[0],sizeof(newline));
                     rxCounter = 0;
                     decode_pdu_packet(receiveBuffer);
+                    
+//                    read_CMD(receiveBuffer);
                 }
                 else
                 {

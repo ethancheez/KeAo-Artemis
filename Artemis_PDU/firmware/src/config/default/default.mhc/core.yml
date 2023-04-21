@@ -113,20 +113,13 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: '120000000'}
-  - type: KeyValueSet
-    attributes: {id: FUSE_SYMBOL_VALUE8}
+  - type: Boolean
+    attributes: {id: FUSE_CONFIG_ENABLE}
     children:
     - type: Values
       children:
       - type: User
-        attributes: {value: '1'}
-  - type: KeyValueSet
-    attributes: {id: FUSE_SYMBOL_VALUE9}
-    children:
-    - type: Values
-      children:
-      - type: User
-        attributes: {value: '1'}
+        attributes: {value: 'true'}
   - type: Integer
     attributes: {id: GCLK_0_FREQ}
     children:
@@ -494,23 +487,25 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'false'}
+        attributes: {id: core, value: 'true'}
       - type: User
-        attributes: {value: 'false'}
+        attributes: {value: 'true'}
   - type: String
     attributes: {id: NVIC_10_0_HANDLER}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: WDT_Handler}
+        attributes: {id: core, value: WDT_InterruptHandler}
+      - type: User
+        attributes: {value: WDT_InterruptHandler}
   - type: Boolean
     attributes: {id: NVIC_10_0_HANDLER_LOCK}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'false'}
+        attributes: {id: core, value: 'true'}
   - type: Boolean
     attributes: {id: NVIC_11_0_ENABLE}
     children:
@@ -3873,7 +3868,7 @@ children:
     - type: Values
       children:
       - type: User
-        attributes: {value: 'false'}
+        attributes: {value: 'true'}
   - type: File
     attributes: {id: WDT_HEADER}
     children:
@@ -3889,28 +3884,37 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'false'}
+        attributes: {id: core, value: 'true'}
+  - type: Comment
+    attributes: {id: WDT_INTERRUPT_ENABLE_COMMENT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'false'}
   - type: Boolean
     attributes: {id: WDT_INTERRUPT_ENABLE_UPDATE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: String
     attributes: {id: WDT_INTERRUPT_HANDLER}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: WDT_Handler}
+        attributes: {id: core, value: WDT_InterruptHandler}
   - type: Boolean
     attributes: {id: WDT_INTERRUPT_HANDLER_LOCK}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'false'}
+        attributes: {id: core, value: 'true'}
   - type: File
     attributes: {id: WDT_SOURCE}
     children:

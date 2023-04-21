@@ -49,6 +49,7 @@
 #include "interrupts.h"
 #include "plib_wdt.h"
 
+static WDT_CALLBACK_OBJECT wdtCallbackObj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -70,6 +71,9 @@ void WDT_Enable( void )
 
         }
     }
+
+    /* Enable early warning interrupt */
+    WDT_REGS->WDT_INTENSET = (uint8_t)WDT_INTENSET_EW_Msk;
 }
 
 /* This function is used to disable the Watchdog Timer */
@@ -89,6 +93,9 @@ void WDT_Disable( void )
     {
 
     }
+
+    /* Disable Early Watchdog Interrupt */
+    WDT_REGS->WDT_INTENCLR = (uint8_t)WDT_INTENCLR_EW_Msk;
 }
 
 void WDT_EnableWindowMode( void )
@@ -189,3 +196,20 @@ void WDT_ClearWithSync( void )
     }
 }
 
+void WDT_CallbackRegister( WDT_CALLBACK callback, uintptr_t context)
+{
+    wdtCallbackObj.callback = callback;
+
+    wdtCallbackObj.context = context;
+}
+
+void WDT_InterruptHandler( void )
+{
+    /* Clear Early Watchdog Interrupt */
+    WDT_REGS->WDT_INTFLAG = (uint8_t)WDT_INTFLAG_EW_Msk;
+
+    if( wdtCallbackObj.callback != NULL )
+    {
+        wdtCallbackObj.callback(wdtCallbackObj.context);
+    }
+}

@@ -3,15 +3,15 @@
   <executable name="dist/default/production/Artemis_PDU.X.production.elf">
     <memory name="program">
       <units>bytes</units>
-      <length>1048576</length>
-      <used>42444</used>
-      <free>1006132</free>
+      <length>524288</length>
+      <used>42454</used>
+      <free>481834</free>
     </memory>
     <memory name="data">
       <units>bytes</units>
-      <length>262144</length>
-      <used>47320</used>
-      <free>214824</free>
+      <length>196608</length>
+      <used>47328</used>
+      <free>149280</free>
     </memory>
   </executable>
 </project>
