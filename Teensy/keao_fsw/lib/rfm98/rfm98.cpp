@@ -70,8 +70,7 @@ namespace Artemis
                 vector<uint8_t> payload;
                 if (encrypt)
                 {
-                    crypto.randomizeIV(config.iv_size);
-                    crypto.encrypt(packet.wrapped, payload);
+                    crypto.encrypt(packet.wrapped, payload, config.iv_size);
                 }
                 else
                 {
@@ -120,16 +119,7 @@ namespace Artemis
 
                         if (decrypt)
                         {
-                            // Decrypt
-                            vector<uint8_t> iv;
-                            for (size_t i = payload.size() - config.iv_size; i < payload.size(); i++)
-                            {
-                                iv.push_back(payload[i]);
-                            }
-
-                            crypto.setIV(iv);
-                            payload.resize(payload.size() - config.iv_size);
-                            crypto.decrypt(payload, packet.wrapped);
+                            crypto.decrypt(payload, packet.wrapped, config.iv_size);
                         }
                         else
                         {

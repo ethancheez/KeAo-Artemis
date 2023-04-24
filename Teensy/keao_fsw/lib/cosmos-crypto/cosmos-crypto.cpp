@@ -35,21 +35,30 @@ namespace Artemis
             return 0;
         }
 
-        int32_t Crypto::encrypt(vector<uint8_t> plaintext_str, vector<uint8_t> &ciphertext_str)
+        int32_t Crypto::encrypt(vector<uint8_t> plaintext_str, vector<uint8_t> &ciphertext_str, size_t iv_size)
         {
             vector<uint8_t> plaintext;
 
-            ciphertext_str.resize(plaintext_str.size() + iv.size());
+            randomizeIV(iv_size);
+
+            ciphertext_str.resize(plaintext_str.size());
             gcm.encrypt(ciphertext_str.data(), plaintext_str.data(), plaintext_str.size());
             ciphertext_str.insert(ciphertext_str.end(), iv.begin(), iv.end());
 
             return 0;
         }
 
-        int32_t Crypto::decrypt(vector<uint8_t> ciphertext_str, vector<uint8_t> &plaintext_str)
+        int32_t Crypto::decrypt(vector<uint8_t> ciphertext_str, vector<uint8_t> &plaintext_str, size_t iv_size)
         {
-            plaintext_str.resize(ciphertext_str.size() - iv.size());
-            gcm.decrypt(plaintext_str.data(), ciphertext_str.data(), ciphertext_str.size() - iv.size());
+            iv.clear();
+            for (size_t i = ciphertext_str.size() - iv_size; i < ciphertext_str.size(); i++)
+            {
+                iv.push_back(ciphertext_str[i]);
+            }
+
+            ciphertext_str.resize(ciphertext_str.size() - iv.size());
+            plaintext_str.resize(ciphertext_str.size());
+            gcm.decrypt(plaintext_str.data(), ciphertext_str.data(), ciphertext_str.size());
 
             return 0;
         }

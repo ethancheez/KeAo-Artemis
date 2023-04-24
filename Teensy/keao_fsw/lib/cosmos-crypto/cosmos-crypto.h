@@ -22,8 +22,8 @@ namespace Artemis
             int32_t setKey(const char *key);
             int32_t setIV(vector<uint8_t> iv);
             int32_t randomizeIV(uint8_t size);
-            int32_t encrypt(vector<uint8_t> plaintext_str, vector<uint8_t> &ciphertext_str);
-            int32_t decrypt(vector<uint8_t> ciphertext_str, vector<uint8_t> &plaintext_str);
+            int32_t encrypt(vector<uint8_t> plaintext_str, vector<uint8_t> &ciphertext_str, size_t iv_size);
+            int32_t decrypt(vector<uint8_t> ciphertext_str, vector<uint8_t> &plaintext_str, size_t iv_size);
 
         private:
             GCM<AES256> gcm;
