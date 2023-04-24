@@ -4,8 +4,10 @@
 #include <GCM.h>
 #include <AES.h>
 #include <RNG.h>
+#include <TimeLib.h>
 #include <support/configCosmosKernel.h>
 #include <support/cosmos-errno.h>
+#include <math/bytelib.h>
 
 namespace Artemis
 {

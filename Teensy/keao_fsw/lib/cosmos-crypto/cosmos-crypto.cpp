@@ -39,9 +39,13 @@ namespace Artemis
         {
             vector<uint8_t> plaintext;
 
+            plaintext.resize(4);
+            uint32to(now(), plaintext.data());
+            plaintext.insert(plaintext.end(), plaintext_str.begin(), plaintext_str.end());
+
             randomizeIV(iv_size);
 
-            ciphertext_str.resize(plaintext_str.size());
+            ciphertext_str.resize(plaintext.size());
             gcm.encrypt(ciphertext_str.data(), plaintext_str.data(), plaintext_str.size());
             ciphertext_str.insert(ciphertext_str.end(), iv.begin(), iv.end());
 
