@@ -223,6 +223,9 @@ void decode_pdu_packet(const char *input)
                 case VBATT:
                     packet.sw_state = PORT_PinRead(SW_VBATT_EN_PIN);
                     break;
+                case BURN:
+                    packet.sw_state = PORT_PinRead(BURN1_EN_PIN) && PORT_PinRead(BURN2_EN_PIN);
+                    break;
                 case BURN1:
                     packet.sw_state = PORT_PinRead(BURN1_EN_PIN);
                     break;
